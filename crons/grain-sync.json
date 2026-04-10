@@ -1,0 +1,6 @@
+{
+  "schedule": "*/15 8-17 * * 1-5",
+  "prompt": "Run a Grain sync for the last 2 hours: node skills/crm/scripts/sync.js --days 0.08. If there are new meetings synced, send me a recap of each one with summary, action items, decisions, and highlights. If nothing new, don't message me.",
+  "chatId": "telegram:-1003540340877:535",
+  "platform": "telegram"
+}

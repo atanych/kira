@@ -1,0 +1,6 @@
+{
+  "schedule": "0 6,12 * * 1-5",
+  "prompt": "Check CRM for action items: 1) Overdue items (due_date < today, status = pending). 2) Items due today. 3) Items due tomorrow (morning only). Run: node skills/crm/scripts/action-items.js --status pending. Group them by urgency. Always send a message — if nothing urgent, say so. Keep it short.",
+  "chatId": "telegram:-1003540340877:535",
+  "platform": "telegram"
+}

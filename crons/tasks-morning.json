@@ -1,0 +1,6 @@
+{
+  "schedule": "0 5 * * *",
+  "prompt": "Покажи список открытых личных задач. Запусти: node skills/personal-tasks/scripts/tasks.js list. Перешли результат как есть. Если задач нет — скажи что список пуст. Отвечай на русском.",
+  "chatId": "telegram:-1003540340877:3",
+  "platform": "telegram"
+}
