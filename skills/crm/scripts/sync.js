@@ -26,10 +26,12 @@ try {
 
 const { values } = parseArgs({
   options: {
-    days:      { type: 'string', default: '3' },
-    meeting:   { type: 'string' },
-    'dry-run': { type: 'boolean', default: false },
-    force:     { type: 'boolean', default: false },
+    days:        { type: 'string', default: '3' },
+    meeting:     { type: 'string' },
+    participant: { type: 'string', default: 'Vlad' },
+    'dry-run':   { type: 'boolean', default: false },
+    force:       { type: 'boolean', default: false },
+    recap:       { type: 'boolean', default: false },
   },
 });
 
@@ -91,12 +93,24 @@ async function upsertContact(name, email = null) {
 /**
  * Sync a single Grain recording into CRM.
  */
+// Meetings to always skip
+const IGNORED_MEETINGS = [
+  'Archive Socials',
+];
+
 async function syncRecording(recording, options = {}) {
   const { dryRun = false } = options;
+  const log = values.recap ? () => {} : console.log.bind(console);
 
-  console.log(`\nSyncing: ${recording.title}`);
-  console.log(`  Date: ${recording.start_datetime}`);
-  console.log(`  Duration: ${Math.round((recording.duration_ms || 0) / 60000)}min`);
+  log(`\nSyncing: ${recording.title}`);
+  log(`  Date: ${recording.start_datetime}`);
+  log(`  Duration: ${Math.round((recording.duration_ms || 0) / 60000)}min`);
+
+  // Skip ignored meetings
+  if (IGNORED_MEETINGS.some(m => recording.title.includes(m))) {
+    log(`  Skipping — ignored meeting`);
+    return null;
+  }
 
   // Check if already synced
   const existing = await db.query(
@@ -104,29 +118,39 @@ async function syncRecording(recording, options = {}) {
     [recording.id]
   );
   if (existing.rows.length > 0 && !options.force) {
-    console.log('  Already synced, skipping (use --force to re-sync)');
+    log('  Already synced, skipping (use --force to re-sync)');
     return null;
   }
 
   // Fetch transcript
-  console.log('  Fetching transcript...');
+  log('  Fetching transcript...');
   const transcript = await getTranscriptText(recording.id);
   if (!transcript) {
-    console.log('  No transcript available, skipping');
+    log('  No transcript available, skipping');
     return null;
   }
 
   // Extract participants from transcript
   const participants = extractParticipants(transcript);
-  console.log(`  Participants: ${participants.join(', ')}`);
+  log(`  Participants: ${participants.join(', ')}`);
+
+  // Filter by participant if specified
+  if (options.participant) {
+    const filter = options.participant.toLowerCase();
+    const match = participants.some(p => p.toLowerCase().includes(filter));
+    if (!match) {
+      log(`  Skipping — ${options.participant} not in participants`);
+      return null;
+    }
+  }
 
   if (dryRun) {
-    console.log('  [DRY RUN] Would extract and save');
+    log('  [DRY RUN] Would extract and save');
     return null;
   }
 
   // AI extraction
-  console.log('  Running AI extraction...');
+  log('  Running AI extraction...');
   const extracted = await extractMeeting({
     title: recording.title,
     transcript,
@@ -135,11 +159,11 @@ async function syncRecording(recording, options = {}) {
     intelligenceNotes: recording.intelligence_notes_md,
   });
 
-  console.log(`  Summary: ${extracted.summary?.slice(0, 150)}...`);
-  console.log(`  Action items: ${extracted.action_items?.length || 0}`);
-  console.log(`  Decisions: ${extracted.decisions?.length || 0}`);
-  console.log(`  Context entries: ${extracted.context?.length || 0}`);
-  console.log(`  Highlights: ${extracted.highlights?.length || 0}`);
+  log(`  Summary: ${extracted.summary?.slice(0, 150)}...`);
+  log(`  Action items: ${extracted.action_items?.length || 0}`);
+  log(`  Decisions: ${extracted.decisions?.length || 0}`);
+  log(`  Context entries: ${extracted.context?.length || 0}`);
+  log(`  Highlights: ${extracted.highlights?.length || 0}`);
 
   // Generate interaction embedding
   const interactionEmb = await embed(
@@ -153,20 +177,23 @@ async function syncRecording(recording, options = {}) {
     await db.query(`
       UPDATE interactions SET
         subject = $1, summary = $2, embedding = $3,
-        duration_minutes = $4, occurred_at = $5
-      WHERE id = $6
+        duration_minutes = $4, occurred_at = $5,
+        decisions = $6, highlights = $7
+      WHERE id = $8
     `, [
       recording.title,
       extracted.summary,
       JSON.stringify(interactionEmb),
       Math.round((recording.duration_ms || 0) / 60000),
       recording.start_datetime,
+      JSON.stringify(extracted.decisions || []),
+      JSON.stringify(extracted.highlights || []),
       interactionId,
     ]);
   } else {
     const res = await db.query(`
-      INSERT INTO interactions (type, source, source_id, subject, summary, occurred_at, duration_minutes, embedding)
-      VALUES ('meeting', 'grain', $1, $2, $3, $4, $5, $6)
+      INSERT INTO interactions (type, source, source_id, subject, summary, occurred_at, duration_minutes, embedding, decisions, highlights)
+      VALUES ('meeting', 'grain', $1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING id
     `, [
       recording.id,
@@ -175,6 +202,8 @@ async function syncRecording(recording, options = {}) {
       recording.start_datetime,
       Math.round((recording.duration_ms || 0) / 60000),
       JSON.stringify(interactionEmb),
+      JSON.stringify(extracted.decisions || []),
+      JSON.stringify(extracted.highlights || []),
     ]);
     interactionId = res.rows[0].id;
   }
@@ -215,7 +244,7 @@ async function syncRecording(recording, options = {}) {
         assignedTo,
         ai.owner || 'them',
         ai.description,
-        ai.due_date || null,
+        (ai.due_date && ai.due_date !== 'null') ? ai.due_date : null,
       ]);
     }
   }
@@ -279,14 +308,27 @@ async function syncRecording(recording, options = {}) {
     }
   }
 
-  // LightRAG dual-write
+  // LightRAG dual-write — push full transcript for rich graph building
   if (pushToLightRAG) {
-    console.log('  Pushing to LightRAG...');
-    const docText = `Meeting: ${recording.title}\nDate: ${recording.start_datetime}\nParticipants: ${participants.join(', ')}\n\nSummary: ${extracted.summary}\n\nDecisions: ${(extracted.decisions || []).map(d => d.decision).join('. ')}\n\nAction Items: ${(extracted.action_items || []).map(a => `${a.assigned_to}: ${a.description}`).join('. ')}`;
-    await pushToLightRAG({ title: recording.title, content: docText, sourceType: 'meeting', itemId: interactionId });
+    log('  Pushing to LightRAG...');
+    const decisions = (extracted.decisions || []).map(d => `- ${d.decision}`).join('\n');
+    const docText = [
+      `Meeting: ${recording.title}`,
+      `Date: ${recording.start_datetime?.split('T')[0] || 'unknown'}`,
+      `Participants: ${participants.join(', ')}`,
+      '',
+      'Summary:',
+      extracted.summary,
+      '',
+      decisions ? `Decisions:\n${decisions}` : null,
+      '',
+      'Transcript:',
+      transcript,
+    ].filter(l => l !== null).join('\n');
+    await pushToLightRAG({ title: recording.title, content: docText, sourceType: 'meeting', itemId: interactionId, force: !!options.force });
   }
 
-  console.log(`  Done: ${interactionId}`);
+  log(`  Done: ${interactionId}`);
 
   return {
     interactionId,
@@ -299,26 +341,69 @@ async function syncRecording(recording, options = {}) {
 
 // ─── CLI ───────────────────────────────────────────────────────────────────
 
+/**
+ * Format a synced meeting into a clean recap string.
+ */
+function formatRecap(title, result) {
+  const lines = [`📋 **${title}**`, ''];
+  lines.push(result.summary);
+
+  if (result.decisions.length > 0) {
+    lines.push('', '**Decisions:**');
+    for (const d of result.decisions) lines.push(`• ${d.decision}`);
+  }
+
+  if (result.actionItems.length > 0) {
+    lines.push('', '**Action Items:**');
+    for (const ai of result.actionItems) {
+      const owner = ai.owner === 'me' ? '(you)' : `(${ai.assigned_to || 'them'})`;
+      const due = ai.due_date ? ` — due ${ai.due_date}` : '';
+      lines.push(`• ${ai.description} ${owner}${due}`);
+    }
+  }
+
+  if (result.highlights.length > 0) {
+    lines.push('', '**Highlights:**');
+    for (const h of result.highlights) lines.push(`• "${h.statement}" — ${h.why}`);
+  }
+
+  return lines.join('\n');
+}
+
 async function main() {
+  const recapMode = values.recap;
+  const results = [];
+
   try {
     if (values.meeting) {
       // Sync specific recording
-      console.log(`Fetching recording: ${values.meeting}`);
+      if (!recapMode) console.log(`Fetching recording: ${values.meeting}`);
       const recording = await getRecording(values.meeting);
-      await syncRecording(recording, { dryRun: values['dry-run'], force: values.force });
+      const result = await syncRecording(recording, { dryRun: values['dry-run'], force: values.force });
+      if (result) results.push({ title: recording.title, ...result });
     } else {
       // Sync recent recordings
-      const days = parseInt(values.days);
-      console.log(`Fetching recordings from last ${days} days...`);
+      const days = parseFloat(values.days);
+      if (!recapMode) console.log(`Fetching recordings from last ${days} days...`);
       const recordings = await listRecentRecordings(days);
-      console.log(`Found ${recordings.length} recording(s)`);
+      if (!recapMode) console.log(`Found ${recordings.length} recording(s)`);
 
       for (const recording of recordings) {
-        await syncRecording(recording, { dryRun: values['dry-run'], force: values.force });
+        const result = await syncRecording(recording, { dryRun: values['dry-run'], force: values.force, participant: values.participant });
+        if (result) results.push({ title: recording.title, ...result });
       }
     }
 
-    console.log('\nSync complete!');
+    if (recapMode) {
+      // Clean output mode — only print the formatted recap, nothing else
+      if (results.length === 0) {
+        console.log('NO_NEW_MEETINGS');
+      } else {
+        console.log(results.map(r => formatRecap(r.title, r)).join('\n\n---\n\n'));
+      }
+    } else {
+      console.log('\nSync complete!');
+    }
   } catch (err) {
     console.error(`\nError: ${err.message}`);
     process.exit(1);

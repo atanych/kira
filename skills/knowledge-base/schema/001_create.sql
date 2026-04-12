@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS knowledge_items (
   source_url TEXT,
   title TEXT NOT NULL,
   content TEXT NOT NULL,
+  content_length INT,
   summary TEXT,
   
   -- Classification

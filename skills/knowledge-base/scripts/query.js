@@ -29,7 +29,7 @@ const { values, positionals } = parseArgs({
     full:      { type: 'boolean', default: false },
     chunks:    { type: 'boolean', default: false },
     graph:     { type: 'boolean', default: false },
-    all:       { type: 'boolean', default: false },
+    all:       { type: 'boolean', default: true },
   },
 });
 
@@ -131,7 +131,7 @@ async function main() {
     if (values.graph) {
       await searchGraph(query);
     } else if (values.all) {
-      await searchVector(query, values);
+      await searchVector(query, { ...values, chunks: true });
       console.log('---\n');
       await searchGraph(query);
     } else {

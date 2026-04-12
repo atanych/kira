@@ -8,6 +8,11 @@ Vovan. Dev. Kira's teammate.
 - Дочка — Лерочка
 (всегда называть именно так)
 
+## Location
+- Minsk, Belarus
+- Квартира — Лобанка 22
+- Дача — СТ Восход-2012, рядом с Заславлем (Минский район)
+
 ## Context
 - Has two other agents: Jarvis and Eli
 - Prefers doing over discussing

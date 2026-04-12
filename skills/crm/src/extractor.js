@@ -38,9 +38,9 @@ async function chat(messages) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4o',
       messages,
-      temperature: 0.2,
+      temperature: 0.3,
       response_format: { type: 'json_object' },
     }),
   });
@@ -102,11 +102,13 @@ export async function extractMeeting({ title, transcript, participants, myName =
 
 Rules:
 - "${myName}" is "me". Everyone else is "them".
+- In the summary, do NOT include participant names or the company name — those are already shown separately. Focus on what was discussed, decided, and committed to.
 - Action items must be specific and actionable, not vague.
 - For due dates, only include if explicitly mentioned in the transcript.
 - Context should capture what each person uniquely contributed or cared about.
-- Highlights are statements that stand out — important commitments, surprising info, strategic insights.
-- Be concise. Quality over quantity.`
+- Highlights are statements that stand out — important commitments, surprising info, strategic insights. Highlights must NOT duplicate decisions. If something is already a decision, don't repeat it as a highlight.
+- Extract EVERY action item, commitment, follow-up, and task mentioned — do not skip any. If someone says they will do something, that's an action item.
+- When in doubt, include it as an action item rather than omitting it.`
     },
     {
       role: 'user',

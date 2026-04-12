@@ -119,4 +119,30 @@ export function chunkTranscript(segments) {
   return chunks;
 }
 
-export default { chunkText, chunkTranscript };
+/**
+ * Chunk transcript by semantic sections (AI-detected topic boundaries).
+ * Each section becomes one chunk with timestamps and topic label.
+ *
+ * @param {Array<{text: string, offset: number, duration: number}>} segments
+ * @param {Array<{topic: string, startIndex: number, endIndex: number}>} sections
+ */
+export function chunkTranscriptSemantic(segments, sections) {
+  if (!segments || !sections || sections.length === 0) return [];
+
+  return sections.map((section, i) => {
+    const sectionSegments = segments.slice(section.startIndex, section.endIndex + 1);
+    const text = sectionSegments.map(s => s.text.trim()).filter(Boolean).join(' ');
+    const startSeg = sectionSegments[0];
+    const endSeg = sectionSegments[sectionSegments.length - 1];
+
+    return {
+      chunkText: `[${section.topic}]\n${text}`,
+      chunkIndex: i,
+      timestampStart: startSeg?.offset ?? 0,
+      timestampEnd: endSeg ? endSeg.offset + (endSeg.duration || 0) : 0,
+      topic: section.topic,
+    };
+  }).filter(c => c.chunkText.length > 0);
+}
+
+export default { chunkText, chunkTranscript, chunkTranscriptSemantic };

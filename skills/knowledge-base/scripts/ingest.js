@@ -23,8 +23,8 @@ import { parseArgs } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import db from '../src/db.js';
 import { embed, embedBatch, buildEmbeddingText } from '../src/embeddings.js';
-import { processContent } from '../src/ai.js';
-import { chunkText, chunkTranscript } from '../src/chunker.js';
+import { processContent, semanticSplit } from '../src/ai.js';
+import { chunkText, chunkTranscript, chunkTranscriptSemantic } from '../src/chunker.js';
 import { isYouTubeUrl, extractYouTube } from '../src/extractors/youtube.js';
 import { isTwitterUrl, extractTwitter } from '../src/extractors/twitter.js';
 import { parseArticle } from '../src/extractors/article.js';
@@ -119,7 +119,7 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
 
   const {
     title, content: rawContent, author, publishedAt, sourceType,
-    transcript, url: itemUrl,
+    transcript, url: itemUrl, metadata,
   } = extracted;
   let content = rawContent;
 
@@ -160,11 +160,11 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
 
   // AI processing
   console.log('Processing with AI...');
-  const ai = await processContent({ title, content, sourceType, userTags });
+  const ai = await processContent({ title: translatedTitle || title, content, sourceType, userTags });
 
-  const finalTitle = titleOverride || title;
+  const finalTitle = titleOverride || translatedTitle || title;
   const finalType = typeOverride || sourceType;
-  const finalAuthor = author || ai.author || null;
+  const finalAuthor = translatedAuthor || author || ai.author || null;
 
   if (dryRun) {
     console.log('\nDRY RUN — would ingest:');
@@ -187,14 +187,15 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
   console.log('Saving to database...');
   const insertResult = await db.query(`
     INSERT INTO knowledge_items
-      (url, title, content, summary, source_type, tags, entities,
+      (url, title, content, content_length, summary, source_type, tags, entities,
        embedding, author, published_at, parent_id)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     RETURNING id
   `, [
     itemUrl || null,
     finalTitle,
     content,
+    content.length,
     ai.summary,
     finalType,
     ai.tags,
@@ -210,8 +211,27 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
 
   // Chunk content
   let chunks;
+  let chunkingMethod = 'text';
   if (sourceType === 'video' && transcript && transcript.length > 0) {
-    chunks = chunkTranscript(transcript);
+    // Try semantic chunking first
+    console.log('Attempting semantic chunking...');
+    try {
+      const sections = await semanticSplit({ title: finalTitle, segments: transcript });
+      if (sections && sections.length > 0) {
+        chunks = chunkTranscriptSemantic(transcript, sections);
+        chunkingMethod = 'semantic';
+        console.log(`  Semantic split: ${sections.length} topical sections`);
+      } else {
+        chunks = chunkTranscript(transcript);
+        chunkingMethod = 'timestamp';
+        console.log('  Semantic split returned nothing, falling back to timestamp chunking');
+      }
+    } catch (err) {
+      console.warn(`  Semantic chunking failed: ${err.message}`);
+      chunks = chunkTranscript(transcript);
+      chunkingMethod = 'timestamp';
+      console.log('  Falling back to timestamp chunking');
+    }
   } else {
     chunks = chunkText(content);
   }
@@ -243,7 +263,7 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
   let lightragOk = false;
   if (!noLightrag) {
     console.log('Pushing to LightRAG...');
-    await pushToLightRAG({ title: finalTitle, content, sourceType: finalType, itemId });
+    await pushToLightRAG({ title: finalTitle, author: finalAuthor, content, sourceType: finalType, itemId });
     lightragOk = true;
   }
 
@@ -253,8 +273,15 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
   console.log(`  Title:      ${finalTitle}`);
   console.log(`  Type:       ${finalType}`);
   console.log(`  Author:     ${finalAuthor || 'unknown'}`);
-  console.log(`  pgvector:   ${chunks.length} chunks stored`);
+  if (metadata?.duration) console.log(`  Duration:   ${metadata.duration}`);
+  console.log(`  Length:     ${content.length} chars`);
+  console.log(`  pgvector:   ${chunks.length} chunks stored (${chunkingMethod})`);
   console.log(`  LightRAG:   ${lightragOk ? '✓ pushed' : 'skipped'}`);
+  console.log(`  Summary:    ${ai.summary}`);
+  if (ai.truncated) {
+    const pct = Math.round((ai.processedLength / ai.originalLength) * 100);
+    console.log(`  ⚠️  AI summary used ${pct}% of content (${ai.originalLength} chars total, truncated to 60k). Summary may not cover the full transcript.`);
+  }
 
   return itemId;
 }
