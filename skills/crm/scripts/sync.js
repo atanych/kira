@@ -96,6 +96,7 @@ async function upsertContact(name, email = null) {
 // Meetings to always skip
 const IGNORED_MEETINGS = [
   'Archive Socials',
+  'All Hands',
 ];
 
 async function syncRecording(recording, options = {}) {
