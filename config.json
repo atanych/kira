@@ -1,5 +1,12 @@
 {
   "telegram": {
-    "allowedUsers": [89388434, 534930318]
-  }
+    "allowedUsers": [89388434, 534930318, 1736284661],"adminUsers": [89388434]
+  },
+   "voice": { "voiceId": "QeKcckTBICc3UuWL7ETc" },
+   "memory": {
+      "report": {
+        "platform": "telegram",
+        "chatId": "telegram:-1003540340877:1709"
+      }
+    }
 }

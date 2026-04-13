@@ -19,3 +19,6 @@ node skills/render-image/render-image.mjs "<prompt>" --ratio <aspect_ratio> --si
 ## Output
 - Saves generated image as PNG to `output/` directory
 - Prints the output file path to stdout
+
+## Learnings
+- [2026-04-11] New agent **Dex** 🧪 — 30yo engineer, quiet nerd, Dexter-inspired. Pure coder, opens browser locally, sends screenshots. Avatar generated via [[render-image]].

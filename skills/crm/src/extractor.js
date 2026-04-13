@@ -108,7 +108,8 @@ Rules:
 - Context should capture what each person uniquely contributed or cared about.
 - Highlights are statements that stand out — important commitments, surprising info, strategic insights. Highlights must NOT duplicate decisions. If something is already a decision, don't repeat it as a highlight.
 - Extract EVERY action item, commitment, follow-up, and task mentioned — do not skip any. If someone says they will do something, that's an action item.
-- When in doubt, include it as an action item rather than omitting it.`
+- When in doubt, include it as an action item rather than omitting it.
+- ALWAYS respond in English. If the meeting was in Russian or any other language, translate everything to English.`
     },
     {
       role: 'user',

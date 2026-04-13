@@ -1,6 +1,6 @@
 {
   "schedule": "*/15 8-17 * * 1-5",
-  "prompt": "Run: node skills/crm/scripts/sync.js --days 0.5 --participant \"Vlad Atanov\" --recap. If the output is NO_NEW_MEETINGS, don't message me. Otherwise, forward the output to me exactly as-is — it's already formatted.",
+  "prompt": "Run: node skills/crm/scripts/sync.js --days 0.5 --participant \"Vlad Atanov\" --recap. If the output is NO_NEW_MEETINGS, respond with exactly <skip>. Otherwise, the output may contain multiple meetings separated by ===MEETING_SEPARATOR===. Send each meeting as a SEPARATE message (one message per meeting). Forward each meeting's text exactly as-is — it's already formatted. After each meeting, add: \"👆 Review action items — approve or reject before I post to Slack.\"",
   "chatId": "telegram:-1003540340877:535",
   "platform": "telegram"
 }

@@ -345,16 +345,16 @@ async function syncRecording(recording, options = {}) {
  * Format a synced meeting into a clean recap string.
  */
 function formatRecap(title, result) {
-  const lines = [`📋 **${title}**`, ''];
+  const lines = [`📋 ${title}`, ''];
   lines.push(result.summary);
 
   if (result.decisions.length > 0) {
-    lines.push('', '**Decisions:**');
+    lines.push('', '✅ Decisions:');
     for (const d of result.decisions) lines.push(`• ${d.decision}`);
   }
 
   if (result.actionItems.length > 0) {
-    lines.push('', '**Action Items:**');
+    lines.push('', '📌 Action Items:');
     for (const ai of result.actionItems) {
       const owner = ai.owner === 'me' ? '(you)' : `(${ai.assigned_to || 'them'})`;
       const due = ai.due_date ? ` — due ${ai.due_date}` : '';
@@ -363,7 +363,7 @@ function formatRecap(title, result) {
   }
 
   if (result.highlights.length > 0) {
-    lines.push('', '**Highlights:**');
+    lines.push('', '💡 Highlights:');
     for (const h of result.highlights) lines.push(`• "${h.statement}" — ${h.why}`);
   }
 
@@ -399,7 +399,7 @@ async function main() {
       if (results.length === 0) {
         console.log('NO_NEW_MEETINGS');
       } else {
-        console.log(results.map(r => formatRecap(r.title, r)).join('\n\n---\n\n'));
+        console.log(results.map(r => formatRecap(r.title, r)).join('\n===MEETING_SEPARATOR===\n'));
       }
     } else {
       console.log('\nSync complete!');

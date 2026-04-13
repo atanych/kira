@@ -1,0 +1,6 @@
+{
+  "schedule": "0 4 * * *",
+  "prompt": "You're my daily research assistant. Find the top 3 developments in AI Tools, New LLM Models, and AI Automation. Summarize each in 2 sentences with source links. Tell me Why it Matters. Format as a quick briefing I can read in under 3 minutes and keep it entertaining and easy to digest.",
+  "chatId": "telegram:-1003540340877:780",
+  "platform": "telegram"
+}
