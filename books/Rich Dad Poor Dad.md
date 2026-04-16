@@ -15,6 +15,8 @@ date-summarized: 2026-04-15
 
 # Rich Dad Poor Dad
 
+![[Rich Dad Poor Dad.png]]
+
 **Author:** [[Robert Kiyosaki]]
 **Year:** 1997 · **Pages:** 336
 **Tags:** #finance #mindset #investing #passive-income

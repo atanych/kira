@@ -15,6 +15,8 @@ date-summarized: 2026-04-15
 
 # Think and Grow Rich
 
+![[Think and Grow Rich.png]]
+
 **Author:** [[Napoleon Hill]]
 **Year:** 1937 · **Pages:** 238
 **Tags:** #mindset #success #wealth

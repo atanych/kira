@@ -18,6 +18,7 @@ No script — this is an agent-driven skill. When the user asks to summarize a b
 - `tmp/output/photo-<slug>.png` — visual summary card (photo mode)
 - `tmp/output/<slug>-summary.mp3` — voice narration
 - `books/<Book Title>.md` — Obsidian note (persistent, committed to repo)
+- `books/<Book Title>.png` — visual card image saved alongside the .md file, embedded via `![[Book Title.png]]`
 
 ## Obsidian Note Format
 Every summary gets saved to `books/<Book Title>.md` with:
