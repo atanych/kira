@@ -104,7 +104,7 @@ Rules:
 - "${myName}" is "me". Everyone else is "them".
 - In the summary, do NOT include participant names or the company name — those are already shown separately. Focus on what was discussed, decided, and committed to.
 - Action items must be specific and actionable, not vague.
-- For due dates, only include if explicitly mentioned in the transcript.
+- For due dates, only include if explicitly mentioned in the transcript. Today's date is ${new Date().toISOString().split('T')[0]} — resolve all relative dates ("tomorrow", "next Friday", "end of the week", "the day after") relative to today.
 - Context should capture what each person uniquely contributed or cared about.
 - Highlights are statements that stand out — important commitments, surprising info, strategic insights. Highlights must NOT duplicate decisions. If something is already a decision, don't repeat it as a highlight.
 - Extract EVERY action item, commitment, follow-up, and task mentioned — do not skip any. If someone says they will do something, that's an action item.

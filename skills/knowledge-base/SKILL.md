@@ -108,3 +108,4 @@ If LightRAG needs a full rebuild:
 
 [2026-04-11] **Specific item queries**: When asked about a specific item (e.g. "what's this video about"), pull that item by URL from the DB. Do NOT use graph/cross-reference search (LightRAG) — it synthesizes across the entire KB and will mix in data from other items. Graph search is for broad topic queries only.
 - [2026-04-11] Skill-specific learnings go in the skill's SKILL.md under `## Learnings`, NOT here. Memory is for general preferences and cross-cutting stuff only. [[knowledge-base]] [[personal-tasks]]
+- [2026-04-15] [[knowledge-base]] Tweet ingestion now uses x-thread (Apify, 200 replies) instead of FxTwitter. x-thread's discussion summary is used as the KB item summary — no extra KB AI summarization for tweets.

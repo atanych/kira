@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b4e 100%);
+    color: #e8e6f0;
+    width: 800px;
+    padding: 48px;
+  }
+
+  .header {
+    margin-bottom: 36px;
+    border-bottom: 2px solid rgba(168, 130, 255, 0.3);
+    padding-bottom: 24px;
+  }
+
+  .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #a882ff;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .author {
+    font-size: 16px;
+    color: #9a8cbf;
+    font-weight: 400;
+  }
+
+  .meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #7a6f99;
+  }
+
+  .section {
+    margin-bottom: 28px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a882ff;
+    margin-bottom: 14px;
+  }
+
+  .one-liner {
+    font-size: 18px;
+    font-weight: 500;
+    color: #d4ccec;
+    line-height: 1.5;
+    padding: 16px 20px;
+    background: rgba(168, 130, 255, 0.08);
+    border-left: 3px solid #a882ff;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .principle {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .principle-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #a882ff;
+    background: rgba(168, 130, 255, 0.15);
+    border-radius: 50%;
+    min-width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .principle-text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #d4ccec;
+  }
+
+  .principle-text strong {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  .takeaway {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .check {
+    color: #4ade80;
+    font-size: 16px;
+    margin-top: 1px;
+  }
+
+  .takeaway-text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #d4ccec;
+  }
+
+  .skip-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+
+  .skip-icon {
+    color: #f87171;
+    font-size: 16px;
+    margin-top: 1px;
+  }
+
+  .verdict {
+    padding: 20px 24px;
+    background: rgba(168, 130, 255, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(168, 130, 255, 0.2);
+  }
+
+  .verdict-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #d4ccec;
+  }
+
+  .ratings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    margin-top: 16px;
+  }
+
+  .rating-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  .rating-label {
+    color: #9a8cbf;
+  }
+
+  .rating-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rating-track {
+    width: 80px;
+    height: 6px;
+    background: rgba(168, 130, 255, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .rating-fill {
+    height: 100%;
+    background: #a882ff;
+    border-radius: 3px;
+  }
+
+  .rating-value {
+    color: #a882ff;
+    font-weight: 600;
+    font-size: 13px;
+    min-width: 28px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- TEMPLATE — replace {{placeholders}} -->
+
+<div class="header">
+  <div class="label">⚡ Kira's Quick Summary</div>
+  <h1>{{TITLE}}</h1>
+  <div class="author">{{AUTHOR}} · {{YEAR}}</div>
+  <div class="meta">
+    <span>📖 {{PAGES}} pages</span>
+    <span>⏱ 5 min summary</span>
+    <span>🏷 {{TAGS}}</span>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">💡 One-Liner</div>
+  <div class="one-liner">{{ONE_LINER}}</div>
+</div>
+
+<div class="section">
+  <div class="section-title">🔑 {{PRINCIPLES_HEADING}}</div>
+
+  <!-- Repeat for each principle -->
+  <div class="principle">
+    <div class="principle-num">1</div>
+    <div class="principle-text"><strong>{{PRINCIPLE_TITLE}}</strong> — {{PRINCIPLE_DESC}}</div>
+  </div>
+  <!-- /repeat -->
+</div>
+
+<div class="section">
+  <div class="section-title">✅ Actionable Takeaways</div>
+
+  <!-- Repeat for each takeaway -->
+  <div class="takeaway">
+    <span class="check">→</span>
+    <div class="takeaway-text">{{TAKEAWAY}}</div>
+  </div>
+  <!-- /repeat -->
+</div>
+
+<div class="section">
+  <div class="section-title">⚠️ What You Can Skip</div>
+
+  <!-- Repeat for each skip item -->
+  <div class="skip-item">
+    <span class="skip-icon">✕</span>
+    <div class="takeaway-text"><strong>{{SKIP_TITLE}}</strong> — {{SKIP_DESC}}</div>
+  </div>
+  <!-- /repeat -->
+</div>
+
+<div class="section">
+  <div class="verdict">
+    <div class="section-title" style="margin-bottom: 10px;">🎯 Kira's Verdict</div>
+    <div class="verdict-text">{{VERDICT}}</div>
+    <div class="ratings-grid">
+      <div class="rating-item">
+        <span class="rating-label">🎯 Core Ideas</span>
+        <div class="rating-bar">
+          <div class="rating-track"><div class="rating-fill" style="width: {{CORE}}0%"></div></div>
+          <span class="rating-value">{{CORE}}/10</span>
+        </div>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">📦 Density</span>
+        <div class="rating-bar">
+          <div class="rating-track"><div class="rating-fill" style="width: {{DENSITY}}0%"></div></div>
+          <span class="rating-value">{{DENSITY}}/10</span>
+        </div>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">⚡ Actionability</span>
+        <div class="rating-bar">
+          <div class="rating-track"><div class="rating-fill" style="width: {{ACTION}}0%"></div></div>
+          <span class="rating-value">{{ACTION}}/10</span>
+        </div>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">🕐 Time Relevance</span>
+        <div class="rating-bar">
+          <div class="rating-track"><div class="rating-fill" style="width: {{TIME}}0%"></div></div>
+          <span class="rating-value">{{TIME}}/10</span>
+        </div>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">🔁 Overlap</span>
+        <div class="rating-bar">
+          <div class="rating-track"><div class="rating-fill" style="width: {{OVERLAP}}0%"></div></div>
+          <span class="rating-value">{{OVERLAP}}/10</span>
+        </div>
+      </div>
+      <div class="rating-item">
+        <span class="rating-label">🎓 Difficulty</span>
+        <div class="rating-bar">
+          <div class="rating-track"><div class="rating-fill" style="width: {{DIFF}}0%"></div></div>
+          <span class="rating-value">{{DIFF}}/10</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

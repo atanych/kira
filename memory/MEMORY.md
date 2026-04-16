@@ -15,3 +15,11 @@
 [2026-04-12] Daily AI digest cron set up — 7:00 Минск, top 3 news in AI Tools, New LLM Models, AI Automation. Prompt from Dan Martell's research assistant format.
 
 [2026-04-13] [[CRM]] Ignore all 'All Hands' meetings — don't sync or surface them in recaps.
+
+[2026-04-14] [[CRM]] One message per meeting (not bundled) — Vovan needs to reply to each for action item review. Always output in English (translate Russian meetings). No markdown bold in Telegram — use emoji headers. Add approval/reject reminder after each recap.
+
+[2026-04-14] [[CRM]] Extractor must pass current year to LLM — was defaulting to 2023. Fixed by injecting current date into extraction prompt.
+
+[2026-04-14] [[Лерочка]] added to Kira's Telegram allowedUsers (ID: 1736284661). She can now chat with me directly.
+
+[2026-04-16] [[Vovan]] has 3 cars, stores 3 sets of tires (12 шин R19 235/55, без дисков) at дача хозпостройка.

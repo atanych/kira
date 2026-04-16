@@ -119,7 +119,7 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
 
   const {
     title, content: rawContent, author, publishedAt, sourceType,
-    transcript, url: itemUrl, metadata,
+    transcript, url: itemUrl, metadata, summary: extractedSummary,
   } = extracted;
   let content = rawContent;
 
@@ -158,9 +158,15 @@ export async function ingestItem(extracted, parentId = null, options = {}) {
     console.log(`  Clean (score: ${secResult.score}/100)`);
   }
 
-  // AI processing
+  // AI processing (tags, entities; summary only if extractor didn't provide one)
   console.log('Processing with AI...');
   const ai = await processContent({ title: translatedTitle || title, content, sourceType, userTags });
+
+  // Use extractor-provided summary (e.g. x-thread discussion summary) over AI-generated one
+  if (extractedSummary) {
+    console.log('  Using extractor-provided summary (skipping AI summary)');
+    ai.summary = extractedSummary;
+  }
 
   const finalTitle = titleOverride || translatedTitle || title;
   const finalType = typeOverride || sourceType;

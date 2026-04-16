@@ -36,15 +36,14 @@ node skills/crm/scripts/search.js "AI strategy" --type context
 
 ### Action Items
 ```bash
-node skills/crm/scripts/action-items.js                   # list pending
+node skills/crm/scripts/action-items.js                   # list pending (unreviewed)
+node skills/crm/scripts/action-items.js --status approved  # list approved
+node skills/crm/scripts/action-items.js --status all       # all non-rejected
+node skills/crm/scripts/action-items.js --group-by-person  # approved + pending sections
 node skills/crm/scripts/action-items.js --approve 1,3,5   # approve by index
 node skills/crm/scripts/action-items.js --reject 2,4      # reject by index
-```
-
-You can also approve/reject directly via DB:
-```js
-import db from './skills/crm/src/db.js';
-await db.query("UPDATE action_items SET approved = false WHERE id = $1", [id]);
+node skills/crm/scripts/action-items.js --complete 1      # mark completed
+node skills/crm/scripts/action-items.js --limit 200       # default is 200
 ```
 
 ### Slack Recaps
@@ -120,8 +119,8 @@ What was discussed (no participant names or company name)
 
 ## DB Schema Notes
 - `interactions` table has `decisions` and `highlights` JSONB columns
-- `action_items.approved` — true = approved, false = rejected, null = not reviewed
-- Action items with `approved = false` are still `status = 'pending'` — filter by `(approved IS NULL OR approved = true)` for active items
+- `action_items.status` — 'pending' (unreviewed), 'approved', 'rejected', 'completed'
+- No separate `approved` column — status is the single source of truth
 - `contact_context` with `direction = 'both'` is per-person context, NOT decisions
 - `contact_context` with `direction = 'highlight'` is legacy highlight storage
 - Transcripts are NOT stored — Grain is the source of truth
@@ -144,3 +143,7 @@ What was discussed (no participant names or company name)
 - Ranked search results
 - Contact profiles with interaction history
 - Slack recaps to any channel
+
+## Learnings
+- [2026-04-15] [[crm]] Consolidated to 3 crons: grain-sync (15min 8-5), action-items-reminder (6am/12pm/6pm, silent when empty), daily-recap as final-sync (7pm, always posts). Single status field (pending/approved/rejected/completed). Action items report: ✅ APPROVED grouped by person + ⏳ NEEDS REVIEW numbered. Due dates short format.
+- [2026-04-15] [[crm]] Extractor must pass full current date (YYYY-MM-DD) not just year — needed for resolving relative dates like tomorrow, next week.

@@ -177,7 +177,7 @@ async function formatRecap(interaction) {
   const actionItems = await db.query(
     `SELECT ai.description, ai.owner, c.name as assigned_to
      FROM action_items ai LEFT JOIN contacts c ON ai.assigned_to = c.id
-     WHERE ai.interaction_id = $1 AND (ai.approved IS NULL OR ai.approved = true)
+     WHERE ai.interaction_id = $1 AND ai.status IN ('pending', 'approved')
      ORDER BY ai.owner ASC`, [id]
   );
 

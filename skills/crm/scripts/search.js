@@ -75,7 +75,7 @@ async function searchContext(queryEmbedding, limit) {
 async function searchActions(queryText, limit) {
   // Action items don't have embeddings — use text search
   const res = await db.query(`
-    SELECT ai.id, ai.description, ai.status, ai.owner, ai.due_date, ai.approved,
+    SELECT ai.id, ai.description, ai.status, ai.owner, ai.due_date,
            ai.created_at, ai.completed_at,
            c.name AS assigned_to_name, i.subject AS meeting_subject
     FROM action_items ai
@@ -143,7 +143,7 @@ async function main() {
       if (actions.length > 0) {
         console.log(`--- Action Items (${actions.length}) ---`);
         for (const a of actions) {
-          const status = a.approved ? `${a.status} (approved)` : `${a.status}`;
+          const status = a.status;
           console.log(`[${status}] ${a.description}`);
           console.log(`  Owner: ${a.owner} | Assigned: ${a.assigned_to_name || 'unassigned'} | Due: ${a.due_date || 'no date'}`);
           if (a.meeting_subject) console.log(`  From: ${a.meeting_subject}`);

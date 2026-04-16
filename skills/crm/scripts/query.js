@@ -99,7 +99,7 @@ async function gatherContext(queryEmbedding, queryText) {
 
   // Recent action items (text match)
   const actions = await db.query(`
-    SELECT ai.description, ai.status, ai.owner, ai.due_date, ai.approved,
+    SELECT ai.description, ai.status, ai.owner, ai.due_date,
            c.name AS assigned_to, i.subject AS meeting
     FROM action_items ai
     LEFT JOIN contacts c ON c.id = ai.assigned_to
@@ -110,7 +110,7 @@ async function gatherContext(queryEmbedding, queryText) {
   if (actions.rows.length > 0) {
     context.push('\n## Relevant Action Items');
     actions.rows.forEach(a => {
-      context.push(`- [${a.status}${a.approved ? '/approved' : ''}] ${a.description} (owner: ${a.owner}, assigned: ${a.assigned_to || 'unassigned'}, due: ${a.due_date || 'none'})`);
+      context.push(`- [${a.status}] ${a.description} (owner: ${a.owner}, assigned: ${a.assigned_to || 'unassigned'}, due: ${a.due_date || 'none'})`);
     });
   }
 

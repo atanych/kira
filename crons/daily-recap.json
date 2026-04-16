@@ -1,6 +1,6 @@
 {
-  "schedule": "0 18 * * 1-5",
-  "prompt": "Run: node skills/crm/scripts/sync.js --days 1 --recap. Then run: node skills/crm/scripts/action-items.js --status pending. Forward both outputs to me. If the sync output is NO_NEW_MEETINGS, just say no new meetings today and show the action items.",
+  "schedule": "0 19 * * 1-5",
+  "prompt": "Final sync of the day. Run: node skills/crm/scripts/sync.js --days 1 --participant \"Vlad Atanov\" --recap. If the output is NO_NEW_MEETINGS, say: \"🌙 Final sync — no new meetings today. You're all caught up.\" If there ARE meetings, the output may contain multiple meetings separated by ===MEETING_SEPARATOR===. Send each meeting as a SEPARATE message (one message per meeting). Forward each meeting's text exactly as-is — it's already formatted. After each meeting, add: \"👆 Review action items — approve or reject before I post to Slack.\"",
   "chatId": "telegram:-1003540340877:535",
   "platform": "telegram"
 }
