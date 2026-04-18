@@ -149,7 +149,8 @@ async function main() {
         ? `, ${overdueItems.length} overdue`
         : '';
 
-      console.log(`📊 ${items.length} items — ${approvedItems.length} approved, ${pendingItems.length} needs review${overdueSuffix}\n`);
+      const visibleCount = approvedItems.length + pendingItems.length;
+      console.log(`📊 ${visibleCount} items — ${approvedItems.length} approved, ${pendingItems.length} needs review${overdueSuffix}\n`);
 
       // Section 1: Approved — grouped by person
       if (approvedItems.length > 0) {

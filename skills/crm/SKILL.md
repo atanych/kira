@@ -147,3 +147,4 @@ What was discussed (no participant names or company name)
 ## Learnings
 - [2026-04-15] [[crm]] Consolidated to 3 crons: grain-sync (15min 8-5), action-items-reminder (6am/12pm/6pm, silent when empty), daily-recap as final-sync (7pm, always posts). Single status field (pending/approved/rejected/completed). Action items report: ✅ APPROVED grouped by person + ⏳ NEEDS REVIEW numbered. Due dates short format.
 - [2026-04-15] [[crm]] Extractor must pass full current date (YYYY-MM-DD) not just year — needed for resolving relative dates like tomorrow, next week.
+- [2026-04-17] [[crm]] Action-items report total count must only include active items (approved + pending), not completed/rejected. Fixed Apr 16.
