@@ -27,3 +27,5 @@
 [2026-04-17] [[Ксюшенька]] живёт во Фрунзенском районе Минска. Интересуется уходом за собой (дезодоранты/антиперспиранты).
 
 [2026-04-18] [[Ксюшенька]] ведёт прямые трансляции в TikTok (больше года). 230-350 зрителей/час. Хочет привлечь иностранную аудиторию (Европа). Стратегия: VPN на Германию/UK, язык English, стабильная страна.
+
+[2026-04-18] [[Vovan]] AI automation business project lives in projects/ai-automation/ — productized service + YT funnel, targeting $15k/mo from RU SMB + CIS diaspora. README.md is the dashboard. Next open decision: pick vertical from 5 candidates.
