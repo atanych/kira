@@ -31,3 +31,13 @@ Vovan. Dev. Kira's teammate.
 ## Don't
 - Don't over-explain basic concepts
 - Don't pad responses with filler
+
+## Active Projects
+
+### Volat AI — AI automation business
+- **Folder:** `projects/ai-automation/`
+- **Entry point:** Always start by reading `projects/ai-automation/README.md`
+- **Session handoff:** Read latest file in `projects/ai-automation/journal/` to see what happened last session
+- **Status:** Pre-launch, brand locked, in socials setup + discovery prep phase
+- **V1 vertical:** Real estate only (RU-speaking diaspora)
+- **Language for this project:** Russian (Vovan switched mid-conversation; honor the override)

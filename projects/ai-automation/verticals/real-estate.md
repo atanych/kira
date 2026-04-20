@@ -4,17 +4,27 @@ _Parent: [[verticals]]_
 
 ## Who exactly
 
-### RU market
-- **Small-to-mid agencies** in Moscow/SPB (5-30 agents)
-- **Solo realtors with personal brand** (Instagram/TG followings)
-- **Not:** big chains (Этажи, ИНКОМ) — too slow, committee buying
+**V1 focus (locked 2026-04-19):** RU-speaking realtors selling **foreign property** (Dubai/Cyprus/Thailand/Georgia/Turkey) to RU-speaking buyers. Same product, two sub-segments by agency location:
 
-### Diaspora market — THE MONEY
-- **RU-speaking realtors selling Dubai/Cyprus/Georgia/Turkey/Thailand property to RU speakers who relocated**
-- This market EXPLODED post-2022 and is still growing
+### Sub-segment 1: Diaspora agencies
+- **RU-speaking realtors based in Dubai/Cyprus/Thailand/Georgia/Turkey** selling local property to RU buyers (expats + RF clients)
+- Market EXPLODED post-2022, still growing
 - Often solo operators or 2-5 person teams
 - Already spend heavily on Instagram ads, understand marketing
 - Paying in USD/EUR
+
+### Sub-segment 2: RF-based agencies selling overseas
+- **Moscow/SPB agencies specializing in foreign real estate** (sell Dubai/Cyprus/Thailand/Georgia/Turkey property to RF clients)
+- Same pain (unqualified leads asking about overseas property) — **identical product fit**
+- Paying in RUB → need routing via crypto/USDT or Georgia ИП
+- Often 5-30 agents, sometimes bigger than diaspora shops
+
+### NOT in V1
+- ~~Domestic RF real estate~~ (scenario B — different CRM ecosystem (Cian/Avito), different regulations, different lead flow)
+- Big chains (Этажи, ИНКОМ) — too slow, committee buying
+- Non-RU-speaking realtors — YT content strategy doesn't reach them
+
+**Revisit domestic RF market only if V1 underperforms** (< 5 paying clients by month 3).
 
 ## Pain landscape
 

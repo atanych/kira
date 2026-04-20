@@ -29,3 +29,9 @@
 [2026-04-18] [[Ксюшенька]] ведёт прямые трансляции в TikTok (больше года). 230-350 зрителей/час. Хочет привлечь иностранную аудиторию (Европа). Стратегия: VPN на Германию/UK, язык English, стабильная страна.
 
 [2026-04-18] [[Vovan]] AI automation business project lives in projects/ai-automation/ — productized service + YT funnel, targeting $15k/mo from RU SMB + CIS diaspora. README.md is the dashboard. Next open decision: pick vertical from 5 candidates.
+
+[2026-04-19] [[Vovan]] AI automation vertical locked: REAL ESTATE (diaspora RU-speaking realtors selling Dubai/Cyprus/Georgia/Turkey property). Flagship offer: AI Lead Qualifier. See projects/ai-automation/verticals/real-estate.md.
+
+[2026-04-19] [[Vovan]] AI automation project = **Volat AI** (brand locked). Always start by reading projects/ai-automation/README.md + latest file in projects/ai-automation/journal/ for session handoff. Product = Volat (AI-agents sold per-agent). V1 vertical: Real Estate only (RU-speaking diaspora: Dubai/Cyprus/Georgia/Turkey). Current phase: pre-launch, socials setup + discovery prep. Tech stack deferred (not n8n, likely Claude Agent SDK TS).
+
+[2026-04-19] [[Vovan]] Volat AI V1 scope refined 2026-04-19: RU-speaking realtors selling FOREIGN property only (Dubai/Cyprus/Georgia/Turkey) — includes diaspora agencies AND Moscow/SPB agencies specializing in overseas. Excludes domestic RF real estate (different CRM/regs) — revisit only if <5 paying clients by month 3.

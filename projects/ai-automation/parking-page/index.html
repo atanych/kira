@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volat AI — AI-агенты для риэлторов зарубежной недвижимости</title>
+  <meta name="description" content="Volat AI строит AI-агентов для риэлторов зарубежной недвижимости. Dubai · Cyprus · Thailand · Georgia · Turkey.">
+  <meta property="og:title" content="Volat AI">
+  <meta property="og:description" content="AI-агенты для риэлторов зарубежной недвижимости">
+  <meta property="og:type" content="website">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #e8e4f5;
+      background: #0e1230;
+      overflow-x: hidden;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 30% 40%, rgba(88, 40, 150, 0.25), transparent 55%),
+        radial-gradient(circle at 75% 70%, rgba(120, 60, 180, 0.15), transparent 50%),
+        linear-gradient(180deg, #0b0e2a 0%, #14163a 50%, #0b0e2a 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 48px 32px;
+      position: relative;
+    }
+
+    /* subtle bokeh */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(2px 2px at 20% 30%, rgba(180, 160, 230, 0.4), transparent),
+        radial-gradient(2px 2px at 80% 60%, rgba(180, 160, 230, 0.3), transparent),
+        radial-gradient(1px 1px at 60% 20%, rgba(200, 180, 240, 0.5), transparent),
+        radial-gradient(2px 2px at 40% 80%, rgba(180, 160, 230, 0.3), transparent);
+      pointer-events: none;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a394d8, #6b5eb8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 22px;
+      box-shadow: 0 4px 20px rgba(120, 100, 200, 0.4);
+    }
+
+    .nav-email {
+      color: rgba(232, 228, 245, 0.7);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .nav-email:hover { color: #fff; }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      max-width: 820px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 80px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(163, 148, 216, 0.15);
+      border: 1px solid rgba(163, 148, 216, 0.3);
+      border-radius: 100px;
+      font-size: 13px;
+      color: #c7bde5;
+      letter-spacing: 0.05em;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    h1 .accent {
+      background: linear-gradient(135deg, #c4b5f0, #8a79d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub {
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.6;
+      color: rgba(232, 228, 245, 0.75);
+      margin-bottom: 40px;
+      max-width: 640px;
+    }
+
+    .markets {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+
+    .market {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(163, 148, 216, 0.2);
+      border-radius: 100px;
+      font-size: 14px;
+      color: #c7bde5;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 28px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #a394d8, #6b5eb8);
+      color: #fff;
+      box-shadow: 0 6px 24px rgba(120, 100, 200, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 32px rgba(120, 100, 200, 0.55);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #e8e4f5;
+      border: 1px solid rgba(163, 148, 216, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(163, 148, 216, 0.15);
+    }
+
+    footer {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      position: relative;
+      z-index: 2;
+      padding-top: 32px;
+      border-top: 1px solid rgba(163, 148, 216, 0.12);
+    }
+
+    .footer-text {
+      font-size: 13px;
+      color: rgba(232, 228, 245, 0.5);
+    }
+
+    .socials {
+      display: flex;
+      gap: 20px;
+    }
+
+    .socials a {
+      color: rgba(232, 228, 245, 0.6);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .socials a:hover { color: #c7bde5; }
+
+    @media (max-width: 640px) {
+      body { padding: 24px 20px; }
+      main { padding: 40px 0; }
+      .cta-row { flex-direction: column; width: 100%; }
+      .btn { justify-content: center; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">V</div>
+      <span>Volat AI</span>
+    </div>
+    <a class="nav-email" href="mailto:vlad@volat.ai">vlad@volat.ai</a>
+  </nav>
+
+  <main>
+    <span class="badge">PRE-LAUNCH · BUILD IN PUBLIC</span>
+    <h1>AI-агенты для <span class="accent">риэлторов зарубежной недвижимости</span></h1>
+    <p class="sub">
+      Строим Volat AI — агентов, которые работают с лидами, пока риэлтор закрывает сделки. Показываем весь процесс открыто: discovery, прототипы, что заходит клиентам, что нет.
+    </p>
+
+    <div class="markets">
+      <span class="market">Dubai</span>
+      <span class="market">Cyprus</span>
+      <span class="market">Thailand</span>
+      <span class="market">Georgia</span>
+      <span class="market">Turkey</span>
+    </div>
+
+    <div class="cta-row">
+      <a href="mailto:vlad@volat.ai?subject=Volat%20AI%20—%20discovery%20call" class="btn btn-primary">
+        Записаться на звонок →
+      </a>
+      <a href="https://youtube.com/@volatai" class="btn btn-secondary" target="_blank" rel="noopener">
+        Смотреть на YouTube
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <span class="footer-text">© 2026 Volat AI — build in public</span>
+    <div class="socials">
+      <a href="https://youtube.com/@volatai" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://instagram.com/volatai" target="_blank" rel="noopener">Instagram</a>
+      <a href="mailto:vlad@volat.ai">Email</a>
+    </div>
+  </footer>
+</body>
+</html>
