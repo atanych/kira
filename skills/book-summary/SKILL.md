@@ -65,3 +65,4 @@ Use the template in `template.html`. Fill in:
 (none yet)
 - [2026-04-16] [[book-summary]] Viewport must match body width (800px, set viewport 800 600). Voice narration target ~5 min (not 1 min). Output to books/ folder at repo root as Obsidian notes with frontmatter, wiki links, tags, cross-references.
 - [2026-04-17] [[book-summary]] 6-factor rating system: Core Ideas, Density, Actionability, Shelf Life, Uniqueness, Writing Quality. Visual bars in verdict section. Images stored in books/assets/, embedded via ![[Book Title.png]].
+- [2026-04-20] [[book-summary]] Model can hallucinate book content — pulled from training-data reviews/excerpts, not actual PDFs. Core frameworks reliable for famous books, but exact quotes/details aren't guaranteed. For high-stakes summaries, verify against actual book text/PDFs (e.g. ingest to NotebookLM first).
