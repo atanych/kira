@@ -101,7 +101,14 @@ async function main() {
 
       if (values.approve) {
         const indices = values.approve.split(',').map(n => parseInt(n.trim()) - 1);
-        const ids = indices.filter(i => i >= 0 && i < indexableItems.length).map(i => indexableItems[i].id);
+        const targets = indices.filter(i => i >= 0 && i < indexableItems.length).map(i => indexableItems[i]);
+        const orphans = targets.filter(t => !t.assigned_to_name);
+        if (orphans.length > 0) {
+          console.log(`❌ Can't approve — ${orphans.length} item(s) have no owner. Assign one first:`);
+          orphans.forEach(o => console.log(`  • ${o.description}`));
+          process.exit(1);
+        }
+        const ids = targets.map(t => t.id);
         if (ids.length > 0) {
           await updateItems(ids, 'approved');
           console.log(`Approved ${ids.length} item(s)`);
@@ -141,18 +148,19 @@ async function main() {
       const approvedItems = items.filter(a => a.status === 'approved');
       const pendingItems = items.filter(a => a.status === 'pending');
 
-      // Count overdue
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      const overdueItems = items.filter(a => a.due_date && new Date(a.due_date) < today);
-      const overdueSuffix = overdueItems.length > 0
-        ? `, ${overdueItems.length} overdue`
+      // Overdue is counted only across approved (reports hide pending)
+      const approvedOverdue = approvedItems.filter(a => a.due_date && new Date(a.due_date) < today);
+      const approvedOverdueSuffix = approvedOverdue.length > 0
+        ? `, ${approvedOverdue.length} overdue`
         : '';
+      const pendingHint = pendingItems.length > 0
+        ? ` (+${pendingItems.length} pending review — run \`action-items.js\` to see them)`
+        : '';
+      console.log(`📊 ${approvedItems.length} approved${approvedOverdueSuffix}${pendingHint}\n`);
 
-      const visibleCount = approvedItems.length + pendingItems.length;
-      console.log(`📊 ${visibleCount} items — ${approvedItems.length} approved, ${pendingItems.length} needs review${overdueSuffix}\n`);
-
-      // Section 1: Approved — grouped by person
+      // Show approved only — grouped by person
       if (approvedItems.length > 0) {
         console.log('✅ APPROVED:\n');
         const groups = {};
@@ -169,18 +177,6 @@ async function main() {
           }
           console.log();
         }
-      }
-
-      // Section 2: Pending — numbered for approve/reject
-      if (pendingItems.length > 0) {
-        console.log('⏳ NEEDS REVIEW:\n');
-        pendingItems.forEach((a, i) => {
-          const name = a.assigned_to_name || 'unassigned';
-          const due = fmtDate(a.due_date) ? ` | Due: ${fmtDate(a.due_date)}` : '';
-          console.log(`${i + 1}. ${a.description} (${name})${due}`);
-        });
-        console.log();
-        console.log('👆 Approve or reject items by number.');
       }
     } else {
       console.log(`Action Items (${values.status}) — ${items.length} found:\n`);

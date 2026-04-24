@@ -17,7 +17,7 @@ node skills/crm/scripts/sync.js --days 0.5 --participant "Vlad Atanov" --dry-run
 **Important:**
 - Always use `--participant "Vlad Atanov"` to only sync Vlad's meetings
 - The `--days` flag uses `parseFloat` (not parseInt) — fractional values like 0.5 work
-- "Archive Socials" meetings are in the IGNORED_MEETINGS list and always skipped
+- "Archive Socials" and "All Hands" meetings are in the IGNORED_MEETINGS list and always skipped
 - Extraction uses GPT-4o (not mini) with temperature 0.3
 - All meetings already in CRM DB are treated as Vlad's meetings (pre-filter era data)
 
@@ -72,6 +72,13 @@ When user says "highlight that" or "Kira, highlight it" during/after a meeting r
 ### Daily Recap (`crons/daily-recap.json`)
 - Schedule: 6pm weekdays
 - Final sync + end-of-day summary
+
+## Recap Format (Telegram)
+When posting meeting recaps to Vovan in Telegram:
+- **One message per meeting** — never bundle. Vovan needs to reply to each for action item approval/review.
+- **Always English** — translate Russian meetings before posting.
+- **No markdown bold** — Telegram renders it poorly; use emoji headers instead (📋 📌 🔑 💬).
+- **Add approval/reject reminder** at the bottom of each recap so Vovan knows to respond.
 
 ## Recap Format (Slack)
 ```

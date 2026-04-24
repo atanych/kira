@@ -173,13 +173,21 @@ async function formatRecap(interaction) {
   const decisions = (decisionsJson || []);
   const highlights = (highlightsJson || []);
 
-  // Get action items (approved only, or all if none approved)
+  // Get action items (approved only)
   const actionItems = await db.query(
-    `SELECT ai.description, ai.owner, c.name as assigned_to
+    `SELECT ai.description, ai.owner, ai.assigned_to as assigned_to_id, c.name as assigned_to
      FROM action_items ai LEFT JOIN contacts c ON ai.assigned_to = c.id
-     WHERE ai.interaction_id = $1 AND ai.status IN ('pending', 'approved')
+     WHERE ai.interaction_id = $1 AND ai.status = 'approved'
      ORDER BY ai.owner ASC`, [id]
   );
+
+  // Refuse to publish if any approved item has no owner
+  const orphans = actionItems.rows.filter(ai => !ai.assigned_to_id);
+  if (orphans.length > 0) {
+    console.error(`❌ Can't publish "${subject}" — ${orphans.length} approved item(s) have no owner:`);
+    orphans.forEach(o => console.error(`  • ${o.description}`));
+    process.exit(1);
+  }
 
   // Format date
   const date = new Date(occurred_at);

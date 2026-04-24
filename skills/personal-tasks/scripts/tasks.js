@@ -30,6 +30,26 @@ function hasFlag(name) {
   return args.includes(`--${name}`);
 }
 
+function normalizeTag(tag) {
+  if (!tag) return null;
+  const t = tag.toLowerCase().trim();
+  if (['кв', 'квартира', 'apt', 'apartment'].includes(t)) return 'квартира';
+  if (['дача', 'dacha', 'cottage'].includes(t)) return 'дача';
+  throw new Error(`Неизвестный tag: ${tag}. Варианты: дача, квартира`);
+}
+
+function parseTagsFlag() {
+  // Accepts --tag дача,квартира and/or repeated --tag flags.
+  const raw = [];
+  args.forEach((a, i) => {
+    if (a === '--tag' && i + 1 < args.length) raw.push(args[i + 1]);
+  });
+  const flat = raw.flatMap(s => s.split(',')).map(s => s.trim()).filter(Boolean);
+  if (flat.length === 0) return null; // null = flag not provided (no change semantics for edit)
+  const normalized = [...new Set(flat.map(normalizeTag).filter(Boolean))];
+  return normalized;
+}
+
 async function add() {
   const title = args[1];
   if (!title) {
@@ -38,35 +58,50 @@ async function add() {
   }
   const due = getFlag('due');
   const notes = getFlag('notes');
+  const tags = parseTagsFlag() || [];
 
   const res = await db.query(
-    `INSERT INTO tasks (title, due_date, notes) VALUES ($1, $2, $3) RETURNING id`,
-    [title, due || null, notes || null]
+    `INSERT INTO tasks (title, due_date, notes, tags) VALUES ($1, $2::date, $3, $4) RETURNING id`,
+    [title, due || null, notes || null, tags]
   );
-  console.log(`Задача #${res.rows[0].id} добавлена: ${title}${due ? ` (до ${due})` : ''}`);
+  const tagStr = tags.length ? ` [${tags.join(', ')}]` : '';
+  console.log(`Задача #${res.rows[0].id} добавлена${tagStr}: ${title}${due ? ` (до ${due})` : ''}`);
+}
+
+const TAG_ORDER_SQL = `CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 ELSE 3 END`;
+const TAG_HEADERS = { 'квартира': '🏠 Квартира', 'дача': '🌲 Дача', 'other': '📍 Прочее' };
+
+function primaryGroup(tags) {
+  if (!tags || tags.length === 0) return 'other';
+  if (tags.includes('квартира')) return 'квартира';
+  if (tags.includes('дача')) return 'дача';
+  return 'other';
 }
 
 async function list() {
   const showAll = hasFlag('all');
   const todayOnly = hasFlag('today');
 
-  let where = "WHERE status = 'open'";
+  let where = `WHERE status = 'open' AND (due_date IS NULL OR due_date <= CURRENT_DATE + INTERVAL '1 month')`;
   if (showAll && !todayOnly) where = '';
-  if (todayOnly) where = `WHERE status = 'open' AND due_date = '${todayStr()}'`;
+  if (todayOnly) where = `WHERE status = 'open' AND due_date IS NOT NULL AND due_date <= '${todayStr()}'`;
 
   const res = await db.query(`
-    SELECT id, title, status, due_date, notes, created_at, completed_at
+    SELECT id, title, status,
+           TO_CHAR(due_date, 'YYYY-MM-DD') AS due_date,
+           notes, tags, created_at, completed_at
     FROM tasks
     ${where}
     ORDER BY
       CASE WHEN status = 'open' THEN 0 ELSE 1 END,
+      ${TAG_ORDER_SQL},
       CASE WHEN due_date IS NOT NULL THEN 0 ELSE 1 END,
       due_date ASC NULLS LAST,
       created_at DESC
   `);
 
   if (res.rows.length === 0) {
-    if (todayOnly) console.log('На сегодня задач с дедлайном нет. Можно спать спокойно 😴');
+    if (todayOnly) console.log('На сегодня и просроченных задач нет. Можно спать спокойно 😴');
     else if (showAll) console.log('Задач нет.');
     else console.log('Открытых задач нет.');
     return;
@@ -76,9 +111,17 @@ async function list() {
   console.log(`${label} — ${res.rows.length}:\n`);
 
   const today = todayStr();
+  let currentGroup = null;
   res.rows.forEach((t, i) => {
+    const tags = t.tags || [];
+    const group = primaryGroup(tags);
+    if (group !== currentGroup) {
+      if (currentGroup !== null) console.log('');
+      console.log(TAG_HEADERS[group]);
+      currentGroup = group;
+    }
     const status = t.status === 'done' ? '✅' : '⬚';
-    const dueDate = t.due_date ? new Date(t.due_date).toISOString().split('T')[0] : null;
+    const dueDate = t.due_date || null;
     let due = '';
     if (dueDate) {
       const isOverdue = dueDate < today;
@@ -87,7 +130,9 @@ async function list() {
       due = ` | ${emoji} до ${dueDate}`;
     }
     const notes = t.notes ? ` — ${t.notes}` : '';
-    console.log(`${i + 1}. ${status} ${t.title}${due}${notes}`);
+    const extraTags = tags.filter(x => x !== group);
+    const extra = extraTags.length ? ` [+${extraTags.join(', ')}]` : '';
+    console.log(`${i + 1}. ${status} ${t.title}${extra}${due}${notes}`);
   });
 }
 
@@ -151,17 +196,19 @@ async function edit() {
   const title = getFlag('title');
   const due = getFlag('due');
   const notes = getFlag('notes');
+  const tags = parseTagsFlag();
 
   const updates = [];
   const params = [item.id];
   let idx = 2;
 
   if (title) { updates.push(`title = $${idx++}`); params.push(title); }
-  if (due) { updates.push(`due_date = $${idx++}`); params.push(due); }
+  if (due) { updates.push(`due_date = $${idx++}::date`); params.push(due); }
   if (notes) { updates.push(`notes = $${idx++}`); params.push(notes); }
+  if (tags !== null) { updates.push(`tags = $${idx++}`); params.push(tags); }
 
   if (updates.length === 0) {
-    console.error('Нечего менять. Используй --title, --due, --notes');
+    console.error('Нечего менять. Используй --title, --due, --notes, --tag');
     process.exit(1);
   }
 
@@ -171,10 +218,16 @@ async function edit() {
 
 async function getOpenItems() {
   const res = await db.query(`
-    SELECT id, title, status, due_date, notes
+    SELECT id, title, status,
+           TO_CHAR(due_date, 'YYYY-MM-DD') AS due_date,
+           notes, tags
     FROM tasks
-    WHERE status = 'open'
-    ORDER BY due_date ASC NULLS LAST, created_at DESC
+    WHERE status = 'open' AND (due_date IS NULL OR due_date <= CURRENT_DATE + INTERVAL '1 month')
+    ORDER BY
+      ${TAG_ORDER_SQL},
+      CASE WHEN due_date IS NOT NULL THEN 0 ELSE 1 END,
+      due_date ASC NULLS LAST,
+      created_at DESC
   `);
   return res.rows;
 }

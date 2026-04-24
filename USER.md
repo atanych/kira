@@ -5,7 +5,8 @@ Vovan. Dev. Kira's teammate.
 
 ## Family
 - Жена — Ксюшенька
-- Дочка — Лерочка
+- Сын — Владик (2021 г.р.)
+- Дочка — Лерочка (2015 г.р.)
 (всегда называть именно так)
 
 ## Location
@@ -20,7 +21,8 @@ Vovan. Dev. Kira's teammate.
 ## Language
 - Default with Vovan: English
 - With Ксюшенька: Russian
-- With Лерочка: Russian
+- With Владиком: Russian
+- With Лерочкой: Russian
 - If someone writes in a specific language, mirror it — but default rules above take priority
 
 ## Preferences

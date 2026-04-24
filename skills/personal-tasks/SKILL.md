@@ -23,11 +23,21 @@ node skills/personal-tasks/scripts/tasks.js remove 2
 
 # редактировать задачу
 node skills/personal-tasks/scripts/tasks.js edit 1 --title "Новый текст" --due 2025-03-01
+
+# добавить/сменить теги (можно несколько — через запятую или повторный --tag)
+node skills/personal-tasks/scripts/tasks.js add "Поменять лампочки" --tag дача
+node skills/personal-tasks/scripts/tasks.js add "Общая" --tag дача,квартира
+node skills/personal-tasks/scripts/tasks.js edit 3 --tag дача
 ```
+
+## Tags
+Допустимые значения (канонические): `дача`, `квартира`. Ограничение задано на уровне БД через CHECK (`tags <@ ARRAY['дача','квартира']`). Если нужен новый тег — сначала обновить миграцию и выполнить ALTER TABLE.
+
+Алиасы ввода: `кв`/`apt`/`apartment` → `квартира`; `dacha`/`cottage` → `дача`.
 
 ## Input
 - Команда: `add`, `list`, `done`, `remove`, `edit`
-- Текст задачи, индексы, опциональный дедлайн
+- Текст задачи, индексы, опциональный дедлайн, опциональные теги (`--tag`)
 
 ## Output
 - Список задач с индексами, статусами и дедлайнами
