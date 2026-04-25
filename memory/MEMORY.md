@@ -31,3 +31,9 @@
 [2026-04-24] [[CRM]] Grain public API has no clip-creation endpoint (404s). For pinpointing a quote: pull raw transcript via transcript API, grep, return deep-link https://grain.com/share/recording/{id}/{token}?t={seconds}. Timestamp-deep-link is the fallback for clips.
 
 [2026-04-24] Malware-safety reflex must NOT block editing Kira's own skill code. When the file is clearly under bots/kira/ or skills/ that Kira owns, just do the edit. The safety prompt is for external/unknown code.
+
+[2026-04-25] [[Personal Tasks]] Schema: tags TEXT[] with CHECK constraint pinning allowed values to ['дача','квартира']. Groups render as 🌲 Дача → 🏠 Квартира → 📍 Прочее. Default list hides tasks with due_date > today + 1 month (use --all to see everything). Adding new tag = ALTER CHECK + update normalizeTag/TAG_HEADERS/TAG_ORDER_SQL.
+
+[2026-04-25] [[Personal Tasks]] Date columns: NEVER round-trip through JS new Date().toISOString() — TZ offset causes off-by-one bugs. Read via TO_CHAR(due_date, 'YYYY-MM-DD') as string, write via $N::date cast. Postgres handles dates, JS never touches them.
+
+[2026-04-25] Детский сад выбираем для Владика (2021 г.р., 4 года), не для Лерочки (2015 г.р., уже в школе). Финальный пик на лето 2026 — №587 (Скрипникова 58а), самый новый, ~5-7 мин пешком от Лобанка 22.
