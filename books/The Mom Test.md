@@ -39,6 +39,8 @@ The moment your idea hits the table, everyone shifts to polite mode. Keep the sp
 ### 4. Three bad data types: compliments, fluff, ideas
 Praise means nothing. Hypotheticals are noise. Customer feature requests aren't orders — dig into the problem underneath.
 
+> **Feature requests are clues, not specs.** Customers usually don't actually know what they want — they know what's broken in their life right now and they grab at the nearest-looking fix. Your job is never to take the request at face value. Always ask: *what problem are you trying to solve?* / *what would this let you do?* / *what are you currently doing instead?* The answer underneath the request is the real data. Build for the problem, not for the proposed feature.
+
 ### 5. Commitment & advancement
 Real signals: time (next meeting booked), reputation (intros made), money (prepayment, LOI). No commitment = not a customer.
 
@@ -50,6 +52,24 @@ Formal interviews trigger PR mode. Coffee chats and corridor convos get real ans
 
 ### 8. Write it down immediately
 Verbatim quotes, not paraphrases. Memory bends toward what you wanted to hear. Review notes weekly for patterns.
+
+## Worked Example — The Loyalty Card App
+
+Founder is in line at a store. Person ahead complains: *"Ugh, these loyalty cards take up so much space in my wallet, I hate carrying all of them."* Founder happens to be building an app that consolidates loyalty cards into one place.
+
+**❌ Bad question (the trap):**
+> "Would you use my app that puts all your loyalty cards in one place?"
+
+The complainer says: *"Yeah, sure, definitely! Nobody's done that yet, that'd be great."*
+→ Founder walks away pumped. Learned **nothing**. The answer was politeness + hypothetical, not signal.
+
+**✅ Good question (the Mom Test version):**
+> "Have you tried any of the existing loyalty card apps?"
+
+The complainer says: *"No, I haven't. I've heard about them, but I never had the time to install one and figure it out."*
+→ This is the **real answer**. The pain isn't strong enough to motivate even thirty seconds of effort to try a free existing solution. If they won't install something that already exists, they sure as hell aren't going to switch to yours. The "complaint" was small talk, not a buying signal.
+
+**Why this matters:** complaints are cheap. Behavior is expensive. The good question revealed that this person's pain doesn't clear the action threshold — the gap between "annoyed enough to vent" and "annoyed enough to do something" is where most startup ideas die. Past behavior on existing solutions is the cleanest test of that gap.
 
 ## Actionable Takeaways
 - [ ] Before every customer call: write the 3 big questions. No 3 questions, no call.
