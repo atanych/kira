@@ -38,11 +38,11 @@ Use the template in `template.html`. Fill in:
 - **Actionable takeaways** (3-5 items) — concrete things the reader can do TODAY
 - **What you can skip** — chapters/ideas that are filler, outdated, or pseudoscience
 - **Ratings** — 6 factors, each 1-10:
-  1. 🎯 Core Ideas — how strong/original the concepts are
+  1. 🎯 Originality — how unique/fresh are the ideas vs. recycled from other books (10 = genuinely new framing, 3 = you've read this 5 times already)
   2. 📦 Density — how packed with value per page (10 = every page hits, 3 = could've been a blog post)
   3. ⚡ Actionability — can you DO something with this tomorrow? (practical vs. philosophical)
   4. 🕐 Time Relevance — does it hold up in 2026 or is it stuck in its era?
-  5. 🔁 Overlap — how much you've already seen in other books (10 = totally unique, 3 = recycled ideas)
+  5. ✍️ Writing Quality — is reading it pleasant or a slog? (10 = tight prose, the author respects your time; 3 = padded, repeats itself, could've been an essay)
   6. 🎓 Difficulty — entry-level mindset or advanced tactical? (helps prioritize by reader level)
 - **Verdict** — honest Kira-style assessment
 
