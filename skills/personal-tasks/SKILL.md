@@ -51,3 +51,6 @@ node skills/personal-tasks/scripts/tasks.js edit 3 --tag дача
 - [2026-04-14] [[personal-tasks]] Morning cron moved to 7:05 Минск (was 8:00). Evening cron stays at 20:00.
 - [2026-04-14] [[personal-tasks]] Always re-fetch the task list before closing/removing/editing a task — never rely on stale indexes from previous list output.
 - [2026-04-15] [[personal-tasks]] When closing/editing a task by name, always re-lookup from DB — don't rely on cached index numbers (indices shift between operations).
+- [2026-04-24] [[personal-tasks]] Daily `--today` query must use `due_date <= today` (not `=`) so overdue open tasks surface in the morning reminder. Fixed at `skills/personal-tasks/scripts/tasks.js:55` on 2026-04-23.
+- [2026-04-25] [[personal-tasks]] Schema: `tags TEXT[]` with CHECK constraint pinning allowed values to `['дача','квартира']`. Default list groups render as 🌲 Дача → 🏠 Квартира → 📍 Прочее. Default list hides tasks with `due_date > today + 1 month` (use `--all` to see everything). Adding a new tag = ALTER CHECK + update `normalizeTag` / `TAG_HEADERS` / `TAG_ORDER_SQL`.
+- [2026-04-25] [[personal-tasks]] Date columns: NEVER round-trip through JS `new Date().toISOString()` — TZ offset causes off-by-one bugs. Read via `TO_CHAR(due_date, 'YYYY-MM-DD')` as a string, write via `$N::date` cast. Postgres handles dates, JS never touches them.
