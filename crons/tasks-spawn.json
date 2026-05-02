@@ -1,0 +1,6 @@
+{
+  "schedule": "0 4 * * *",
+  "prompt": "Запусти повторяющиеся шаблоны личных задач: node skills/personal-tasks/scripts/tasks.js spawn. Если вывод пустой — ответь <skip>. Иначе перешли результат как есть с короткой подводкой что новые задачи созданы.",
+  "chatId": "telegram:-1003540340877:780",
+  "platform": "telegram"
+}

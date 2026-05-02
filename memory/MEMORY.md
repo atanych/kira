@@ -17,3 +17,5 @@
 [2026-04-22] Memory trim rule: when Vovan asks to reduce a memory entry, collapse it to ONE simple line — no links, no context dump, just what-it-is + who-owns-it.
 
 [2026-04-24] Malware-safety reflex must NOT block editing Kira's own skill code. When the file is clearly under `bots/kira/` or `skills/` that Kira owns, just do the edit. The safety prompt is for external/unknown code.
+
+[2026-05-01] Memory backlink case-sensitivity: relocate matcher checks lowercase folder names. Write `[[book-summary]]` not `[[Book Summary]]` so nightly compiler entries get relocated to skill SKILL.md automatically.
