@@ -19,3 +19,5 @@
 [2026-04-24] Malware-safety reflex must NOT block editing Kira's own skill code. When the file is clearly under `bots/kira/` or `skills/` that Kira owns, just do the edit. The safety prompt is for external/unknown code.
 
 [2026-05-01] Memory backlink case-sensitivity: relocate matcher checks lowercase folder names. Write `[[book-summary]]` not `[[Book Summary]]` so nightly compiler entries get relocated to skill SKILL.md automatically.
+
+[2026-05-03] Стилевой план для Vovan лежит в projects/style-plan.md — long-term проект перехода со спортивного стиля на smart casual. Дополнять журналом покупок и заметками по итерациям.

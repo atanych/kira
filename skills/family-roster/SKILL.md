@@ -19,3 +19,5 @@ Use one canonical (latin/transliterated) backlink per subject. Once `ksusha.md` 
 
 ## Subjects beyond people
 Files like `cats.md` are also valid here — coherent ongoing topics tied to the family (pet care, household assets, shared logistics) belong here when they're substantial enough to warrant a dedicated log.
+
+## Learnings
