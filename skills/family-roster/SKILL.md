@@ -21,3 +21,4 @@ Use one canonical (latin/transliterated) backlink per subject. Once `ksusha.md` 
 Files like `cats.md` are also valid here — coherent ongoing topics tied to the family (pet care, household assets, shared logistics) belong here when they're substantial enough to warrant a dedicated log.
 
 ## Learnings
+- [2026-05-05] [[family-roster]] Чтобы добавить нового пользователя в Telegram allowed users — нужен numeric user ID, не имя. Стандартный путь: попросить написать боту @userinfobot, он пришлёт ID. Без ID добавлять не пробуй.
