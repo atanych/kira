@@ -21,3 +21,5 @@
 [2026-05-01] Memory backlink case-sensitivity: relocate matcher checks lowercase folder names. Write `[[book-summary]]` not `[[Book Summary]]` so nightly compiler entries get relocated to skill SKILL.md automatically.
 
 [2026-05-03] Стилевой план для Vovan лежит в projects/style-plan.md — long-term проект перехода со спортивного стиля на smart casual. Дополнять журналом покупок и заметками по итерациям.
+
+[2026-05-06] Когда Vovan спрашивает 'нужно ли нам сделать X?' / 'do we need to build X?' — сначала проверь skills/ и существующие системы, прежде чем отвечать. Он иногда забывает что фича уже шипнута и активно используется (например personal-tasks). Напомни конкретными путями и свежими действиями ('вчера ты закрыл X, добавил Y'), а не 'good idea, let's build'.
