@@ -102,3 +102,4 @@ Output goes to `tmp/output/` → автоматически отправляет
 
 ## Learnings
 - [2026-05-08] [[car-report]] Skill для генерации PDF-репортов по авто. Структура: shortlist.md + research-notes.md + batteries.md в projects/cars/, плюс HTML template в skills/car-report/. Workflow: обновить markdown, потом HTML, потом render-pdf.sh. Всегда PDF (не PNG) — Telegram сжимает картинки.
+- [2026-05-09] [[car-report]] Skill для генерации PDF-отчётов по машинам создан 2026-05-08. Workflow: обновить markdown в projects/cars/ (shortlist.md и др.) → обновить template.html → bash skills/car-report/render-pdf.sh tmp/car-report.html. PDF идёт в tmp/output/ автоматически. Шаблон в skills/car-report/template.html (35K). При следующих итерациях не делать заново — использовать этот pipeline.
