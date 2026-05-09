@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Замена Volvo XC90 — Шортлист (только EV)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  @media print {
+    body { background: white !important; padding: 0 !important; }
+    .header, .recommendation { page-break-inside: avoid; }
+    .card, .battery-card, .compare-table, .battery-section { page-break-inside: avoid; }
+    .cards-grid { page-break-inside: avoid; }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f5f6f8;
+    color: #1a1a1a;
+    width: 900px;
+    padding: 40px;
+    line-height: 1.5;
+  }
+  .header {
+    background: linear-gradient(135deg, #0a0e27 0%, #1a2a5e 100%);
+    color: white;
+    padding: 32px 36px;
+    border-radius: 20px;
+    margin-bottom: 28px;
+  }
+  .header h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    opacity: 0.75;
+  }
+  .header .date {
+    font-size: 13px;
+    opacity: 0.6;
+    margin-top: 12px;
+  }
+  .header .ev-tag {
+    display: inline-block;
+    background: rgba(0, 168, 107, 0.2);
+    color: #6dffb0;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    border: 1px solid rgba(0, 168, 107, 0.4);
+  }
+  .reqs {
+    background: white;
+    padding: 24px 28px;
+    border-radius: 16px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .reqs h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+    color: #1a1a1a;
+  }
+  .reqs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .req-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #444;
+  }
+  .check {
+    color: #00a86b;
+    font-weight: 700;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .cards-grid .card.wide {
+    grid-column: span 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .card.winner {
+    border-color: #00a86b;
+  }
+  .card.runner-up {
+    border-color: #ffa500;
+  }
+  .badge {
+    position: absolute;
+    top: -12px;
+    right: 16px;
+    background: #00a86b;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge.silver {
+    background: #ffa500;
+  }
+  .card h3 {
+    font-size: 19px;
+    margin-bottom: 4px;
+    color: #1a1a1a;
+  }
+  .card .type {
+    font-size: 11px;
+    color: #00754a;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .price {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a2a5e;
+    margin-bottom: 2px;
+  }
+  .price-byn {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 4px;
+  }
+  .price-note {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 14px;
+  }
+  .battery-pill {
+    display: inline-block;
+    background: #e8f4ff;
+    color: #0066cc;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .specs {
+    list-style: none;
+    margin-bottom: 14px;
+  }
+  .specs li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 12px;
+  }
+  .specs li:last-child {
+    border-bottom: none;
+  }
+  .specs .label {
+    color: #666;
+  }
+  .specs .value {
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  .pros, .cons {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .pros { color: #00a86b; }
+  .cons { color: #d04444; }
+  .pros::before { content: "✓ "; }
+  .cons::before { content: "✗ "; }
+  .dealer-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 8px;
+    background: #e6f7ee;
+    color: #00754a;
+  }
+  .recommendation {
+    background: linear-gradient(135deg, #00a86b 0%, #008556 100%);
+    color: white;
+    padding: 28px 32px;
+    border-radius: 16px;
+    margin-bottom: 28px;
+  }
+  .recommendation .label {
+    font-size: 12px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .recommendation h2 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .recommendation p {
+    font-size: 14px;
+    opacity: 0.95;
+    line-height: 1.6;
+  }
+  .compare-table {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 28px;
+  }
+  .compare-table h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th, td {
+    padding: 11px 10px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #555;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  td.label {
+    color: #666;
+    font-weight: 500;
+  }
+  td.highlight {
+    background: #fff8e6;
+    font-weight: 600;
+  }
+  td.win {
+    background: #e6f7ee;
+    font-weight: 600;
+    color: #00754a;
+  }
+  .footer {
+    text-align: center;
+    padding: 16px;
+    color: #888;
+    font-size: 12px;
+  }
+  .next-steps {
+    background: white;
+    padding: 24px 28px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 28px;
+  }
+  .next-steps h2 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .next-steps ol {
+    padding-left: 20px;
+    font-size: 14px;
+    color: #444;
+  }
+  .next-steps li {
+    padding: 6px 0;
+  }
+  .filter-note {
+    background: #fff8e6;
+    border-left: 4px solid #ffa500;
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+    font-size: 13px;
+    color: #6c4a00;
+  }
+  .filter-note strong {
+    color: #1a1a1a;
+  }
+  .battery-section {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 28px;
+  }
+  .battery-section h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .battery-section .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  .battery-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .battery-card {
+    padding: 20px;
+    border-radius: 12px;
+    border: 2px solid #f0f0f0;
+  }
+  .battery-card.lfp {
+    background: #f0f9ff;
+    border-color: #b8e0ff;
+  }
+  .battery-card.nmc {
+    background: #fef5f0;
+    border-color: #ffd0b8;
+  }
+  .battery-card h3 {
+    font-size: 17px;
+    margin-bottom: 4px;
+  }
+  .battery-card .formula {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .battery-card .which {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .battery-card.lfp .which {
+    background: #0066cc;
+    color: white;
+  }
+  .battery-card.nmc .which {
+    background: #c54a00;
+    color: white;
+  }
+  .battery-card .props {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .battery-card .pro::before { content: "✓ "; color: #00a86b; font-weight: 700; }
+  .battery-card .con::before { content: "✗ "; color: #d04444; font-weight: 700; }
+  .verdict-box {
+    background: linear-gradient(135deg, #fff8e6 0%, #fff3d0 100%);
+    border-left: 4px solid #ffa500;
+    padding: 18px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #4a3a00;
+    line-height: 1.7;
+  }
+  .verdict-box strong {
+    color: #1a1a1a;
+  }
+  .size-section {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom: 28px;
+  }
+  .size-section h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .size-section .subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  .size-section table tr.baseline {
+    background: #fff8e6;
+    font-weight: 700;
+  }
+  .size-section table tr.baseline td {
+    color: #6c4a00;
+  }
+  .size-section .delta-good {
+    color: #00a86b;
+    font-weight: 700;
+  }
+  .size-section .delta-bad {
+    color: #d04444;
+    font-weight: 700;
+  }
+  .size-section .delta-neutral {
+    color: #666;
+  }
+  .size-verdict {
+    background: linear-gradient(135deg, #fff8e6 0%, #fff3d0 100%);
+    border-left: 4px solid #ffa500;
+    padding: 18px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #4a3a00;
+    line-height: 1.7;
+    margin-top: 20px;
+  }
+  .size-verdict strong {
+    color: #1a1a1a;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ Замена Volvo XC90 — шортлист</h1>
+  <div class="subtitle">5+ мест · полный привод · комфорт + снег · 100-130 км в день</div>
+  <div class="ev-tag">ТОЛЬКО ЧИСТЫЙ EV · 8 ВАРИАНТОВ</div>
+  <div class="date">07 мая 2026 · цены с av.by</div>
+</div>
+
+<div class="filter-note">
+  <strong>Фильтр:</strong> только чистые электромобили (BEV) — гибриды убраны (растаможка дорого, есть второй авто как страховка).
+  Добавлены <strong>BYD Tang L</strong> (единственный размером с XC90 — 5м длины, 1.76м высоты) и <strong>BYD Sealion 7</strong>. Обе на Blade Battery.
+</div>
+
+<div class="reqs">
+  <h2>Требования</h2>
+  <div class="reqs-grid">
+    <div class="req-item"><span class="check">✓</span> Полный привод (AWD)</div>
+    <div class="req-item"><span class="check">✓</span> 5 мест</div>
+    <div class="req-item"><span class="check">✓</span> Размер близкий к XC90</div>
+    <div class="req-item"><span class="check">✓</span> Только чистый EV</div>
+    <div class="req-item"><span class="check">✓</span> Зарядка на даче</div>
+    <div class="req-item"><span class="check">✓</span> Уверенно по снегу</div>
+  </div>
+</div>
+
+<div class="recommendation">
+  <div class="label">Шортлист — 8 машин</div>
+  <h2>BYD Tang L · Bao 7 · Sealion 7 · Denza N7 · Zeekr 7X · Avatr 07/11 · Voyah Free</h2>
+  <p>Все семь — чистые EV, все AWD. Шесть с официальным дилером в РБ, BYD Bao 7 EV — новинка апреля 2026, пока только серый импорт. Цены от $29.6к до $60к. BYD Tang L и Bao 7 — единственные размером с XC90 (5м длина). Bao 7 уникален тем что ВЫШЕ XC90 (1.86м vs 1.78м) — настоящий big offroad SUV-feel.</p>
+</div>
+
+<div class="cards-grid">
+
+  <div class="card winner">
+    <div class="badge">🦁 Выше XC90!</div>
+    <h3>BYD Bao 7 EV</h3>
+    <div class="type">Чистый EV · AWD · 5 мест</div>
+    <div class="price">~$50 000 - 60 000</div>
+    <div class="price-byn">серый импорт (новинка апр.2026)</div>
+    <div class="price-note">SILVERAUTO и др. серые</div>
+    <div class="battery-pill">🔋 92-105.7 кВт·ч Blade 2gen</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">700 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">~4.5 с</span></li>
+      <li><span class="label">Запас (CLTC)</span><span class="value">до 755 км</span></li>
+      <li><span class="label">800В + Flash Charge</span><span class="value">10-70% за 5 мин</span></li>
+      <li><span class="label">Размер</span><span class="value">5.00 × 1.99 × 1.86 м</span></li>
+    </ul>
+    <div class="pros">Высота 1.86 м — ВЫШЕ XC90!</div>
+    <div class="pros">Длина 5м — XC90-класс</div>
+    <div class="pros">Flash Charging 5 мин (топ в индустрии)</div>
+    <div class="pros">Blade 2-го поколения</div>
+    <div class="pros">700 л.с. AWD, до 755 км запас</div>
+    <div class="cons">⚠️ Серый импорт (нет дилера в РБ)</div>
+    <div class="cons">Дорогой — самый дорогой в шортлисте</div>
+    <div class="dealer-tag" style="background: #fef0e8; color: #c54a00;">⚠ СЕРЫЙ ИМПОРТ</div>
+  </div>
+
+  <div class="card winner">
+    <div class="badge">🆕 Размер XC90</div>
+    <h3>BYD Tang L EV</h3>
+    <div class="type">Чистый EV · AWD · 7 мест</div>
+    <div class="price">$31 850 - 37 550</div>
+    <div class="price-byn">от 121 691 BYN</div>
+    <div class="price-note">Atlant-M, ZUBR ELECTRO</div>
+    <div class="battery-pill">🔋 100.5 кВт·ч Blade LFP</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">530-1102 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">3.9 с (топ)</span></li>
+      <li><span class="label">Запас (CLTC)</span><span class="value">600 км</span></li>
+      <li><span class="label">800В</span><span class="value">✓ Да</span></li>
+      <li><span class="label">Размер</span><span class="value">5.04 × 1.99 × 1.76 м</span></li>
+    </ul>
+    <div class="pros">Размер прямо как XC90 (даже больше)</div>
+    <div class="pros">Высота 1.76 м — настоящий SUV-feel</div>
+    <div class="pros">Blade Battery 100 кВт·ч</div>
+    <div class="pros">7 мест (последний ряд складывается)</div>
+    <div class="pros">Гарантия 8 лет на батарею</div>
+    <div class="cons">Самый большой — парковка сложнее</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+  <div class="card">
+    <h3>Avatr 07 BEV</h3>
+    <div class="type">Чистый EV · AWD</div>
+    <div class="price">$29 600+</div>
+    <div class="price-byn">от 96 350 BYN</div>
+    <div class="price-note">avatr.by, Multimotors</div>
+    <div class="battery-pill">🔋 82 кВт·ч CATL LFP</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">590 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">3.9 с</span></li>
+      <li><span class="label">Запас</span><span class="value">610 км</span></li>
+      <li><span class="label">800В</span><span class="value">✓ Да</span></li>
+      <li><span class="label">Размер</span><span class="value">4.83 × 1.98 × 1.61 м</span></li>
+    </ul>
+    <div class="pros">Самая низкая цена в шортлисте</div>
+    <div class="pros">LFP — каждый день до 100%</div>
+    <div class="pros">Huawei ADS — топ автопилот</div>
+    <div class="pros">Meridian 25 динамиков</div>
+    <div class="cons">Меньшая батарея (82 кВт·ч)</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+  <div class="card">
+    <div class="badge silver">👑 Премиум-флагман</div>
+    <h3>Avatr 11</h3>
+    <div class="type">Чистый EV · AWD · 4 или 5 мест</div>
+    <div class="price">$42 780 - 52 250</div>
+    <div class="price-byn">139 029 - 169 830 BYN</div>
+    <div class="price-note">avatr.by (с апреля 2025)</div>
+    <div class="battery-pill">🔋 90-116.8 кВт·ч Li-ion</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">547-578 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">3.98 с</span></li>
+      <li><span class="label">Запас (CLTC)</span><span class="value">555-760 км</span></li>
+      <li><span class="label">800В</span><span class="value">✓ Да</span></li>
+      <li><span class="label">Размер</span><span class="value">4.88 × 1.97 × 1.60 м</span></li>
+    </ul>
+    <div class="pros">Самая большая батарея до 116.8 кВт·ч</div>
+    <div class="pros">Самый большой запас — до 760 км</div>
+    <div class="pros">Huawei ADS + LiDAR (топ автопилот)</div>
+    <div class="pros">Гарантия 8 лет/160к на батарею</div>
+    <div class="pros">Опция 4-местный luxury-салон</div>
+    <div class="cons">Самый дорогой в шортлисте</div>
+    <div class="cons">Возможно 4 места — проверь конфиг</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+  <div class="card">
+    <div class="badge silver">💎 Премиум BYD</div>
+    <h3>Denza N7</h3>
+    <div class="type">Чистый EV · AWD · 5 мест</div>
+    <div class="price">$38 040 - 44 000</div>
+    <div class="price-byn">от 114 128 BYN</div>
+    <div class="price-note">gsmotors.by, electro-car.by</div>
+    <div class="battery-pill">🔋 91.3 кВт·ч</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">530 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">3.9 с</span></li>
+      <li><span class="label">Запас (CLTC)</span><span class="value">702 км</span></li>
+      <li><span class="label">800В + двойная DC</span><span class="value">350 км за 15 мин</span></li>
+      <li><span class="label">Размер</span><span class="value">4.86 × 1.93 × 1.60 м</span></li>
+    </ul>
+    <div class="pros">Премиум суб-бренд BYD (изначально с Mercedes)</div>
+    <div class="pros">Пневмоподвеска в стандарте</div>
+    <div class="pros">Двойная DC зарядка (350 км за 15 мин)</div>
+    <div class="pros">CTB архитектура (Cell-to-Body)</div>
+    <div class="pros">16 динамиков, 17.3" экран</div>
+    <div class="cons">Класс XC60, не XC90 (как Sealion 7)</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+  <div class="card">
+    <div class="badge silver">🛡️ Безопасность</div>
+    <h3>BYD Sealion 7</h3>
+    <div class="type">Чистый EV · AWD · 5 мест</div>
+    <div class="price">$34 340</div>
+    <div class="price-byn">~111 619 BYN</div>
+    <div class="price-note">Atlant-M Электромобили</div>
+    <div class="battery-pill">🔋 82-91 кВт·ч Blade LFP</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">530 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">4.2 с</span></li>
+      <li><span class="label">Запас</span><span class="value">550-610 км</span></li>
+      <li><span class="label">800В</span><span class="value">✓ Да</span></li>
+      <li><span class="label">Размер</span><span class="value">4.83 × 1.93 × 1.62 м</span></li>
+    </ul>
+    <div class="pros">Blade Battery — №1 безопасность</div>
+    <div class="pros">Гарантия 8 лет/240к км на батарею</div>
+    <div class="pros">e-Platform 3.0 Evo</div>
+    <div class="pros">Идентичен Zeekr 7X по размеру</div>
+    <div class="cons">Меньше Tang L</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+  <div class="card">
+    <h3>Zeekr 7X</h3>
+    <div class="type">Чистый EV · AWD · 5 мест</div>
+    <div class="price">$35 700+</div>
+    <div class="price-byn">от 115 900 BYN</div>
+    <div class="price-note">Atlant-M Минск</div>
+    <div class="battery-pill">🔋 100 кВт·ч NMC</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">646 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">3.8 с</span></li>
+      <li><span class="label">Запас</span><span class="value">705 км</span></li>
+      <li><span class="label">800В</span><span class="value">✓ Да</span></li>
+      <li><span class="label">Размер</span><span class="value">4.83 × 1.93 × 1.65 м</span></li>
+    </ul>
+    <div class="pros">Платформа SEA (родня Volvo EX90)</div>
+    <div class="pros">Самая быстрая зарядка (15 мин)</div>
+    <div class="pros">Пневмоподвеска (опция)</div>
+    <div class="pros">Самая быстрая (3.8с)</div>
+    <div class="cons">Гарантия только 2 года/30к</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+  <div class="card">
+    <h3>Voyah Free EV</h3>
+    <div class="type">Чистый EV · AWD · 5 мест</div>
+    <div class="price">$32 150+</div>
+    <div class="price-byn">от 104 500 BYN</div>
+    <div class="price-note">voyah.by Минск/Гродно/Гомель</div>
+    <div class="battery-pill">🔋 106 кВт·ч NMC</div>
+    <ul class="specs">
+      <li><span class="label">Мощность</span><span class="value">694 л.с.</span></li>
+      <li><span class="label">0-100 км/ч</span><span class="value">4.4 с</span></li>
+      <li><span class="label">Запас</span><span class="value">631 км</span></li>
+      <li><span class="label">800В</span><span class="value">✗ Нет</span></li>
+      <li><span class="label">Размер</span><span class="value">4.91 × 1.95 × 1.65 м</span></li>
+    </ul>
+    <div class="pros">Самая большая батарея (106)</div>
+    <div class="pros">Самая мощная (694 л.с.)</div>
+    <div class="pros">Длинная база (2.96 м)</div>
+    <div class="cons">Нет 800В — медленнее зарядка</div>
+    <div class="cons">Массаж только передний ряд</div>
+    <div class="dealer-tag">✓ ОФИЦИАЛЬНО В РБ</div>
+  </div>
+
+</div>
+
+<div class="size-section">
+  <h2>📏 Габариты vs твоя Volvo XC90</h2>
+  <div class="subtitle">XC90 как baseline — сравним кто реально "того же класса", а кто на размер меньше.</div>
+  <table>
+    <tr>
+      <th>Машина</th>
+      <th>Длина</th>
+      <th>Ширина</th>
+      <th>Высота</th>
+      <th>Колёсная база</th>
+      <th>Δ длина</th>
+      <th>Δ высота</th>
+    </tr>
+    <tr class="baseline">
+      <td><strong>Volvo XC90 (твоя)</strong></td>
+      <td>4 953 мм</td>
+      <td>1 958 мм</td>
+      <td>1 776 мм</td>
+      <td>2 984 мм</td>
+      <td>baseline</td>
+      <td>baseline</td>
+    </tr>
+    <tr>
+      <td><strong>BYD Bao 7 EV</strong></td>
+      <td>4 999 мм</td>
+      <td>1 995 мм</td>
+      <td>1 865 мм</td>
+      <td>2 920 мм</td>
+      <td class="delta-good">+46 мм</td>
+      <td class="delta-good">+89 мм ⭐</td>
+    </tr>
+    <tr>
+      <td><strong>BYD Tang L EV</strong></td>
+      <td>5 040 мм</td>
+      <td>1 996 мм</td>
+      <td>1 760 мм</td>
+      <td>~2 950 мм</td>
+      <td class="delta-good">+87 мм</td>
+      <td class="delta-good">−16 мм ✓</td>
+    </tr>
+    <tr>
+      <td>Voyah Free EV</td>
+      <td>4 910 мм</td>
+      <td>1 950 мм</td>
+      <td>1 650 мм</td>
+      <td>2 960 мм</td>
+      <td class="delta-neutral">−43 мм</td>
+      <td class="delta-bad">−126 мм</td>
+    </tr>
+    <tr>
+      <td>Avatr 11</td>
+      <td>4 880 мм</td>
+      <td>1 970 мм</td>
+      <td>1 601 мм</td>
+      <td>2 975 мм</td>
+      <td class="delta-neutral">−73 мм</td>
+      <td class="delta-bad">−175 мм</td>
+    </tr>
+    <tr>
+      <td>Zeekr 7X</td>
+      <td>4 830 мм</td>
+      <td>1 930 мм</td>
+      <td>1 650 мм</td>
+      <td>2 900 мм</td>
+      <td class="delta-bad">−123 мм</td>
+      <td class="delta-bad">−126 мм</td>
+    </tr>
+    <tr>
+      <td>BYD Sealion 7</td>
+      <td>4 830 мм</td>
+      <td>1 925 мм</td>
+      <td>1 620 мм</td>
+      <td>2 930 мм</td>
+      <td class="delta-bad">−123 мм</td>
+      <td class="delta-bad">−156 мм</td>
+    </tr>
+    <tr>
+      <td>Denza N7</td>
+      <td>4 860 мм</td>
+      <td>1 935 мм</td>
+      <td>1 602 мм</td>
+      <td>2 940 мм</td>
+      <td class="delta-bad">−93 мм</td>
+      <td class="delta-bad">−174 мм</td>
+    </tr>
+    <tr>
+      <td>Avatr 07</td>
+      <td>4 830 мм</td>
+      <td>1 980 мм</td>
+      <td>1 610 мм</td>
+      <td>2 940 мм</td>
+      <td class="delta-bad">−123 мм</td>
+      <td class="delta-bad">−166 мм</td>
+    </tr>
+  </table>
+
+  <div class="size-verdict">
+    <strong>Вывод по размеру:</strong><br><br>
+    🦁 <strong>BYD Bao 7 EV</strong> — единственная машина ВЫШЕ XC90 (+89 мм)! Длина почти идентична (+46 мм). Это "электрический Defender" — настоящий big offroad SUV. Минус: новинка, в РБ только серый импорт.<br><br>
+    🏆 <strong>BYD Tang L EV</strong> — реально такого же класса как XC90. Длиннее на 9 см, высота почти идентична (−1.6 см). Тот же "big SUV" пресенс, та же посадка. Плюс: официальный дилер в РБ.<br><br>
+    📉 <strong>Остальные 5 машин</strong> — это <strong>класс XC60</strong>, не XC90. Ниже на 12-18 см и короче на 7-12 см. Глазом и при посадке разница ОЧЕНЬ заметна — формат "паркетника", не настоящего big SUV.<br><br>
+    <strong>Что это значит для решения:</strong><br>
+    • Хочешь big SUV-feel + дилер в РБ → <strong>Tang L EV</strong><br>
+    • Хочешь big SUV даже круче XC90 + готов на серый импорт → <strong>Bao 7 EV</strong><br>
+    • Готов на класс XC60 (легче парковать, дешевле) → остальные 5
+  </div>
+</div>
+
+<div class="battery-section">
+  <h2>🔋 Батареи: LFP vs NMC — что важно знать</h2>
+  <div class="subtitle">Avatr 07 использует LFP батарею. Zeekr 7X и Voyah Free EV — NMC. Это влияет на срок службы, безопасность и зимнюю работу.</div>
+
+  <div class="battery-grid">
+
+    <div class="battery-card lfp">
+      <div class="which">LFP — у Avatr 07 и BYD Sealion 7</div>
+      <h3>Lithium Iron Phosphate</h3>
+      <div class="formula">Литий + железо + фосфор · без кобальта</div>
+      <div class="props">
+        <div class="pro">Срок службы 3000-6000 циклов (vs 1000-2000 NMC)</div>
+        <div class="pro">Можно заряжать до 100% каждый день</div>
+        <div class="pro">Не горит при ДТП — намного безопаснее</div>
+        <div class="pro">Дешевле на 20-30%</div>
+        <div class="pro">Чистая этика добычи (нет кобальта)</div>
+        <div class="con">На -20°C теряет до 30-40% ёмкости</div>
+        <div class="con">Тяжелее на ту же ёмкость</div>
+        <br>
+        <div style="background: #fff8e6; padding: 8px; border-radius: 6px; font-size: 12px;"><strong>BYD Blade Battery</strong> — особый вид LFP в Sealion 7. Прошёл тест прокола гвоздём без возгорания (NMC при таком тесте горит). Самая безопасная батарея в индустрии.</div>
+      </div>
+    </div>
+
+    <div class="battery-card nmc">
+      <div class="which">NMC — у Zeekr 7X / Voyah Free</div>
+      <h3>Nickel Manganese Cobalt</h3>
+      <div class="formula">Литий + никель + марганец + кобальт</div>
+      <div class="props">
+        <div class="pro">Лучше работает на сильном морозе</div>
+        <div class="pro">Выше плотность энергии (больше км/кг)</div>
+        <div class="pro">Быстрее заряжается на холоде</div>
+        <div class="con">Через 5-7 лет ёмкость падает на 15-20%</div>
+        <div class="con">НЕ заряжать до 100% каждый день — лучше 20-80%</div>
+        <div class="con">Может загореться при сильном повреждении</div>
+        <div class="con">Дороже из-за кобальта</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="verdict-box">
+    <strong>Что это значит для тебя (100-130 км/день, РБ-зима):</strong><br><br>
+    <strong>BYD Sealion 7 / Avatr 07 (LFP):</strong> Зимой реальный запас ~360-400 км = <strong>2.8-3.5 дня езды</strong> между зарядками. Заряжаешь до 100% каждый день — батарея проживёт 10+ лет. У BYD ещё и Blade — №1 безопасность.<br><br>
+    <strong>Zeekr 7X / Voyah (NMC):</strong> Зимой реальный запас ~385-400 км = <strong>3-3.5 дня езды</strong>. Лучше держать 20-80% (используешь ~60% батареи) = реально 230-240 км в зимний день. Через 5-7 лет ёмкость упадёт.<br><br>
+    <strong>Verdict:</strong> При 100-130 км/день все четыре проходят с запасом. <strong>LFP (BYD/Avatr) — это плюс, не минус:</strong> простая стратегия "зарядил-поехал", дольше живёт, безопаснее. NMC выигрывает только если делаешь дальние поездки 500+ км в один заход в -20°C.
+  </div>
+</div>
+
+<div class="compare-table">
+  <h2>📊 Сравнение по ключевым параметрам</h2>
+  <table>
+    <tr>
+      <th>Параметр</th>
+      <th>BYD Bao 7</th>
+      <th>BYD Tang L</th>
+      <th>BYD Sealion 7</th>
+      <th>Denza N7</th>
+      <th>Zeekr 7X</th>
+      <th>Avatr 07</th>
+      <th>Avatr 11</th>
+      <th>Voyah Free</th>
+    </tr>
+    <tr>
+      <td class="label">Размер (длина)</td>
+      <td>5.00 м</td>
+      <td class="win">5.04 м (XC90)</td>
+      <td>4.83 м</td>
+      <td>4.86 м</td>
+      <td>4.83 м</td>
+      <td>4.83 м</td>
+      <td>4.88 м</td>
+      <td>4.91 м</td>
+    </tr>
+    <tr>
+      <td class="label">Высота</td>
+      <td class="win">1.86 м ⭐</td>
+      <td>1.76 м</td>
+      <td>1.62 м</td>
+      <td>1.60 м</td>
+      <td>1.65 м</td>
+      <td>1.61 м</td>
+      <td>1.60 м</td>
+      <td>1.65 м</td>
+    </tr>
+    <tr>
+      <td class="label">Места</td>
+      <td>5</td>
+      <td>7 (можно 5)</td>
+      <td>5</td>
+      <td>5</td>
+      <td>5</td>
+      <td>5</td>
+      <td>4 или 5</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td class="label">Батарея</td>
+      <td class="win">92-106 Blade 2gen</td>
+      <td>100.5 Blade LFP</td>
+      <td>82-91 Blade LFP</td>
+      <td>91.3 Blade</td>
+      <td>100 NMC</td>
+      <td>82 LFP</td>
+      <td class="win">90-116.8 Li-ion</td>
+      <td>106 NMC</td>
+    </tr>
+    <tr>
+      <td class="label">Запас (CLTC)</td>
+      <td class="win">до 755 км</td>
+      <td>600 км</td>
+      <td>550-610 км</td>
+      <td>702 км</td>
+      <td>705 км</td>
+      <td>610 км</td>
+      <td class="win">555-760 км</td>
+      <td>631 км</td>
+    </tr>
+    <tr>
+      <td class="label">Мощность</td>
+      <td class="win">700 л.с.</td>
+      <td class="win">530-1102 л.с.</td>
+      <td>530 л.с.</td>
+      <td>530 л.с.</td>
+      <td>646 л.с.</td>
+      <td>590 л.с.</td>
+      <td>547-578 л.с.</td>
+      <td>694 л.с.</td>
+    </tr>
+    <tr>
+      <td class="label">0-100 км/ч</td>
+      <td>~4.5 с</td>
+      <td>3.9 с</td>
+      <td>4.2 с</td>
+      <td>3.9 с</td>
+      <td class="win">3.8 с</td>
+      <td>3.9 с</td>
+      <td>3.98 с</td>
+      <td>4.4 с</td>
+    </tr>
+    <tr>
+      <td class="label">Зарядка DC</td>
+      <td class="win">5 мин (Flash)</td>
+      <td>~25 мин</td>
+      <td>25 мин</td>
+      <td>15 мин (двойная)</td>
+      <td>15 мин</td>
+      <td>~18 мин</td>
+      <td>15-25 мин</td>
+      <td>30 мин</td>
+    </tr>
+    <tr>
+      <td class="label">Пневмоподвеска</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+      <td class="win">✓ стандарт</td>
+      <td>опция</td>
+      <td>—</td>
+      <td>—</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="label">Гарантия батареи</td>
+      <td class="win">8 лет/240к</td>
+      <td class="win">8 лет/240к</td>
+      <td class="win">8 лет/240к</td>
+      <td class="win">8 лет/240к</td>
+      <td>3 года/100к</td>
+      <td>стандарт</td>
+      <td class="win">8 лет/160к</td>
+      <td>стандарт</td>
+    </tr>
+    <tr>
+      <td class="label">Автопилот</td>
+      <td>"Eye of God" + LiDAR</td>
+      <td>BYD DiPilot</td>
+      <td>BYD DiPilot</td>
+      <td>BYD DiPilot</td>
+      <td>Zeekr AD</td>
+      <td class="win">Huawei ADS</td>
+      <td class="win">Huawei ADS + LiDAR</td>
+      <td>Voyah ADAS</td>
+    </tr>
+    <tr>
+      <td class="label">Цена USD</td>
+      <td>~$50-60к (серый)</td>
+      <td>$31.8-37.5к</td>
+      <td>$34.3к</td>
+      <td>$38-44к</td>
+      <td>$35.7к</td>
+      <td class="win">$29.6к</td>
+      <td>$42.8-52.3к</td>
+      <td>$32.2к</td>
+    </tr>
+    <tr>
+      <td class="label">Дилер РБ</td>
+      <td style="color:#c54a00;">⚠ серый импорт</td>
+      <td>Atlant-M, ZUBR</td>
+      <td>Atlant-M</td>
+      <td>gsmotors.by</td>
+      <td>Atlant-M</td>
+      <td>avatr.by</td>
+      <td>avatr.by</td>
+      <td>voyah.by</td>
+    </tr>
+  </table>
+</div>
+
+<div class="next-steps">
+  <h2>📋 Следующие шаги</h2>
+  <ol>
+    <li>Проверить электрику на даче — открыть щиток, узнать сколько фаз и амперы</li>
+    <li>Тест-драйв BYD Tang L EV через Atlant-M / ZUBR ELECTRO (размер XC90)</li>
+    <li>BYD Bao 7 EV — узнать у серых импортёров (SILVERAUTO и др.) сроки и точные цены</li>
+    <li>Тест-драйв BYD Sealion 7 через Atlant-M Электромобили</li>
+    <li>Тест-драйв Denza N7 (gsmotors.by, electro-car.by) — премиум BYD</li>
+    <li>Тест-драйв Zeekr 7X через Atlant-M</li>
+    <li>Тест-драйв Avatr 07 (avatr.by, Multimotors) — бюджет</li>
+    <li>Тест-драйв Avatr 11 (avatr.by) — премиум-флагман</li>
+    <li>Тест-драйв Voyah Free EV (voyah.by)</li>
+    <li>Сравнить trade-in условия по Volvo XC90 у каждого дилера</li>
+  </ol>
+</div>
+
+<div class="footer">
+  Подготовлено: Kira ⚡ · цены с av.by · 07.05.2026
+</div>
+
+</body>
+</html>
