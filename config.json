@@ -12,5 +12,6 @@
         "platform": "telegram",
         "chatId": "telegram:-1003540340877:1709"
       }
-    }
+    },
+    "agent": { "queryTimeoutMinutes": 30 }
 }
