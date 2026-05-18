@@ -1,6 +1,6 @@
 {
   "schedule": "*/15 8-17 * * 1-5",
-  "gate": "node skills/crm/scripts/sync.js --days 0.5 --participant \"Vlad Atanov\" --recap | grep -v '^NO_NEW_MEETINGS$'",
+  "gate": "sh -c 'node skills/crm/scripts/sync.js --days 0.5 --participant \"Vlad Atanov\" --recap | { grep -v \"^NO_NEW_MEETINGS$\" || true; }'",
   "prompt": "Свежий sync встреч:\n\n{{gate}}\n\nВывод содержит одну или несколько встреч, разделённых строкой `===MEETING_SEPARATOR===`. Отправь каждую встречу как ОТДЕЛЬНОЕ сообщение (одно сообщение на встречу). Текст каждой встречи перешли как есть — он уже отформатирован. После каждой встречи добавь: \"👆 Review action items — approve or reject before I post to Slack.\"",
   "chatId": "telegram:-1003540340877:535",
   "platform": "telegram"

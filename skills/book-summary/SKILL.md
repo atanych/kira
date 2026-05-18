@@ -51,7 +51,7 @@ Use the template in `template.html`. Fill in:
 - Target ~5 minutes (~750-900 words). NOT a 1-minute teaser — actually explain each idea with context, examples, and why it matters
 - For each key principle: name it, explain what it means, give an example or modern parallel, say why it's useful
 - End with the "what to skip" section and bottom line verdict
-- Use ElevenLabs API with voice ID `cgSgspJ2msm6clMCkdW9` (Jessica), model `eleven_multilingual_v2`
+- Use ElevenLabs API with voice ID from `config.json` (`voice.voiceId` — currently `QeKcckTBICc3UuWL7ETc`), model `eleven_multilingual_v2`. Source of truth = config, NOT this doc.
 
 ## Screenshot
 - Set viewport first: `npx agent-browser set viewport 800 600`

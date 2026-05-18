@@ -43,7 +43,8 @@ function normalizeTag(tag) {
   const t = tag.toLowerCase().trim();
   if (['кв', 'квартира', 'apt', 'apartment'].includes(t)) return 'квартира';
   if (['дача', 'dacha', 'cottage'].includes(t)) return 'дача';
-  throw new Error(`Неизвестный tag: ${tag}. Варианты: дача, квартира`);
+  if (['ai', 'ии', 'aiwork'].includes(t)) return 'ai';
+  throw new Error(`Неизвестный tag: ${tag}. Варианты: дача, квартира, ai`);
 }
 
 function parseTagsFlag() {
@@ -76,13 +77,14 @@ async function add() {
   console.log(`Задача #${res.rows[0].id} добавлена${tagStr}: ${title}${due ? ` (до ${due})` : ''}`);
 }
 
-const TAG_ORDER_SQL = `CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 ELSE 3 END`;
-const TAG_HEADERS = { 'квартира': '🏠 Квартира', 'дача': '🌲 Дача', 'other': '📍 Прочее' };
+const TAG_ORDER_SQL = `CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 WHEN 'ai' = ANY(tags) THEN 3 ELSE 4 END`;
+const TAG_HEADERS = { 'квартира': '🏠 Квартира', 'дача': '🌲 Дача', 'ai': '🤖 AI', 'other': '📍 Прочее' };
 
 function primaryGroup(tags) {
   if (!tags || tags.length === 0) return 'other';
   if (tags.includes('квартира')) return 'квартира';
   if (tags.includes('дача')) return 'дача';
+  if (tags.includes('ai')) return 'ai';
   return 'other';
 }
 
