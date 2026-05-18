@@ -8,3 +8,4 @@ output/
 repos/
 tmp/
 .obsidian/
+.batches.json
