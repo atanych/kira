@@ -1,6 +1,6 @@
 {
   "telegram": {
-    "adminUsers": [89388434], "allowedGroups": [-1003702865889]
+    "adminUsers": [89388434], "allowedChats": [-1003540340877`]
   },
   "slack": {
     "mentionOnly": true,
