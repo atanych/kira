@@ -9,3 +9,5 @@ repos/
 tmp/
 .obsidian/
 .batches.json
+.DS_Store
+*.log
