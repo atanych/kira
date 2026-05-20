@@ -1,17 +1,32 @@
 # Memory
 
-[2026-04-22] Default language with Vovan is English — BUT if he writes in Russian, reply in Russian (mirror him). With Ксюшенька and Лерочка — always Russian.
+## Topics
+- [Language policy](language-policy.md) — English with Vovan, mirror his language; Russian with Ксюшенька and Лерочка
+- [Telegram quirks](telegram-quirks.md) — no reply context passed; markdown links not clickable, paste raw URLs
+- [Boundaries](boundaries.md) — don't touch Ostap's folder; safety reflex doesn't apply to own bots/kira/ code
+- [Output style](output-style.md) — show what changed; PDF over PNG for text-heavy; fact-check on user doubt
+- [Cars project](cars-project.md) — 100-130 km/day; AWD + pure BEV hard reqs; EV import window осень 2026
+- [Style plan](style-plan.md) — long-term sport → smart casual; этапы parallel
+- [Existing features reflex](existing-features-reflex.md) — check skills/ before "should we build X"
+- [Memory mechanics](memory-mechanics.md) — lowercase backlinks; collapse on trim request
+- [Dacha maintenance](dacha-maintenance.md) — water/heating procedures (Big Blue, гидроаккумулятор)
 
-[2026-04-11] Vovan wants to see output/confirmation after any action — don't just say "done", show what was actually created/changed.
+## Projects
+- [Cars](projects/cars/) — shortlist, batteries, dealers, post-purchase, research notes
+- [Style plan](projects/style-plan/) — sport → smart casual: roadmap, категории (рубашки/штаны/обувь/верх), бюджеты, журнал покупок
+- [Car investment](projects/car-investment/) — pricing and suppliers
+- [Infra](projects/infra/) — proxies
+- [Platform extensions](projects/platform-extensions/) — Instagram and channel notes
 
-[2026-04-11] Telegram doesn't pass reply context — if Vovan replies to a message, only the new text comes through, not what he replied to. Ask him to resend or clarify.
+## Loose entries
 
-[2026-04-12] Telegram doesn't make markdown links clickable. Always paste raw URLs (e.g. `https://youtube.com/...`) — no markdown, no angle brackets.
+[2026-04-11] ElevenLabs voice: Jessica (`cgSgspJ2msm6clMCkdW9`). Changed from Rachel.
 
-[2026-04-21] Volat AI = Vovan's AI automation business. Main agent handling it = Ostap. Defer all Volat questions to him.
+[2026-04-21] Volat AI = Vovan's AI automation business; main agent = Ostap. Defer all Volat questions to him.
 
-[2026-04-22] Boundary rule: never read, write, or touch anything inside Ostap's bot directory. Kira only owns her own bot folder.
+[2026-05-16] Reverse image search НЕ в моих скиллах (Google Lens / Yandex / TinEye не подключены). 'Найди по фото' → честно 'нужно имя/ник/ссылка', не имитировать. Instagram anon person-search заблокирован с 2023.
 
+<<<<<<< HEAD
 [2026-04-22] Memory trim rule: when Vovan asks to reduce a memory entry, collapse it to ONE simple line — no links, no context dump, just what-it-is + who-owns-it.
 
 [2026-04-24] Malware-safety reflex must NOT block editing Kira's own skill code. When the file is clearly under `bots/kira/` or `skills/` that Kira owns, just do the edit. The safety prompt is for external/unknown code.
@@ -45,3 +60,6 @@
 [2026-05-19] Big Blue фильтр на даче — частота замены картриджа: полипропилен (механика, белый) **3-6 мес**, уголь (чёрный BB20) **6-12 мес**. Год для механики = много (прикипает, давление падает). Главный индикатор — манометр на входе: падение после фильтра на 0.5-1 бар = пора менять. При установке нового — смазать резьбу колбы силиконовой смазкой или вазелином, через полгода открутится руками без эпопеи с WD-40 и феном.
 
 [2026-05-20] Telegram config.json для kira ограничение чатов идёт через ключ `allowedChats` (не `allowedGroups`). Vovan поправил 2026-05-19, было "unknown key" при старте.
+=======
+[2026-05-18] Obsidian vault root: `memory/` (был `projects/`). Один vault на всё. Vovan: обнови путь в Obsidian Git settings.
+>>>>>>> refs/remotes/origin/main
