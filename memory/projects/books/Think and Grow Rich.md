@@ -4,13 +4,14 @@ author: Napoleon Hill
 year: 1937
 pages: 238
 tags: [mindset, success, wealth, self-help]
-core-ideas: 9/10
-density: 6/10
-actionability: 6/10
-time-relevance: 6/10
-overlap: 5/10
-difficulty: 3/10
-date-summarized: 2026-04-15
+ratings:
+  originality: 8
+  density: 6
+  actionability: 6
+  time_relevance: 6
+  writing_quality: 4
+  difficulty: 3
+date_summarized: 2026-04-15
 ---
 
 # Think and Grow Rich
@@ -84,11 +85,11 @@ The OG of self-help. The core ideas — clarity of purpose, persistence, masterm
 
 | Factor | Rating |
 |---|---|
-| 🎯 Core Ideas | 9/10 |
+| 🎯 Originality | 8/10 |
 | 📦 Density | 6/10 |
 | ⚡ Actionability | 6/10 |
 | 🕐 Time Relevance | 6/10 |
-| 🔁 Overlap | 5/10 |
+| ✍️ Writing Quality | 4/10 |
 | 🎓 Difficulty | 3/10 |
 
 ---

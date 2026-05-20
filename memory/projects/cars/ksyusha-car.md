@@ -199,7 +199,7 @@
 
 ## 🔗 Связанные файлы
 
-- `shortlist.md` — основной шортлист авто Vovan'а
-- `dealers.md` — карта дилеров РБ (Atlant-M координаты)
-- `post-purchase-checklist.md` — детальный чек-лист (общий, не только для EV)
+- [[shortlist]] — основной шортлист авто Vovan'а
+- [[dealers]] — карта дилеров РБ (Atlant-M координаты)
+- [[post-purchase-checklist]] — детальный чек-лист (общий, не только для EV)
 - `assets/monjaro-shaohua-xing-interior.jpg` — референс-фото салона

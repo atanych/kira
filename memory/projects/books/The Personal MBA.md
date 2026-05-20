@@ -5,13 +5,14 @@ year: 2010
 updated: 2020
 pages: 416
 tags: [business, fundamentals, self-education, reference]
-core-ideas: 7
-density: 9
-actionability: 7
-time-relevance: 8
-overlap: 4
-difficulty: 3
-date-summarized: 2026-04-29
+ratings:
+  originality: 5
+  density: 9
+  actionability: 7
+  time_relevance: 8
+  writing_quality: 6
+  difficulty: 3
+date_summarized: 2026-04-29
 url: https://personalmba.com/
 ---
 
@@ -65,11 +66,11 @@ It's a business-fundamentals dictionary, not a manifesto. None of the ideas are 
 If you've never absorbed business 101, this is the fastest legal path to "fluent." If you've already read [[Peter Drucker]], [[Robert Cialdini]], [[Eric Ries]], and [[Daniel Kahneman]] — heavy déjà vu. Worth owning. Not worth a cover-to-cover deep read.
 
 **Ratings**
-- 🎯 Core Ideas — 7/10
+- 🎯 Originality — 5/10
 - 📦 Density — 9/10
 - ⚡ Actionability — 7/10
 - 🕐 Time Relevance — 8/10
-- 🔁 Overlap — 4/10
+- ✍️ Writing Quality — 6/10
 - 🎓 Difficulty — 3/10
 
 See also: [[The Lean Startup]], [[Zero to One]], [[Influence]], [[Thinking, Fast and Slow]]

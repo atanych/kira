@@ -5,13 +5,13 @@ year: 2013
 pages: 130
 tags: [startup, customer-dev, sales, research, founders]
 ratings:
-  core_ideas: 9
+  originality: 9
   density: 10
   actionability: 10
   time_relevance: 9
-  overlap: 8
+  writing_quality: 9
   difficulty: 3
-date-summarized: 2026-04-19
+date_summarized: 2026-04-19
 ---
 
 ![[The Mom Test.png]]

@@ -5,11 +5,11 @@ year: 2021
 pages: 250
 tags: [product, discovery, research, ux, lean]
 ratings:
-  core_ideas: 8
+  originality: 8
   density: 7
   actionability: 9
   time_relevance: 9
-  overlap: 7
+  writing_quality: 8
   difficulty: 5
 date_summarized: 2026-04-26
 ---

@@ -1,0 +1,17 @@
+filters:
+  and:
+    - 'file.inFolder("daily")'
+    - 'file.ext == "md"'
+
+formulas:
+  month: 'file.basename.substring(0, 7)'
+
+views:
+  - type: table
+    name: "Timeline"
+    groupBy:
+      property: formula.month
+      direction: DESC
+    order:
+      - file.basename
+      - file.mtime

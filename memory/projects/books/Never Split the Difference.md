@@ -6,13 +6,13 @@ year: 2016
 pages: 288
 tags: [negotiation, sales, psychology, communication, business, influence]
 ratings:
-  core_ideas: 9
+  originality: 9
   density: 7
   actionability: 10
   time_relevance: 10
-  overlap: 8
+  writing_quality: 9
   difficulty: 4
-date-summarized: 2026-04-20
+date_summarized: 2026-04-20
 ---
 
 ![[Never Split the Difference.png]]

@@ -1,6 +1,6 @@
 # EV Batteries — полный гид
 
-Reference-документ по батареям для электромобилей. Связан с `shortlist.md` и `research-notes.md`.
+Reference-документ по батареям для электромобилей. Связан с [[shortlist]] и [[research-notes]].
 
 ---
 

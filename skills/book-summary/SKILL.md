@@ -25,12 +25,40 @@ No script — this is an agent-driven skill. When the user asks to summarize a b
 
 ## Obsidian Note Format
 Every summary gets saved to `memory/projects/books/<Book Title>.md` with:
-- **Frontmatter** — title, author, year, pages, tags, ratings, date-summarized
+- **Frontmatter** — see canonical schema below
 - **Obsidian links** — `[[Author Name]]`, `[[Related Book]]`, `[[Concept]]` for cross-referencing
 - **Tags** — `#tag` format for Obsidian tag search
 - **Sections** — One-Liner, Key Principles (H3 each), Actionable Takeaways (checkboxes), What You Can Skip, Verdict
 - **Cross-links** — link to related books from the list or concepts that connect (e.g. `See also: [[Atomic Habits]]`)
 - **Footer** — `*Summarized by [[Kira]] · date*`
+
+### Canonical frontmatter schema (locked 2026-05-20)
+
+```yaml
+---
+title: Book Title
+author: Author Name
+year: 2020
+pages: 300
+tags: [tag1, tag2, tag3]
+ratings:
+  originality: 8
+  density: 7
+  actionability: 9
+  time_relevance: 8
+  writing_quality: 7
+  difficulty: 4
+date_summarized: 2026-05-20
+---
+```
+
+> [!warning] Schema rules — non-negotiable
+> - **Underscores only** in keys: `time_relevance`, `writing_quality`, `date_summarized`. Never hyphens.
+> - **Ratings nested** under a `ratings:` block. Never flat top-level.
+> - **Bare integers 1–10**, never `8/10` strings — `.base` queries break on strings.
+> - **Six factors only**: originality, density, actionability, time_relevance, writing_quality, difficulty. No `core_ideas`, no `overlap` — those are legacy from before 2026-04-29.
+
+All 9 existing book files were backfilled to this schema on 2026-05-20. `core_ideas` → `originality` (judgement, not formula), `overlap` removed, `writing_quality` added from gut feel based on book content.
 
 ## Updating the Books README index
 After saving a new `<Book Title>.md`, append a line to `memory/projects/books/README.md` under `### Saved summaries`:

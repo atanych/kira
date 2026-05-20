@@ -5,13 +5,13 @@ year: 2005
 pages: 224
 tags: [mindset, money, self-help, wealth, psychology]
 ratings:
-  core_ideas: 7
+  originality: 4
   density: 4
   actionability: 6
   time_relevance: 7
-  overlap: 4
+  writing_quality: 4
   difficulty: 2
-date-summarized: 2026-04-18
+date_summarized: 2026-04-18
 ---
 
 ![[Secrets of the Millionaire Mind.png]]

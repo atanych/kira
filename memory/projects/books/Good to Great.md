@@ -10,13 +10,13 @@ tags:
   - management
   - culture
 ratings:
-  core-ideas: 8
+  originality: 7
   density: 5
   actionability: 7
-  time-relevance: 6
-  overlap: 4
+  time_relevance: 6
+  writing_quality: 7
   difficulty: 3
-date-summarized: 2026-04-18
+date_summarized: 2026-04-18
 ---
 
 # Good to Great

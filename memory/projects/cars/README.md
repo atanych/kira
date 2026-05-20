@@ -16,4 +16,4 @@
 
 ## Where the live decision lives
 
-Текущее решение (2026-05-10): two-step plan — Zeekr 001 у Славы как 1-year EV-transition, потом большой SUV. Подробности — в `shortlist.md` и `research-notes.md`.
+Текущее решение (2026-05-10): two-step plan — Zeekr 001 у Славы как 1-year EV-transition, потом большой SUV. Подробности — в [[shortlist]] и [[research-notes]].

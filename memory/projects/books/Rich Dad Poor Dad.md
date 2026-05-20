@@ -4,13 +4,14 @@ author: Robert Kiyosaki
 year: 1997
 pages: 336
 tags: [finance, mindset, investing, passive-income]
-core-ideas: 8/10
-density: 5/10
-actionability: 5/10
-time-relevance: 7/10
-overlap: 4/10
-difficulty: 2/10
-date-summarized: 2026-04-15
+ratings:
+  originality: 5
+  density: 5
+  actionability: 5
+  time_relevance: 7
+  writing_quality: 4
+  difficulty: 2
+date_summarized: 2026-04-15
 ---
 
 # Rich Dad Poor Dad
@@ -86,11 +87,11 @@ The mindset shift is the real value — assets vs. liabilities, passive income, 
 
 | Factor | Rating |
 |---|---|
-| 🎯 Core Ideas | 8/10 |
+| 🎯 Originality | 5/10 |
 | 📦 Density | 5/10 |
 | ⚡ Actionability | 5/10 |
 | 🕐 Time Relevance | 7/10 |
-| 🔁 Overlap | 4/10 |
+| ✍️ Writing Quality | 4/10 |
 | 🎓 Difficulty | 2/10 |
 
 ---
