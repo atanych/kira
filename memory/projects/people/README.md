@@ -14,9 +14,9 @@ Use one canonical (latin/transliterated) backlink per subject. Once `ksusha.md` 
 
 ## Files
 
-- [vovan.md](vovan.md) — Vovan
-- [ksusha.md](ksusha.md) — Ksyushenka
-- [lerochka.md](lerochka.md) — Lerochka
-- [irochka.md](irochka.md) — Irochka
-- [vladik.md](vladik.md) — Vladik
-- [cats.md](cats.md) — household cats
+- [[vovan]] — Vovan
+- [[ksusha]] — Ksyushenka
+- [[lerochka]] — Lerochka
+- [[irochka]] — Irochka
+- [[vladik]] — Vladik
+- [[cats]] — household cats

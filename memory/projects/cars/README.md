@@ -4,14 +4,14 @@
 
 ## Files
 
-- [shortlist.md](shortlist.md) — живая таблица кандидатов; ground truth по hard reqs (AWD, BEV-only)
-- [research-notes.md](research-notes.md) — теория и insights по брендам/технологиям/рынку
-- [batteries.md](batteries.md) — LFP / NMC / Blade reference, deg, гарантии
-- [dealers.md](dealers.md) — карта дилеров РБ + Trade-in + правило 180-дней MOFCOM
-- [post-purchase-checklist.md](post-purchase-checklist.md) — приёмка авто, керамика, антикор, wallbox, дворники
-- [sealion-7-final-comparison.md](sealion-7-final-comparison.md) — конкретное сравнение BYD Sealion 7 RWD vs AWD
-- [cny-usd-cheatsheet.md](cny-usd-cheatsheet.md) — шпаргалка конвертации ¥/$ для китайских цен
-- [ksyusha-car.md](ksyusha-car.md) — параллельный поиск: замена Mercedes GLC для Ксюшеньки
+- [[shortlist]] — живая таблица кандидатов; ground truth по hard reqs (AWD, BEV-only)
+- [[research-notes]] — теория и insights по брендам/технологиям/рынку
+- [[batteries]] — LFP / NMC / Blade reference, deg, гарантии
+- [[dealers]] — карта дилеров РБ + Trade-in + правило 180-дней MOFCOM
+- [[post-purchase-checklist]] — приёмка авто, керамика, антикор, wallbox, дворники
+- [[sealion-7-final-comparison]] — конкретное сравнение BYD Sealion 7 RWD vs AWD
+- [[cny-usd-cheatsheet]] — шпаргалка конвертации ¥/$ для китайских цен
+- [[ksyusha-car]] — параллельный поиск: замена Mercedes GLC для Ксюшеньки
 - `assets/` — изображения/PDF-вложения
 
 ## Where the live decision lives
