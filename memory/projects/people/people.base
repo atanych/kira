@@ -1,0 +1,13 @@
+filters:
+  and:
+    - 'file.inFolder("projects/people")'
+    - 'file.name != "README.md"'
+    - 'file.ext == "md"'
+
+views:
+  - type: table
+    name: "People"
+    order:
+      - file.basename
+      - aliases
+      - file.mtime

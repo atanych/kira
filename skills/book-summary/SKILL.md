@@ -17,17 +17,33 @@ No script — this is an agent-driven skill. When the user asks to summarize a b
 ## Output Files
 - `tmp/output/photo-<slug>.png` — visual summary card (photo mode)
 - `tmp/output/<slug>-summary.mp3` — voice narration
-- `books/<Book Title>.md` — Obsidian note (persistent, committed to repo)
-- `books/assets/<Book Title>.png` — visual card image, embedded in .md via `![[Book Title.png]]`
+- `memory/projects/books/<Book Title>.md` — Obsidian note (persistent, committed to repo)
+- `memory/projects/books/assets/<Book Title>.png` — visual card image, embedded in .md via `![[Book Title.png]]`
+
+> [!warning] Vault path
+> The vault root moved from `projects/` to `memory/` (2026-05-18). All persistent book files live under `memory/projects/books/` — never write to a top-level `books/` folder.
 
 ## Obsidian Note Format
-Every summary gets saved to `books/<Book Title>.md` with:
+Every summary gets saved to `memory/projects/books/<Book Title>.md` with:
 - **Frontmatter** — title, author, year, pages, tags, ratings, date-summarized
 - **Obsidian links** — `[[Author Name]]`, `[[Related Book]]`, `[[Concept]]` for cross-referencing
 - **Tags** — `#tag` format for Obsidian tag search
 - **Sections** — One-Liner, Key Principles (H3 each), Actionable Takeaways (checkboxes), What You Can Skip, Verdict
 - **Cross-links** — link to related books from the list or concepts that connect (e.g. `See also: [[Atomic Habits]]`)
 - **Footer** — `*Summarized by [[Kira]] · date*`
+
+## Updating the Books README index
+After saving a new `<Book Title>.md`, append a line to `memory/projects/books/README.md` under `### Saved summaries`:
+
+```
+- [[Book Title]] — <author> on <one-line hook>
+```
+
+Rules:
+- **Always wikilinks**, never markdown links. `[[Title]]` populates Obsidian's backlinks panel + graph; `[Title](Title.md)` does not.
+- No URL-encoding (`%20` etc.) — Obsidian resolves spaces in `[[…]]` natively.
+- One-line hook = the same author-blurb style as the existing entries (e.g. "Teresa Torres on weekly customer touchpoints + opportunity solution trees").
+- Keep the list alphabetical.
 
 ## HTML Template Structure
 Use the template in `template.html`. Fill in:

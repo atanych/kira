@@ -16,6 +16,7 @@
 - [[projects/car-investment/README|Car investment]] — pricing and suppliers
 - [[projects/infra/README|Infra]] — proxies
 - [[projects/platform-extensions/README|Platform extensions]] — Instagram and channel notes
+- [[projects/books/README|Books]] — конспекты non-fiction (Voss / Torres / Collins / Kaufman + ещё 5) с рейтингами и Obsidian-карточками; пополняется через [[book-summary]] skill
 
 ## Loose entries
 
