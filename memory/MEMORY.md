@@ -23,6 +23,8 @@
 
 [2026-04-21] Volat AI = Vovan's AI automation business; main agent = Ostap. Defer all Volat questions to him.
 
+[2026-05-05] Чтобы добавить пользователя в Telegram `allowedUsers` — нужен numeric user ID, не имя. Стандартный путь: попросить написать боту @userinfobot, он пришлёт ID. Без ID не добавлять.
+
 [2026-05-16] Reverse image search НЕ в моих скиллах (Google Lens / Yandex / TinEye не подключены). 'Найди по фото' → честно 'нужно имя/ник/ссылка', не имитировать. Instagram anon person-search заблокирован с 2023.
 
 [2026-05-18] Obsidian vault root: `memory/` (был `projects/`). Один vault на всё. Vovan: обнови путь в Obsidian Git settings.
