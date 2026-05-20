@@ -20,8 +20,6 @@
 
 ## Loose entries
 
-[2026-04-11] ElevenLabs voice: Jessica (`cgSgspJ2msm6clMCkdW9`). Changed from Rachel.
-
 [2026-04-21] Volat AI = Vovan's AI automation business; main agent = Ostap. Defer all Volat questions to him.
 
 [2026-05-16] Reverse image search НЕ в моих скиллах (Google Lens / Yandex / TinEye не подключены). 'Найди по фото' → честно 'нужно имя/ник/ссылка', не имитировать. Instagram anon person-search заблокирован с 2023.

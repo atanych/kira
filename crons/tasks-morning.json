@@ -1,6 +1,6 @@
 {
   "schedule": "5 4 * * *",
-  "prompt": "Покажи список открытых личных задач. Запусти: node skills/personal-tasks/scripts/tasks.js list. Перешли результат как есть. Если задач нет — скажи что список пуст. Отвечай на русском.",
+  "prompt": "Запусти: `node skills/personal-tasks/scripts/tasks.js list`. Перешли stdout ровно как есть — БЕЗ markdown, БЕЗ `**`, БЕЗ '← сегодня' или других добавок, БЕЗ финальных комментариев. Telegram parse_mode = HTML, markdown asterisks рендерятся буквально. Если задач нет — одна строка 'Список пуст.' Отвечай на русском.",
   "chatId": "telegram:-1003540340877:780",
   "platform": "telegram"
 }
