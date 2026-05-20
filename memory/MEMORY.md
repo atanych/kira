@@ -14,6 +14,7 @@
 ## Projects
 - [Cars](projects/cars/) — shortlist, batteries, dealers, post-purchase, research notes
 - [Style plan](projects/style-plan/) — sport → smart casual: roadmap, категории (рубашки/штаны/обувь/верх), бюджеты, журнал покупок
+- [People](projects/people/) — Vovan's family + close orbit; per-subject (Vovan, Ksusha, Lerochka, Irochka, Vladik, cats)
 - [Car investment](projects/car-investment/) — pricing and suppliers
 - [Infra](projects/infra/) — proxies
 - [Platform extensions](projects/platform-extensions/) — Instagram and channel notes
