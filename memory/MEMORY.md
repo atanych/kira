@@ -5,8 +5,6 @@
 - [Telegram quirks](telegram-quirks.md) — no reply context passed; markdown links not clickable, paste raw URLs
 - [Boundaries](boundaries.md) — don't touch Ostap's folder; safety reflex doesn't apply to own bots/kira/ code
 - [Output style](output-style.md) — show what changed; PDF over PNG for text-heavy; fact-check on user doubt
-- [Cars project](cars-project.md) — 100-130 km/day; AWD + pure BEV hard reqs; EV import window осень 2026
-- [Style plan](style-plan.md) — long-term sport → smart casual; этапы parallel
 - [Existing features reflex](existing-features-reflex.md) — check skills/ before "should we build X"
 - [Memory mechanics](memory-mechanics.md) — lowercase backlinks; collapse on trim request
 - [Dacha maintenance](dacha-maintenance.md) — water/heating procedures (Big Blue, гидроаккумулятор)
