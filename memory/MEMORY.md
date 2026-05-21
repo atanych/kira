@@ -8,6 +8,7 @@
 - [[existing-features-reflex|Existing features reflex]] — check skills/ before "should we build X"
 - [[memory-mechanics|Memory mechanics]] — lowercase backlinks; collapse on trim request
 - [[dacha-maintenance|Dacha maintenance]] — water/heating procedures (Big Blue, гидроаккумулятор)
+- [[ksusha|Ksusha]] — TikTok region pinning — регион аккаунта TikTok запоминается на момент первой...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes

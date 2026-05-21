@@ -30,8 +30,13 @@ node skills/personal-tasks/scripts/tasks.js add "Общая" --tag дача,кв
 node skills/personal-tasks/scripts/tasks.js edit 3 --tag дача
 
 # повторяющиеся задачи (шаблоны)
-node skills/personal-tasks/scripts/tasks.js recur add "Заплатить за МинГАЗ" --every monthly:20 --tag квартира
-node skills/personal-tasks/scripts/tasks.js recur add "Заказать сырки на рынке" --every weekly:friday --tag квартира
+node skills/personal-tasks/scripts/tasks.js recur add "Заплатить за МинГАЗ" --type monthly --day 20 --tag квартира
+node skills/personal-tasks/scripts/tasks.js recur add "Заказать сырки на рынке" --type weekly --day friday --tag квартира
+
+# с интервалом (interval > 1)
+node skills/personal-tasks/scripts/tasks.js recur add "Взносы в СТ" --type monthly --day 15 --interval 3 --tag дача   # quarterly
+node skills/personal-tasks/scripts/tasks.js recur add "Зарплата" --type weekly --day friday --interval 2              # biweekly
+
 node skills/personal-tasks/scripts/tasks.js recur list
 node skills/personal-tasks/scripts/tasks.js recur off 1   # выключить шаблон
 node skills/personal-tasks/scripts/tasks.js recur on 1    # включить обратно
@@ -42,14 +47,20 @@ node skills/personal-tasks/scripts/tasks.js spawn
 ```
 
 ## Recurring tasks
-- Шаблоны живут в таблице `task_templates`. Поля: title, notes, tags, recurrence, lead_time_days, active, last_spawned_due.
-- Формат `--every`:
-  - `monthly:N` где N = 1-31. Если N > числа дней в месяце — клампится до последнего дня месяца.
-  - `weekly:<день>` — `monday|mon|пн|понедельник` и т.д. (RU/EN/short все работают).
+- Шаблоны живут в таблице `task_templates`. Поля: title, notes, tags, **recurrence_type**, **recurrence_day**, **interval**, lead_time_days, active, last_spawned_due.
+- Флаги CLI:
+  - `--type monthly|weekly` — обязательный.
+  - `--day` — обязательный.
+    - Для `monthly`: 1-31. Если N > числа дней в месяце — клампится до последнего дня.
+    - Для `weekly`: `monday|mon|пн|понедельник|5` и т.д. (RU/EN/short/numeric 0-6 все работают).
+  - `--interval N` — каждые N единиц (дефолт 1). `monthly + interval=3` = quarterly. `weekly + interval=2` = biweekly. `monthly + interval=12` = yearly.
 - `--lead` — за сколько дней до дедлайна спавнить. Дефолты: monthly=3, weekly=0.
 - Имя спавненной задачи стампится:
   - monthly → "Заплатить за МинГАЗ (май 2026)"
   - weekly → "Заказать сырки на рынке (2026-05-08)"
+- Семантика interval:
+  - **Первый** spawn (last_spawned_due IS NULL): ближайший подходящий день >= today, **interval игнорируется** (это anchor).
+  - **Последующие** spawn'ы: anchor + N единиц (для monthly — добавляются месяцы, clamp дня; для weekly — добавляются недели).
 - Дедуп: на каждый период спавн происходит ровно один раз (`last_spawned_due` сравнивается с `next_due`).
 - Если предыдущий период не закрыт — новый спавнится рядом, старый остаётся 🔴 в списке.
 - Спавн дёргается ежедневным кроном `tasks-spawn.json` (4:00 UTC = 7:00 Минск, за 5 минут до morning list).

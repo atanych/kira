@@ -256,20 +256,22 @@ const DOW_MAP = {
 const DOW_RU = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
 const RU_MONTHS = ['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
 
-function parseRecurrence(s) {
-  if (!s || !s.includes(':')) throw new Error(`Формат --every: monthly:N или weekly:<день>. Дано: ${s}`);
-  const [type, val] = s.split(':');
+// Parse and validate --day for given type. Accepts numeric DOW (0-6) or named day for weekly.
+function parseDay(type, val) {
   if (type === 'monthly') {
     const day = parseInt(val);
-    if (isNaN(day) || day < 1 || day > 31) throw new Error(`monthly:N — N должно быть 1-31. Дано: ${val}`);
-    return { type: 'monthly', day };
+    if (isNaN(day) || day < 1 || day > 31) throw new Error(`monthly day — 1-31. Дано: ${val}`);
+    return day;
   }
   if (type === 'weekly') {
-    const dow = DOW_MAP[val.toLowerCase()];
-    if (dow === undefined) throw new Error(`Неизвестный день недели: ${val}`);
-    return { type: 'weekly', dow };
+    if (val === null || val === undefined) throw new Error(`weekly: нужен --day (понедельник/friday/5)`);
+    const lower = String(val).toLowerCase();
+    if (DOW_MAP[lower] !== undefined) return DOW_MAP[lower];
+    const n = parseInt(val);
+    if (!isNaN(n) && n >= 0 && n <= 6) return n;
+    throw new Error(`Неизвестный день недели: ${val}`);
   }
-  throw new Error(`Неизвестный тип recurrence: ${type}`);
+  throw new Error(`Неизвестный тип: ${type}. Варианты: monthly, weekly`);
 }
 
 function daysInMonth(y, m) {
@@ -281,27 +283,52 @@ function fmtDate(y, m, d) {
   return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
+function addMonths(y, m, n) {
+  // returns [y2, m2] after adding n months to (y, m) where m is 1-12.
+  const total = (y * 12 + (m - 1)) + n;
+  return [Math.floor(total / 12), (total % 12) + 1];
+}
+
 // Compute the next due date >= fromDateStr for a recurrence rule.
+// rec = { type, day, interval, lastSpawnedDue|null }
 function computeNextDue(rec, fromDateStr) {
-  const [y, m, d] = fromDateStr.split('-').map(Number);
+  const interval = Math.max(1, rec.interval || 1);
+  const last = rec.lastSpawnedDue || null;
+
   if (rec.type === 'monthly') {
+    // If we already spawned once, next = last + interval months (clamp day).
+    if (last) {
+      const [ly, lm] = last.split('-').map(Number);
+      const [ny, nm] = addMonths(ly, lm, interval);
+      const nd = Math.min(rec.day, daysInMonth(ny, nm));
+      return fmtDate(ny, nm, nd);
+    }
+    // First spawn: nearest N-th of month >= today, ignoring interval (anchor here).
+    const [y, m, d] = fromDateStr.split('-').map(Number);
     let yr = y, mo = m;
     let day = Math.min(rec.day, daysInMonth(yr, mo));
     if (day < d) {
-      mo++;
-      if (mo > 12) { mo = 1; yr++; }
+      [yr, mo] = addMonths(yr, mo, 1);
       day = Math.min(rec.day, daysInMonth(yr, mo));
     }
     return fmtDate(yr, mo, day);
   }
+
   if (rec.type === 'weekly') {
+    if (last) {
+      const [ly, lm, ld] = last.split('-').map(Number);
+      const dt = new Date(Date.UTC(ly, lm - 1, ld));
+      dt.setUTCDate(dt.getUTCDate() + 7 * interval);
+      return fmtDate(dt.getUTCFullYear(), dt.getUTCMonth() + 1, dt.getUTCDate());
+    }
+    const [y, m, d] = fromDateStr.split('-').map(Number);
     const dt = new Date(Date.UTC(y, m - 1, d));
     const curDow = dt.getUTCDay();
-    const delta = (rec.dow - curDow + 7) % 7;
+    const delta = (rec.day - curDow + 7) % 7;
     dt.setUTCDate(dt.getUTCDate() + delta);
     return fmtDate(dt.getUTCFullYear(), dt.getUTCMonth() + 1, dt.getUTCDate());
   }
-  throw new Error(`Bad recurrence type: ${rec.type}`);
+  throw new Error(`Bad type: ${rec.type}`);
 }
 
 // Subtract N days from a YYYY-MM-DD string, returning YYYY-MM-DD.
@@ -323,11 +350,17 @@ function stampedTitle(baseTitle, rec, dueDate) {
   return baseTitle;
 }
 
-function describeRecurrence(s) {
-  const rec = parseRecurrence(s);
-  if (rec.type === 'monthly') return `каждое ${rec.day}-е число`;
-  if (rec.type === 'weekly') return `каждую неделю в ${DOW_RU[rec.dow]}`;
-  return s;
+function describeRecurrence(rec) {
+  const interval = Math.max(1, rec.interval || 1);
+  if (rec.type === 'monthly') {
+    if (interval === 1) return `каждое ${rec.day}-е число`;
+    return `каждое ${rec.day}-е число раз в ${interval} мес.`;
+  }
+  if (rec.type === 'weekly') {
+    if (interval === 1) return `каждую неделю в ${DOW_RU[rec.day]}`;
+    return `каждые ${interval} недели в ${DOW_RU[rec.day]}`;
+  }
+  return `${rec.type}:${rec.day}:${interval}`;
 }
 
 async function recur() {
@@ -342,24 +375,37 @@ async function recur() {
     case 'delete': return recurRemove();
     default:
       console.log('Команды recur: add, list, on, off, rm');
-      console.log('Пример: node tasks.js recur add "Заплатить за МинГАЗ" --every monthly:20 --tag квартира');
+      console.log('Пример: node tasks.js recur add "Заплатить за МинГАЗ" --type monthly --day 20 --tag квартира');
+      console.log('Quarterly: --type monthly --day 15 --interval 3');
+      console.log('Biweekly:  --type weekly --day friday --interval 2');
   }
 }
 
 async function recurAdd() {
   const title = args[2];
   if (!title) {
-    console.error('Нужен текст: node tasks.js recur add "Title" --every monthly:20');
+    console.error('Нужен текст: node tasks.js recur add "Title" --type monthly --day 20');
     process.exit(1);
   }
-  const everyRaw = getFlag('every');
-  if (!everyRaw) {
-    console.error('Нужен --every monthly:N или weekly:<день>');
+  const type = getFlag('type');
+  const dayFlag = getFlag('day');
+  if (!type) {
+    console.error('Нужен --type monthly|weekly');
     process.exit(1);
   }
-  const rec = parseRecurrence(everyRaw); // validation
+  if (dayFlag === null) {
+    console.error('Нужен --day (для monthly: 1-31; для weekly: пн/friday/5)');
+    process.exit(1);
+  }
+  const day = parseDay(type, dayFlag);
+  const intervalFlag = getFlag('interval');
+  const interval = intervalFlag !== null ? parseInt(intervalFlag) : 1;
+  if (isNaN(interval) || interval < 1) {
+    console.error(`Bad --interval: ${intervalFlag} (должно быть >= 1)`);
+    process.exit(1);
+  }
   const leadFlag = getFlag('lead');
-  const leadDefault = rec.type === 'weekly' ? 0 : 3;
+  const leadDefault = type === 'weekly' ? 0 : 3;
   const lead = leadFlag !== null ? parseInt(leadFlag) : leadDefault;
   if (isNaN(lead) || lead < 0) {
     console.error(`Bad --lead: ${leadFlag}`);
@@ -369,17 +415,17 @@ async function recurAdd() {
   const tags = parseTagsFlag() || [];
 
   const res = await db.query(
-    `INSERT INTO task_templates (title, notes, tags, recurrence, lead_time_days)
-     VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-    [title, notes || null, tags, everyRaw, lead]
+    `INSERT INTO task_templates (title, notes, tags, recurrence_type, recurrence_day, interval, lead_time_days)
+     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+    [title, notes || null, tags, type, day, interval, lead]
   );
   const tagStr = tags.length ? ` [${tags.join(', ')}]` : '';
-  console.log(`Шаблон #${res.rows[0].id} добавлен${tagStr}: ${title} — ${describeRecurrence(everyRaw)} (lead ${lead}д)`);
+  console.log(`Шаблон #${res.rows[0].id} добавлен${tagStr}: ${title} — ${describeRecurrence({ type, day, interval })} (lead ${lead}д)`);
 }
 
 async function recurList() {
   const res = await db.query(`
-    SELECT id, title, notes, tags, recurrence, lead_time_days, active,
+    SELECT id, title, notes, tags, recurrence_type, recurrence_day, interval, lead_time_days, active,
            TO_CHAR(last_spawned_due, 'YYYY-MM-DD') AS last_spawned_due
     FROM task_templates
     ORDER BY active DESC, id ASC
@@ -393,8 +439,9 @@ async function recurList() {
     const status = t.active ? '🟢' : '⚪️';
     const tags = t.tags && t.tags.length ? ` [${t.tags.join(', ')}]` : '';
     const last = t.last_spawned_due ? ` | последний: ${t.last_spawned_due}` : '';
-    const next = t.active ? ` | след: ${computeNextDue(parseRecurrence(t.recurrence), todayStr())}` : '';
-    console.log(`#${t.id} ${status} ${t.title}${tags} — ${describeRecurrence(t.recurrence)} (lead ${t.lead_time_days}д)${next}${last}`);
+    const rec = { type: t.recurrence_type, day: t.recurrence_day, interval: t.interval, lastSpawnedDue: t.last_spawned_due };
+    const next = t.active ? ` | след: ${computeNextDue(rec, todayStr())}` : '';
+    console.log(`#${t.id} ${status} ${t.title}${tags} — ${describeRecurrence(rec)} (lead ${t.lead_time_days}д)${next}${last}`);
     if (t.notes) console.log(`     ${t.notes}`);
   });
 }
@@ -433,7 +480,7 @@ async function recurRemove() {
 async function spawn() {
   const today = todayStr();
   const res = await db.query(`
-    SELECT id, title, notes, tags, recurrence, lead_time_days,
+    SELECT id, title, notes, tags, recurrence_type, recurrence_day, interval, lead_time_days,
            TO_CHAR(last_spawned_due, 'YYYY-MM-DD') AS last_spawned_due
     FROM task_templates
     WHERE active = TRUE
@@ -441,12 +488,16 @@ async function spawn() {
 
   const spawned = [];
   for (const tpl of res.rows) {
-    let rec;
-    try { rec = parseRecurrence(tpl.recurrence); }
-    catch (e) {
-      console.error(`Шаблон #${tpl.id} битый recurrence (${tpl.recurrence}): ${e.message}`);
+    if (!tpl.recurrence_type || tpl.recurrence_day === null) {
+      console.error(`Шаблон #${tpl.id} без recurrence_type/day — пропускаю`);
       continue;
     }
+    const rec = {
+      type: tpl.recurrence_type,
+      day: tpl.recurrence_day,
+      interval: tpl.interval,
+      lastSpawnedDue: tpl.last_spawned_due,
+    };
     const nextDue = computeNextDue(rec, today);
     const spawnDate = subtractDays(nextDue, tpl.lead_time_days);
     if (today < spawnDate) continue; // not time yet
