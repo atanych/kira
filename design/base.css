@@ -1,0 +1,149 @@
+@import "./tokens.css";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-light);
+  font-size: var(--font-size-body-md);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 var(--space-md);
+  color: var(--color-heading);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-display);
+}
+
+h1 { font-size: var(--font-size-display-xl); line-height: var(--line-height-display-xl); }
+h2 { font-size: var(--font-size-display-lg); line-height: var(--line-height-display-lg); }
+h3 { font-size: var(--font-size-display-md); line-height: var(--line-height-display-md); }
+h4 { font-size: var(--font-size-display-sm); line-height: var(--line-height-display-sm); }
+h5 { font-size: var(--font-size-title-lg); line-height: var(--line-height-title); }
+h6 { font-size: var(--font-size-title-md); line-height: var(--line-height-title-md); font-weight: var(--font-weight-regular); text-transform: none; }
+
+p {
+  margin: 0 0 var(--space-md);
+  color: var(--color-body);
+  font-size: var(--font-size-body-md);
+  font-weight: var(--font-weight-light);
+  line-height: var(--line-height-body);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+small {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  letter-spacing: var(--letter-spacing-caption);
+  color: var(--color-muted);
+}
+
+strong, b { color: var(--color-body-strong); font-weight: var(--font-weight-bold); }
+
+ul, ol {
+  margin: 0 0 var(--space-md);
+  padding-left: var(--space-lg);
+}
+li { margin-bottom: var(--space-xs); }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-hairline);
+  margin: var(--space-xl) 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-body-md);
+}
+th, td {
+  padding: var(--space-md) var(--space-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--color-hairline);
+}
+th {
+  color: var(--color-on-dark);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+  background: var(--color-surface-soft);
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+code {
+  background: var(--color-surface-card);
+  color: var(--color-on-dark);
+  padding: 2px 6px;
+  border-radius: var(--radius-none);
+}
+pre {
+  background: var(--color-surface-card);
+  color: var(--color-on-dark);
+  padding: var(--space-lg);
+  border-radius: var(--radius-none);
+  overflow-x: auto;
+  margin: 0 0 var(--space-lg);
+  line-height: var(--line-height-body);
+}
+pre code { background: transparent; padding: 0; }
+
+blockquote {
+  margin: 0 0 var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  border-left: 2px solid var(--color-on-dark);
+  color: var(--color-body-strong);
+  font-size: var(--font-size-title-sm);
+  line-height: var(--line-height-title-md);
+}
+
+img, video, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius-none);
+}
+
+button, input, select, textarea {
+  font-family: var(--font-sans);
+  font-size: var(--font-size-body-md);
+  color: var(--color-on-dark);
+}
+
+input, textarea, select {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-none);
+  padding: var(--space-sm) var(--space-md);
+  font-weight: var(--font-weight-light);
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-on-dark);
+}
+
+::selection {
+  background: var(--color-on-dark);
+  color: var(--color-canvas);
+}

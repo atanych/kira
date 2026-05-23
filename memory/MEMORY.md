@@ -9,6 +9,7 @@
 - [[memory-mechanics|Memory mechanics]] — lowercase backlinks; collapse on trim request
 - [[dacha-maintenance|Dacha maintenance]] — water/heating procedures (Big Blue, гидроаккумулятор)
 - [[ksusha|Ksusha]] — TikTok region pinning — регион аккаунта TikTok запоминается на момент первой...
+- [[lerochka|Lerochka]] — День рождения **29 июля 2015** — в 2026 году исполнится 11 лет. Подтверждено...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes

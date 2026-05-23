@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>av.by market scan</title>
+<style id="design-tokens">__TOKENS_CSS__</style>
+<style id="design-base">__BASE_CSS__</style>
+<script>__CHARTJS__</script>
+<style>
+  /* Inter fallback for BMW Type Next Latin */
+  :root {
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-light: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  @page { size: A4; margin: 14mm 12mm; background: var(--color-canvas); }
+  @media print { .chart-card, .listing-card, .my-marker { page-break-inside: avoid; } }
+  html, body { background: var(--color-canvas); color: var(--color-body); min-height: 100%; }
+  body { font-family: var(--font-light); font-weight: var(--font-weight-light); font-size: var(--font-size-body-sm); }
+
+  .page { padding: var(--space-lg) var(--space-md); max-width: 1100px; margin: 0 auto; }
+  @media (max-width: 800px) {
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .stats-grid .stat:nth-child(4), .stats-grid .stat:nth-child(5) { grid-column: span 1; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .header h1 { font-size: 32px !important; }
+  }
+
+  /* M tricolor stripe */
+  .m-stripe {
+    height: 4px;
+    background: linear-gradient(to right,
+      var(--color-m-blue-light) 0%,
+      var(--color-m-blue-light) 33.3%,
+      var(--color-m-blue-dark) 33.3%,
+      var(--color-m-blue-dark) 66.6%,
+      var(--color-m-red) 66.6%,
+      var(--color-m-red) 100%);
+    width: 80px;
+    margin-bottom: var(--space-md);
+  }
+  .m-stripe.full { width: 100%; margin: var(--space-xl) 0; }
+
+  /* Header */
+  .header { padding: var(--space-xl) 0 var(--space-lg) 0; border-bottom: 1px solid var(--color-hairline); margin-bottom: var(--space-xl); }
+  .header .kicker { font-family: var(--font-sans); font-size: var(--font-size-caption); font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-muted); margin-bottom: var(--space-xs); }
+  .header h1 { font-size: 40px; line-height: 1.05; margin: 0 0 var(--space-md) 0; }
+  .header .sub { font-size: var(--font-size-body-sm); color: var(--color-body); margin: 0; }
+  .header .filter-url { font-family: var(--font-mono); font-size: 10px; color: var(--color-muted); margin-top: var(--space-sm); word-break: break-all; }
+
+  /* Stats grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--color-hairline); margin-top: var(--space-lg); }
+  .stat { background: var(--color-surface-soft); padding: var(--space-md) var(--space-md); }
+  .stat .lbl { font-family: var(--font-sans); font-size: 10px; font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-muted); }
+  .stat .val { font-family: var(--font-sans); font-size: 24px; font-weight: var(--font-weight-bold); color: var(--color-on-dark); margin-top: var(--space-xs); line-height: 1.1; }
+  .stat .sub { font-size: 11px; color: var(--color-body); margin-top: 2px; }
+  .stat.median { background: var(--color-surface-card); }
+  .stat.median .val { color: var(--color-m-red); }
+
+  /* My marker note */
+  .my-marker {
+    border: 1px solid var(--color-hairline);
+    border-left: 4px solid var(--color-m-red);
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-lg) 0;
+    background: var(--color-surface-soft);
+  }
+  .my-marker .lbl { font-family: var(--font-sans); font-size: 11px; font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-m-red); margin-bottom: var(--space-xs); }
+  .my-marker .body { font-size: var(--font-size-body-sm); color: var(--color-body-strong); }
+  .my-marker .body strong { color: var(--color-on-dark); }
+
+  /* Section heads */
+  .section-head { font-family: var(--font-sans); font-size: var(--font-size-title-md); font-weight: var(--font-weight-bold); letter-spacing: 1px; text-transform: uppercase; color: var(--color-on-dark); margin: var(--space-xl) 0 var(--space-md) 0; padding-bottom: var(--space-xs); border-bottom: 1px solid var(--color-hairline); }
+  .section-head:first-of-type { margin-top: 0; }
+
+  /* Chart card */
+  .chart-card {
+    border: 1px solid var(--color-hairline);
+    background: var(--color-surface-soft);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    page-break-inside: avoid;
+  }
+  .chart-card .chart-title { font-family: var(--font-sans); font-size: 11px; font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-body); margin-bottom: var(--space-md); }
+  .chart-wrap { position: relative; height: 320px; width: 100%; overflow: hidden; }
+  .chart-wrap.tall { height: 400px; }
+  .chart-wrap canvas { display: block; max-width: 100%; height: auto !important; }
+
+  /* Cards grid */
+  .cards-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-sm); margin-top: var(--space-md); }
+  .listing-card {
+    background: var(--color-surface-card);
+    border: 1px solid var(--color-hairline);
+    padding: var(--space-md);
+    page-break-inside: avoid;
+  }
+  .listing-card .yr { font-family: var(--font-sans); font-size: 10px; font-weight: var(--font-weight-bold); letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-muted); }
+  .listing-card .price { font-family: var(--font-sans); font-size: 22px; font-weight: var(--font-weight-bold); color: var(--color-on-dark); margin: var(--space-xs) 0 2px 0; line-height: 1; }
+  .listing-card .price-byn { font-size: 11px; color: var(--color-body); }
+  .listing-card .km { font-size: 12px; color: var(--color-body-strong); margin-top: var(--space-xs); }
+  .listing-card .city { font-size: 11px; color: var(--color-muted); margin-top: 2px; }
+  .listing-card a { display: block; font-size: 9px; color: var(--color-m-blue-light); margin-top: var(--space-xs); word-break: break-all; font-family: var(--font-mono); }
+  .listing-card.cheap { border-top: 3px solid var(--color-success); }
+  .listing-card.expensive { border-top: 3px solid var(--color-m-red); }
+
+  /* Footer */
+  .footer { margin-top: var(--space-xl); padding-top: var(--space-md); border-top: 1px solid var(--color-hairline); font-family: var(--font-sans); font-size: 10px; letter-spacing: var(--letter-spacing-label); text-transform: uppercase; color: var(--color-muted); display: flex; justify-content: space-between; }
+  .footer .kira { color: var(--color-on-dark); font-weight: var(--font-weight-bold); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="header">
+  <div class="m-stripe"></div>
+  <div class="kicker">av.by · market scan</div>
+  <h1 id="title">Анализ рынка</h1>
+  <p class="sub" id="sub">Загрузка…</p>
+  <div class="filter-url" id="filter"></div>
+  <div class="stats-grid" id="stats-grid"></div>
+</div>
+
+<div id="my-marker-section"></div>
+
+<div class="section-head">Графики</div>
+
+<div class="chart-card">
+  <div class="chart-title">Распределение цен · USD</div>
+  <div class="chart-wrap"><canvas id="chart-hist" width="660" height="320"></canvas></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title">Цена vs Пробег</div>
+  <div class="chart-wrap tall"><canvas id="chart-scatter" width="660" height="400"></canvas></div>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title">Цены по годам выпуска</div>
+  <div class="chart-wrap"><canvas id="chart-year" width="660" height="320"></canvas></div>
+</div>
+
+<div class="section-head">Топ-5 самых дешёвых</div>
+<div class="cards-grid" id="cheapest"></div>
+
+<div class="section-head">Топ-5 самых дорогих</div>
+<div class="cards-grid" id="expensive"></div>
+
+<div class="footer">
+  <div>Подготовлено · <span class="kira">Kira ⚡</span></div>
+  <div>Источник · av.by</div>
+  <div>Курс · <span id="rate-foot"></span> BYN/USD</div>
+</div>
+
+</div>
+
+<script>
+const PAYLOAD = __PAYLOAD_JSON__;
+const RATE = PAYLOAD.rate;
+
+// Force Chart.js to re-measure after initial layout settles
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.querySelectorAll("canvas").forEach(c => {
+      const ch = Chart.getChart(c);
+      if (ch) ch.resize();
+    });
+  }, 500);
+});
+
+// Chart.js global theme — BMW M dark
+Chart.defaults.color = '#bbbbbb';
+Chart.defaults.font.family = 'Inter, sans-serif';
+Chart.defaults.font.size = 11;
+Chart.defaults.borderColor = '#3c3c3c';
+Chart.defaults.scale.grid.color = '#262626';
+Chart.defaults.plugins.legend.labels.color = '#e6e6e6';
+
+// Header
+document.getElementById("title").textContent = PAYLOAD.title;
+document.getElementById("sub").textContent =
+  `${PAYLOAD.stats.count} объявлений · собрано ${PAYLOAD.generated_at}`;
+document.getElementById("filter").textContent = PAYLOAD.filter_url;
+document.getElementById("rate-foot").textContent = RATE.toFixed(2);
+
+// Stats grid
+const sg = document.getElementById("stats-grid");
+const s = PAYLOAD.stats;
+const stats = [
+  { lbl: "Минимум", val: "$" + s.min_usd.toLocaleString(), sub: s.min_byn.toLocaleString() + " BYN", cls: "" },
+  { lbl: "P25", val: "$" + s.p25_usd.toLocaleString(), sub: s.p25_byn.toLocaleString() + " BYN", cls: "" },
+  { lbl: "Медиана", val: "$" + s.median_usd.toLocaleString(), sub: s.median_byn.toLocaleString() + " BYN", cls: "median" },
+  { lbl: "P75", val: "$" + s.p75_usd.toLocaleString(), sub: s.p75_byn.toLocaleString() + " BYN", cls: "" },
+  { lbl: "Максимум", val: "$" + s.max_usd.toLocaleString(), sub: s.max_byn.toLocaleString() + " BYN", cls: "" },
+];
+sg.innerHTML = stats.map(x => `
+  <div class="stat ${x.cls}">
+    <div class="lbl">${x.lbl}</div>
+    <div class="val">${x.val}</div>
+    <div class="sub">${x.sub}</div>
+  </div>
+`).join("");
+
+// My marker note
+if (PAYLOAD.my_marker) {
+  const m = PAYLOAD.my_marker;
+  const med = s.median_usd;
+  const diff = m.price - med;
+  const pct = ((diff / med) * 100).toFixed(0);
+  const sign = diff >= 0 ? "+" : "";
+  document.getElementById("my-marker-section").innerHTML = `
+    <div class="my-marker">
+      <div class="lbl">${m.label}</div>
+      <div class="body">${m.year} г. · ${m.mileage.toLocaleString()} км · <strong>$${m.price.toLocaleString()}</strong> · относительно медианы рынка: <strong>${sign}${diff.toLocaleString()} (${sign}${pct}%)</strong></div>
+    </div>`;
+}
+
+const M_BLUE = '#1c69d4';
+const M_BLUE_LIGHT = '#0066b1';
+const M_RED = '#e22718';
+const INK = '#ffffff';
+
+// 1. Price histogram with round $2k bins
+(() => {
+  const prices = PAYLOAD.cars.map(c => c.price_usd);
+  const minP = Math.min(...prices), maxP = Math.max(...prices);
+  // Round to nice $2k boundaries
+  const step = 2000;
+  const minBin = Math.floor(minP / step) * step;
+  const maxBin = Math.ceil(maxP / step) * step;
+  const bins = Math.max(1, Math.round((maxBin - minBin) / step));
+  const labels = [], counts = new Array(bins).fill(0);
+  for (let i = 0; i < bins; i++) {
+    const lo = minBin + step * i;
+    const hi = lo + step;
+    labels.push(`$${lo/1000}–${hi/1000}k`);
+  }
+  prices.forEach(p => {
+    let idx = Math.min(Math.floor((p - minBin) / step), bins - 1);
+    if (idx >= 0) counts[idx]++;
+  });
+  const myBin = PAYLOAD.my_marker
+    ? Math.min(Math.floor((PAYLOAD.my_marker.price - minBin) / step), bins - 1)
+    : -1;
+  const colors = counts.map((_, i) => i === myBin ? M_RED : M_BLUE);
+
+  new Chart(document.getElementById("chart-hist"), {
+    type: "bar",
+    data: { labels, datasets: [{ data: counts, backgroundColor: colors, borderWidth: 0, barPercentage: 0.95, categoryPercentage: 0.95, maxBarThickness: 9999 }] },
+    options: {
+      responsive: false, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { callbacks: {
+        title: ctx => labels[ctx[0].dataIndex],
+        label: ctx => `${ctx.parsed.y} объявлений`,
+      } } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#bbbbbb', autoSkip: false, maxRotation: 45, minRotation: 45, font: { size: 10 } } },
+        y: { beginAtZero: true, ticks: { stepSize: 1, color: '#bbbbbb' }, grid: { color: '#262626' }, title: { display: true, text: 'Объявлений', color: '#7e7e7e' } }
+      }
+    }
+  });
+})();
+
+// 2. Scatter price vs mileage
+(() => {
+  const points = PAYLOAD.cars.filter(c => c.mileage > 0).map(c => ({ x: c.mileage / 1000, y: c.price_usd }));
+  const datasets = [{
+    label: "Объявления",
+    data: points,
+    backgroundColor: "rgba(28, 105, 212, 0.55)",
+    borderColor: M_BLUE,
+    pointRadius: 4,
+  }];
+  if (PAYLOAD.my_marker) {
+    datasets.push({
+      label: PAYLOAD.my_marker.label + ` (${(PAYLOAD.my_marker.mileage/1000).toFixed(0)}к км · $${PAYLOAD.my_marker.price.toLocaleString()})`,
+      data: [{ x: PAYLOAD.my_marker.mileage / 1000, y: PAYLOAD.my_marker.price }],
+      backgroundColor: M_RED,
+      borderColor: INK,
+      borderWidth: 2,
+      pointRadius: 14,
+      pointStyle: "star",
+    });
+  }
+  new Chart(document.getElementById("chart-scatter"), {
+    type: "scatter",
+    data: { datasets },
+    options: {
+      responsive: false, maintainAspectRatio: false,
+      plugins: { legend: { position: "top", labels: { color: '#e6e6e6' } } },
+      scales: {
+        x: { title: { display: true, text: "Пробег, тыс. км", color: '#bbbbbb' }, ticks: { color: '#bbbbbb' }, grid: { color: '#262626' } },
+        y: { title: { display: true, text: "Цена, USD", color: '#bbbbbb' }, ticks: { color: '#bbbbbb' }, grid: { color: '#262626' } }
+      }
+    }
+  });
+})();
+
+// 3. Range bars + median by year
+(() => {
+  const yrs = PAYLOAD.year_data;
+  if (yrs.length === 0) return;
+  const labels = yrs.map(y => y.year);
+  const ranges = yrs.map(y => [y.min, y.max]);
+  const medians = yrs.map(y => y.median);
+  new Chart(document.getElementById("chart-year"), {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Диапазон min-max",
+          data: ranges,
+          backgroundColor: "rgba(28, 105, 212, 0.35)",
+          borderColor: M_BLUE,
+          borderWidth: 1,
+          borderSkipped: false,
+          barPercentage: 0.9, categoryPercentage: 0.9, maxBarThickness: 9999,
+        },
+        {
+          type: "line",
+          label: "Медиана",
+          data: medians,
+          borderColor: M_RED,
+          backgroundColor: M_RED,
+          pointRadius: 5, pointHoverRadius: 7,
+          showLine: false,
+        },
+      ]
+    },
+    options: {
+      responsive: false, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: "top", labels: { color: '#e6e6e6' } },
+        tooltip: { callbacks: { label: ctx => {
+          const y = yrs[ctx.dataIndex];
+          if (ctx.datasetIndex === 0) return `$${y.min.toLocaleString()} → $${y.max.toLocaleString()} (${y.count} объяв.)`;
+          return `Медиана: $${y.median.toLocaleString()}`;
+        } } }
+      },
+      scales: {
+        x: { title: { display: true, text: "Год выпуска", color: '#bbbbbb' }, ticks: { color: '#bbbbbb' }, grid: { display: false } },
+        y: { title: { display: true, text: "Цена, USD", color: '#bbbbbb' }, ticks: { color: '#bbbbbb' }, grid: { color: '#262626' } }
+      }
+    }
+  });
+})();
+
+// Cards
+function renderCards(containerId, cars, klass) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = cars.map(c => `
+    <div class="listing-card ${klass}">
+      <div class="yr">${c.year || "?"}</div>
+      <div class="price">$${c.price_usd.toLocaleString()}</div>
+      <div class="price-byn">${c.price_byn.toLocaleString()} BYN</div>
+      <div class="km">${(c.mileage/1000).toFixed(0)}к км</div>
+      <div class="city">${c.city}</div>
+      <a href="${c.url}">${c.url.replace("https://cars.av.by", "av.by")}</a>
+    </div>
+  `).join("");
+}
+renderCards("cheapest", PAYLOAD.cheapest, "cheap");
+renderCards("expensive", PAYLOAD.most_expensive, "expensive");
+</script>
+</body>
+</html>
