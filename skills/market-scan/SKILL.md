@@ -95,3 +95,4 @@ python3 skills/market-scan/market-scan.py \
 
 ## Learnings
 - [[2026-05-22]] [[market-scan]] При av.by URL машины или просьбе оценить рынок — запускать market-scan с --exclude-damaged. Дефолт PNG 720px. Для продаваемой машины добавлять --my-year/--my-mileage/--my-price/--my-label.
+- [[2026-05-23]] [[market-scan]] Chart.js + headless PNG render gotcha — при responsive:true в headless рендере бары сжимаются на левой части canvas. Фикс: фиксированный canvas (660×320 для market-scan), `responsive: false`, `maxBarThickness: 9999`, `barPercentage/categoryPercentage: 0.95`. Также Chart.js нужно запекать inline в HTML (не CDN) — для self-contained файла который работает без интернета и под headless render.

@@ -1,4 +1,5 @@
 {
+  "languages": ["ru"],
   "telegram": {
     "adminUsers": [89388434], "allowedChats": [-1003540340877, -1003702865889]
   },
