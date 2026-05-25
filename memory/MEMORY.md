@@ -10,6 +10,7 @@
 - [[dacha-maintenance|Dacha maintenance]] — water/heating procedures (Big Blue, гидроаккумулятор)
 - [[ksusha|Ksusha]] — TikTok region pinning — регион аккаунта TikTok запоминается на момент первой...
 - [[lerochka|Lerochka]] — День рождения **29 июля 2015** — в 2026 году исполнится 11 лет. Подтверждено...
+- [[wb-search|Wb Search]] — Скилл готов: поиск товаров на wildberries.by через BY-прокси + agent-browser....
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes
@@ -19,6 +20,8 @@
 - [[projects/infra/README|Infra]] — proxies
 - [[projects/platform-extensions/README|Platform extensions]] — Instagram and channel notes
 - [[projects/books/README|Books]] — конспекты non-fiction (Voss / Torres / Collins / Kaufman + ещё 5) с рейтингами и Obsidian-карточками; пополняется через [[book-summary]] skill
+- [[projects/dacha-garage/README|Dacha Garage]] — план, бюджет, фундамент УШП, EV-зарядка, дренаж, поставщики
+- [[projects/health/README|Health]] — dental, cosmetology, прочие визиты к врачам
 
 ## Loose entries
 
