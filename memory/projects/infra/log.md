@@ -1,0 +1,5 @@
+# Infra log
+
+## Log
+- [[2026-05-24]] [[infra]] WB / .by сайты через JSON API возвращают 429 без BY прокси (наш серверный IP заблокирован). `proxied by` отказывается работать: 'PROXY_BY is not set — refusing to run' — переменная не настроена в root .env платформы. Workarounds: (1) agent-browser fallback (Chromium игнорирует *_PROXY env, нужен --proxy флаг отдельно, работает но медленно/нестабильно для WB); (2) operator должен прописать PROXY_BY=http://user:pass@host:port в volatclaw/.env. Гипотеза для WB конкретно — JSON endpoint card.wb.ru/cards/v2/detail?nm={article_id} публичный и быстрый, но тоже требует BY прокси. Блокер для wb-скилла 2026-05-23.
+- [[2026-05-24]] WB прямые клики по карточкам через agent-browser ненадёжны — гипотеза: WB это React SPA с history API, click event проваливается мимо React-обработчика. Workaround: брать артикул из snapshot и открывать через https://wildberries.by/catalog/{article}/detail.aspx напрямую (URL работает всегда), либо через JSON API card.wb.ru/cards/v2/detail?nm={article_id} (требует BY прокси, см. [[infra]] про PROXY_BY).
