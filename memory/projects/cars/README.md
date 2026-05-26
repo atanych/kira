@@ -12,6 +12,7 @@
 - [[sealion-7-final-comparison]] — конкретное сравнение BYD Sealion 7 RWD vs AWD
 - [[cny-usd-cheatsheet]] — шпаргалка конвертации ¥/$ для китайских цен
 - [[ksyusha-car]] — параллельный поиск: замена Mercedes GLC для Ксюшеньки
+- `maintenance/` — журналы обслуживания и пробега по машинам ([[xc90]], [[glc]])
 - `assets/` — изображения/PDF-вложения
 
 ## Where the live decision lives
