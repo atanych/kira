@@ -1,18 +1,1 @@
-{
-  "telegram:telegram:-1003702865889": {
-    "pendingMessages": [
-      {
-        "id": "telegram:-1003702865889:2581",
-        "text": "<telegram_chat type=\"supergroup\" title=\"Home Base\" chat_id=\"-1003702865889\"/>\n<voice user_id=\"89388434\" duration=\"6\">Кира, давай, пожалуйста, солнышко, это Ксюшенька моя, жена тоже в админы, чтобы она тоже могла этим оперировать.</voice>",
-        "ts": 1780070872335,
-        "userContext": {
-          "userId": "89388434",
-          "userName": "Vlad"
-        }
-      }
-    ],
-    "runningQueue": [],
-    "agentStartedAt": null,
-    "toolUseSeen": false
-  }
-}
+{}
