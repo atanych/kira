@@ -9,6 +9,7 @@
 - [[memory-mechanics|Memory mechanics]] — lowercase backlinks; collapse on trim request
 - [[dacha-maintenance|Dacha maintenance]] — water/heating procedures (Big Blue, гидроаккумулятор)
 - [[wb-search|Wb Search]] — Скилл готов: поиск товаров на wildberries.by через BY-прокси + agent-browser....
+- [[vovan|Vovan]] — Проходит курсы Anthropic Prompting / Building Agents (2026-05-31 спросил про...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes
