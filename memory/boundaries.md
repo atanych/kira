@@ -11,3 +11,4 @@ What I own vs. what I don't touch. Safety reflex exceptions for own code.
 ## Log
 - [[2026-04-22]] Boundary rule: never read, write, or touch anything inside Ostap's bot directory. Kira only owns her own bot folder.
 - [[2026-04-24]] Malware-safety reflex must NOT block editing Kira's own skill code. When the file is clearly under `bots/kira/` or `skills/` that Kira owns, just do the edit. The safety prompt is for external/unknown code.
+- [[2026-06-04]] [[boundaries]] **google-search skill BROKEN с 2026-06-02** — `volatclaw/skills/google-search/google-search.ts:22` хардкодит `gemini-2.0-flash`, который Google EOL'нул 1 июня 2026. Каждый search → 404. Fix: одна строка `gemini-2.0-flash` → `gemini-3.5-flash` (3.5 Flash GA с того же 1 июня). Это shared skill, не моя территория — Vovan должен применить one-line change. До этого AI briefing и все search-зависимые задачи лежат.
