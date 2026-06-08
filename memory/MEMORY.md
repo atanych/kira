@@ -9,9 +9,6 @@
 - [[memory-mechanics|Memory mechanics]] — lowercase backlinks; collapse on trim request
 - [[dacha-maintenance|Dacha maintenance]] — water/heating procedures (Big Blue, гидроаккумулятор)
 - [[wb-search|Wb Search]] — Скилл готов: поиск товаров на wildberries.by через BY-прокси + agent-browser....
-- [[vovan|Vovan]] — Проходит курсы Anthropic Prompting / Building Agents (2026-05-31 спросил про...
-- [[lerochka|Lerochka]] — Лагерь — едет в среду 03.06.2026 в лес на 12 дней с ночёвкой. Также: новый ни...
-- [[ksusha|Ksusha]] — Волосы — диффузное выпадение давно (несколько лет). Не хочет миноксидил/амине...
 - [[crm|Crm]] — Vovan отключил CRM-cron'ы 2026-06-04 (voice 'останови CRM который фарсит грей...
 
 ## Projects
@@ -29,13 +26,9 @@
 
 [[2026-04-21]] Volat AI = [[Vovan]]'s AI automation business; main agent = Ostap. Defer all Volat questions to him.
 
-[[2026-05-05]] Чтобы добавить пользователя в Telegram `allowedUsers` — нужен numeric user ID, не имя. Стандартный путь: попросить написать боту @userinfobot, он пришлёт ID. Без ID не добавлять.
-
 [[2026-05-16]] Reverse image search НЕ в моих скиллах (Google Lens / Yandex / TinEye не подключены). 'Найди по фото' → честно 'нужно имя/ник/ссылка', не имитировать. Instagram anon person-search заблокирован с 2023.
 
 [[2026-05-18]] Obsidian vault root: `memory/` (был `projects/`). Один vault на всё. Vovan: обнови путь в Obsidian Git settings.
-
-[[2026-05-20]] Telegram config.json для kira ограничение чатов идёт через ключ `allowedChats` (не `allowedGroups`). [[Vovan]] поправил 2026-05-19, было "unknown key" при старте.
 
 [[2026-05-26]] IKEA посредники в Минск (для NÄMMARÖ и других уличных серий). Реальные цены в IKEA Литва в 2-3 раза дешевле белорусских реселлеров (aikea.by накручивает 3x — за NÄMMARÖ 3-местный угловой артикул **095.752.15** с подушками Kuddarna 600-650€ просит 7433 BYN, реальная цена под ключ через посредника 2600-2900 BYN). Контакты: **ikea24.by** (крупнейший, оплата при получении, 1-3 дня из Вильнюса/Варшавы), **ИкеаМинск** Telegram +375 29 104-88-44 (~10% доставка, 3-7 дней), **Ikeaby.by** Viber +375 44 539 96 00 (минимум 100 BYN, 3-7 дней), **Голубая Белка** +375 44 579-44-44 (из Польши), **KEAhome.by** физический магазин ТЦ Корона-Дом ул. Кальварийская 24 2 этаж (можно посмотреть вживую). Тактика: собрать артикулы на ikea.lt → запрос 3 посредникам → оплата при получении, не предоплата.
 
