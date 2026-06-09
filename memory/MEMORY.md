@@ -21,6 +21,7 @@
 - [[projects/books/README|Books]] — конспекты non-fiction (Voss / Torres / Collins / Kaufman + ещё 5) с рейтингами и Obsidian-карточками; пополняется через [[book-summary]] skill
 - [[projects/dacha-garage/README|Dacha Garage]] — план, бюджет, фундамент УШП, EV-зарядка, дренаж, поставщики
 - [[projects/health/README|Health]] — dental, cosmetology, прочие визиты к врачам
+- [[projects/fancy-design/README|Fancy Design]] — ig-посты, скриншоты, источники, заметки по приёмам
 
 ## Loose entries
 
