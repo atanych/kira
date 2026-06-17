@@ -12,6 +12,7 @@
 - [[crm|Crm]] — Vovan отключил Grain/recap CRM-cron'ы 2026-06-04 (перенесены в `crons/.disabled/`); action-items-reminder остался
 - [[car-sale-rb|Car Sale RB]] — продажа б/у авто в РБ: МРО ГАИ Ждановичи/Малиновка, транзиты + ДКП, договор комиссии (ст. 880 ГК)
 - [[vovan|Vovan]] — Использует **AirPods Pro 2 USB-C (Model A3047)** — выяснилось 2026-06-13 когд...
+- [[ksusha|Ksusha]] — Стрим-благодарность framework для TikTok-баттлов (2026-06-15 thread). Аудитор...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes
