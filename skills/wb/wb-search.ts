@@ -115,7 +115,7 @@ for (let i = 0; i < products.length; i++) {
   const fileName = `photo-wb-${String(i + 1).padStart(2, "0")}-${p.nmId}.jpg`;
   const filePath = resolve(OUTPUT_DIR, fileName);
   try {
-    sh("/home/claude/volatclaw/bin/proxied", [
+    sh("proxied", [
       "by", "curl", "-fsSL",
       "-H", "Referer: https://www.wildberries.by/",
       "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
