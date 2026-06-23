@@ -20,7 +20,9 @@
  */
 
 import db from '../../crm/src/db.js';
+import path from 'node:path';
 
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const args = process.argv.slice(2);
 const command = args[0];
 
@@ -44,7 +46,8 @@ function normalizeTag(tag) {
   if (['кв', 'квартира', 'apt', 'apartment'].includes(t)) return 'квартира';
   if (['дача', 'dacha', 'cottage'].includes(t)) return 'дача';
   if (['ai', 'ии', 'aiwork'].includes(t)) return 'ai';
-  throw new Error(`Неизвестный tag: ${tag}. Варианты: дача, квартира, ai`);
+  if (['volatclaw', 'volat', 'platform', 'vc'].includes(t)) return 'volatclaw';
+  throw new Error(`Неизвестный tag: ${tag}. Варианты: дача, квартира, ai, volatclaw`);
 }
 
 function parseTagsFlag() {
@@ -77,73 +80,29 @@ async function add() {
   console.log(`Задача #${res.rows[0].id} добавлена${tagStr}: ${title}${due ? ` (до ${due})` : ''}`);
 }
 
-const TAG_ORDER_SQL = `CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 WHEN 'ai' = ANY(tags) THEN 3 ELSE 4 END`;
-const TAG_HEADERS = { 'квартира': '🏠 Квартира', 'дача': '🌲 Дача', 'ai': '🤖 AI', 'other': '📍 Прочее' };
+const TAG_ORDER_SQL = `CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 WHEN 'ai' = ANY(tags) THEN 3 WHEN 'volatclaw' = ANY(tags) THEN 4 ELSE 5 END`;
+const TAG_HEADERS = { 'квартира': '🏠 Квартира', 'дача': '🌲 Дача', 'ai': '🤖 AI', 'volatclaw': '⚙️ Volatclaw', 'other': '📍 Прочее' };
 
 function primaryGroup(tags) {
   if (!tags || tags.length === 0) return 'other';
   if (tags.includes('квартира')) return 'квартира';
   if (tags.includes('дача')) return 'дача';
   if (tags.includes('ai')) return 'ai';
+  if (tags.includes('volatclaw')) return 'volatclaw';
   return 'other';
 }
 
 async function list() {
+  // Delegate rendering to render.mjs — produces PNG in $BOT_OUTPUT_DIR/photo-tasks.png.
+  // Empty list → render.mjs prints a text fallback to stdout.
   const showAll = hasFlag('all');
   const todayOnly = hasFlag('today');
-
-  let where = `WHERE status = 'open' AND (due_date IS NULL OR due_date <= CURRENT_DATE + INTERVAL '1 month')`;
-  if (showAll && !todayOnly) where = '';
-  if (todayOnly) where = `WHERE status = 'open' AND due_date IS NOT NULL AND due_date <= '${todayStr()}'`;
-
-  const res = await db.query(`
-    SELECT id, title, status,
-           TO_CHAR(due_date, 'YYYY-MM-DD') AS due_date,
-           notes, tags, created_at, completed_at
-    FROM tasks
-    ${where}
-    ORDER BY
-      CASE WHEN status = 'open' THEN 0 ELSE 1 END,
-      ${TAG_ORDER_SQL},
-      CASE WHEN due_date IS NOT NULL THEN 0 ELSE 1 END,
-      due_date ASC NULLS LAST,
-      created_at DESC
-  `);
-
-  if (res.rows.length === 0) {
-    if (todayOnly) console.log('На сегодня и просроченных задач нет. Можно спать спокойно 😴');
-    else if (showAll) console.log('Задач нет.');
-    else console.log('Открытых задач нет.');
-    return;
-  }
-
-  const label = todayOnly ? 'Задачи на сегодня' : showAll ? 'Все задачи' : 'Открытые задачи';
-  console.log(`${label} — ${res.rows.length}:\n`);
-
-  const today = todayStr();
-  let currentGroup = null;
-  res.rows.forEach((t, i) => {
-    const tags = t.tags || [];
-    const group = primaryGroup(tags);
-    if (group !== currentGroup) {
-      if (currentGroup !== null) console.log('');
-      console.log(TAG_HEADERS[group]);
-      currentGroup = group;
-    }
-    const status = t.status === 'done' ? '✅' : '⬚';
-    const dueDate = t.due_date || null;
-    let due = '';
-    if (dueDate) {
-      const isOverdue = dueDate < today;
-      const isToday = dueDate === today;
-      const emoji = isOverdue ? '🔴' : isToday ? '🔥' : '📅';
-      due = ` | ${emoji} до ${dueDate}`;
-    }
-    const notes = t.notes ? ` — ${t.notes}` : '';
-    const extraTags = tags.filter(x => x !== group);
-    const extra = extraTags.length ? ` [+${extraTags.join(', ')}]` : '';
-    console.log(`${i + 1}. ${status} ${t.title}${extra}${due}${notes}`);
-  });
+  const { spawnSync } = await import('node:child_process');
+  const renderArgs = [path.resolve(__dirname, 'render.mjs')];
+  if (todayOnly) renderArgs.push('--today');
+  if (showAll && !todayOnly) renderArgs.push('--all');
+  const r = spawnSync(process.execPath, renderArgs, { stdio: 'inherit' });
+  if (r.status !== 0) process.exit(r.status || 1);
 }
 
 async function done() {
@@ -237,7 +196,8 @@ async function getOpenItems() {
       ${TAG_ORDER_SQL},
       CASE WHEN due_date IS NOT NULL THEN 0 ELSE 1 END,
       due_date ASC NULLS LAST,
-      created_at DESC
+      created_at DESC,
+      id ASC
   `);
   return res.rows;
 }

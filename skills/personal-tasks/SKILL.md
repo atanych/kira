@@ -9,11 +9,14 @@
 # добавить задачу
 node skills/personal-tasks/scripts/tasks.js add "Починить iPhone Лерочке" --due 2025-02-15
 
-# список открытых задач
+# список открытых задач — рендерится как PNG в $BOT_OUTPUT_DIR/photo-tasks.png (авто-отправляется в чат)
 node skills/personal-tasks/scripts/tasks.js list
 
-# список всех (включая завершённые)
+# список всех (включая завершённые) — тоже PNG
 node skills/personal-tasks/scripts/tasks.js list --all
+
+# на сегодня (overdue + today) — PNG
+node skills/personal-tasks/scripts/tasks.js list --today
 
 # завершить задачу по индексу
 node skills/personal-tasks/scripts/tasks.js done 1,3
@@ -66,11 +69,11 @@ node skills/personal-tasks/scripts/tasks.js spawn
 - Спавн дёргается ежедневным кроном `tasks-spawn.json` (4:00 UTC = 7:00 Минск, за 5 минут до morning list).
 
 ## Tags
-Допустимые значения (канонические): `дача`, `квартира`, `ai`. Ограничение задано на уровне БД через CHECK (`tags <@ ARRAY['дача','квартира','ai']`). Если нужен новый тег — сначала обновить миграцию и выполнить ALTER TABLE.
+Допустимые значения (канонические): `дача`, `квартира`, `ai`, `volatclaw`. Ограничение задано на уровне БД через CHECK (`tags <@ ARRAY['дача','квартира','ai','volatclaw']`) на обеих таблицах (`tasks`, `task_templates`). Если нужен новый тег — обновить миграцию + выполнить `ALTER TABLE … DROP/ADD CONSTRAINT` + дописать `normalizeTag` / `TAG_HEADERS` / `TAG_ORDER_SQL` / `primaryGroup`.
 
-Алиасы ввода: `кв`/`apt`/`apartment` → `квартира`; `dacha`/`cottage` → `дача`; `ии`/`aiwork` → `ai`.
+Алиасы ввода: `кв`/`apt`/`apartment` → `квартира`; `dacha`/`cottage` → `дача`; `ии`/`aiwork` → `ai`; `volat`/`platform`/`vc` → `volatclaw`.
 
-Порядок групп в выводе list: 🏠 Квартира → 🌲 Дача → 🤖 AI → 📍 Прочее.
+Порядок групп в выводе list: 🏠 Квартира → 🌲 Дача → 🤖 AI → ⚙️ Volatclaw → 📍 Прочее.
 
 ## Input
 - Команда: `add`, `list`, `done`, `remove`, `edit`
@@ -98,3 +101,7 @@ node skills/personal-tasks/scripts/tasks.js spawn
 - [2026-05-19] [[personal-tasks]] Новая группа 🤖 AI добавлена 2026-05-18. БД CHECK constraint принимает: дача, квартира, **ai**, прочее. normalizeTag принимает алиасы ai/ии/aiwork → ai. Порядок вывода: 🏠 Квартира → 🌲 Дача → 🤖 AI → 📍 Прочее. Эмодзи 🤖, header 'AI'. Используется для задач связанных с AI/ботами/инструментами (примеры: улучшить дашборд ботов, изучить jitter.video, новые скиллы).
 - [2026-05-20] [[personal-tasks]] Вывод от list (утро/вечер крон + ручной запрос) отдавать как plain text — БЕЗ markdown bold/italic (**...**). Telegram у Vovan'а не рендерит markdown, сырые звёзды торчат в выдаче. Заголовки групп оставлять как есть из CLI (🏠 Квартира / 🌲 Дача / 🤖 AI / 📍 Прочее) — они и так читаемые. Акценты делать через эмодзи (🔥 🔴 ←) и переносы строк, не bold.
 - [[2026-05-22]] [[personal-tasks]] task_templates schema migrated 2026-05-21 — legacy колонка `recurrence` дропнута, добавлены: `recurrence_type TEXT` ('monthly'|'weekly'), `recurrence_day INT` (1-31 monthly / 0-6 weekly), `interval INT NOT NULL DEFAULT 1`. Семантика: type=monthly, day=15, interval=3 → 15-го раз в 3 мес (quarterly). type=weekly, day=5, interval=2 → каждая 2-я пятница (biweekly). interval=1 по дефолту = старое поведение. CLI: --type / --day / --interval вместо старого --every. Anchor для interval-стэпа = last_spawned_due (или created_at если null).
+- [[2026-06-19]] [[personal-tasks]] Тег `volatclaw` добавлен 2026-06-19 — для багов/задач по платформе volatclaw. Эмодзи ⚙️, в выводе list идёт после AI (🤖 → ⚙️ → 📍). Алиасы: volat/platform/vc → volatclaw. CHECK constraint обновлён на обеих таблицах (tasks, task_templates) до ['дача','квартира','ai','volatclaw'].
+- [[2026-06-20]] [[personal-tasks]] Тег `volatclaw` 2026-06-19: добавлен в CHECK constraint `tasks_tags_allowed` + `task_templates_tags_allowed` (ALTER TABLE DROP/ADD CONSTRAINT). Обновлён код: `normalizeTag` принимает `volatclaw` + ё→е нормализация, `TAG_HEADERS['volatclaw'] = '⚙️ Volatclaw'`, `TAG_ORDER_SQL` — между `ai` и `прочее`, `primaryGroup` приоритет volatclaw. Все 11 таблиц kira-схемы owned by bot_kira — DDL делаю сама через DATABASE_URL без postgres-роли.
+- [[2026-06-20]] [[personal-tasks]] Bug fixed 2026-06-20: ORDER BY в tasks.js не имел финального tiebreaker по id — при равных created_at порядок задач между вызовами плавал, что ломает workflow 'list → edit by index'. Сегодня edit 12 попал в Gemini Spark вместо loose entries. Фикс: добавлен 'id ASC' в обе ORDER BY (в list и в getOpenItems). Урок: всегда финализируй ORDER BY по уникальному столбцу, иначе индексы нестабильны.
+- [[2026-06-21]] [[personal-tasks]] 2026-06-20: `list`/`list --today`/`list --all` теперь рендерит HTML→PNG в $BOT_OUTPUT_DIR/photo-tasks.png (Stream layout: BMW M-полоска в hero, accent-bar по группе, бейджи дедлайнов overdue/today/дата, label-only без emoji в группах — Noto Color Emoji не подгружался в headless Chrome). Текстовый fallback только для пустого списка. Morning/evening cron'ы (`tasks-morning.json`/`tasks-evening.json`) переписаны под новый flow — никаких 'перешли stdout', скрипт сам шлёт картинку. Параллельно прибит ORDER BY tiebreaker — индексы стабильны между запросами.

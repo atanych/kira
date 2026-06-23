@@ -44,6 +44,11 @@ const pool = new pg.Pool({
   max: 5,
 });
 
+// CRM + personal-tasks tables live in the kira schema (migrated 2026-06-18)
+pool.on('connect', (client) => {
+  client.query('SET search_path TO kira, extensions, public').catch(() => {});
+});
+
 export async function query(text, params) {
   return pool.query(text, params);
 }

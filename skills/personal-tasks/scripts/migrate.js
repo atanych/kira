@@ -18,7 +18,7 @@ async function migrate() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       completed_at TIMESTAMPTZ,
       template_id INTEGER,
-      CONSTRAINT tasks_tags_allowed CHECK (tags <@ ARRAY['дача','квартира']::text[])
+      CONSTRAINT tasks_tags_allowed CHECK (tags <@ ARRAY['дача','квартира','ai','volatclaw']::text[])
     )
   `);
   // Ensure constraint exists for already-created tables (idempotent).
@@ -29,7 +29,7 @@ async function migrate() {
       ) THEN
         ALTER TABLE tasks
           ADD CONSTRAINT tasks_tags_allowed
-          CHECK (tags <@ ARRAY['дача','квартира']::text[]);
+          CHECK (tags <@ ARRAY['дача','квартира','ai','volatclaw']::text[]);
       END IF;
     END $$;
   `);
@@ -48,7 +48,7 @@ async function migrate() {
       active BOOLEAN NOT NULL DEFAULT TRUE,
       last_spawned_due DATE,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      CONSTRAINT task_templates_tags_allowed CHECK (tags <@ ARRAY['дача','квартира']::text[])
+      CONSTRAINT task_templates_tags_allowed CHECK (tags <@ ARRAY['дача','квартира','ai','volatclaw']::text[])
     )
   `);
 

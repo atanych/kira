@@ -23,3 +23,4 @@ node skills/render-image/render-image.mjs "<prompt>" --ratio <aspect_ratio> --si
 ## Learnings
 - [2026-04-11] New agent **Dex** 🧪 — 30yo engineer, quiet nerd, Dexter-inspired. Pure coder, opens browser locally, sends screenshots. Avatar generated via [[render-image]].
 - [2026-04-15] [[render-image]] Default model switched to Nano Banana 2 (gemini-3.1-flash-image-preview) — far better text rendering, especially Cyrillic. Imagen 4 still available as fallback.
+- [[2026-06-19]] [[render-image]] GPT Image 2 endpoint мёртвый (404) на запросах — Gemini работает нормально. При мульти-генерации возвращается только Gemini-вариант. Зафиксировано 2026-06-18 на запросе 'розовый котик'.

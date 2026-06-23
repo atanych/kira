@@ -15,9 +15,9 @@ const pool = new pg.Pool({
   max: 5,
 });
 
-// KB tables live in the eli schema
+// KB tables live in the kira schema (migrated 2026-06-18 from public)
 pool.on('connect', (client) => {
-  client.query('SET search_path TO eli, extensions, public').catch(() => {});
+  client.query('SET search_path TO kira, extensions, public').catch(() => {});
 });
 
 export async function query(text, params) {
