@@ -8,6 +8,15 @@
 - Shopping list собран (см. [[shopping-list]])
 - Ждём заказ
 
+## 2026-06-26 — первый заказ + переориентация
+- Купил: **Pyunkang Yul Essence Toner 200мл** + **Niacinamide 10 Brightening Ampoule 30мл**
+- ⚠️ Essence Toner оказался слишком плотным/масляным для combination skin — кожа жирнится
+- Решение: переходим на **Pyunkang Yul Mist Toner 200мл** (другая консистенция, водянистый спрей)
+- Essence Toner откладываем на полку для зимы / иногда на ночь
+- Bielenda Water Balance тоник по всей РБ нет в наличии — закрыли вопрос, не ищем
+- Финальная рутина упрощена до 4 шагов утром/3 шагом вечером (см. [[target-routine]])
+- К покупке: Pyunkang Yul Mist Toner на goldapple.by (48 BYN)
+
 ## Шаблон записи
 ```
 ## YYYY-MM-DD — событие

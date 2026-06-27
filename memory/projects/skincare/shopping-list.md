@@ -1,35 +1,42 @@
 # Shopping List
 
-**Где:** Золотое Яблоко (goldapple.ru) → Viber-посредник в РБ.
-Альтернатива — Wildberries.by (искать продавцов с РФ-доставкой).
+## ✅ Уже куплено (2026-06-26)
 
-## Приоритет 1 — must-have (~$110)
-
-| Продукт | Что делает | Цена ~$ |
+| Продукт | Где взято | Цена |
 |---|---|---|
-| **Paula's Choice 2% BHA Liquid 118ml** | Очищает поры изнутри, убирает чёрные точки | 30 |
-| **Timeless 20% Vit C + E + Ferulic Serum 30ml** | Антиоксидант, выравнивание тона, защита от UV-стресса | 25 |
-| **The Ordinary Granactive Retinoid 2% Emulsion 30ml** | Антиэйдж (новичкам — мягкий старт) | 12 |
-| **COSRX Hyaluronic Hydra Power Essence 100ml** | Лёгкое увлажнение для жирной/комбо | 15 |
-| **LRP Anthelios UVMune 400 Oil Control SPF 50+** | Матирующий SPF на день | 28 |
-| **Итого** | | **~110** |
+| Pyunkang Yul Essence Toner 200мл | Goldapple.by | ~50 BYN |
+| Niacinamide 10 Brightening Ampoule 30мл | Goldapple.by | ? |
 
-## Приоритет 2 — потом (если зайдёт рутина)
+⚠️ Essence Toner оказался слишком плотным/масляным — отложен. Покупаем замену:
 
-| Продукт | Что делает |
-|---|---|
-| The Ordinary Niacinamide 10% + Zinc 1% | Сужает поры, регулирует sebum (можно вместо/вместе с BHA) |
-| Beauty of Joseon Calming Toner | Если кожа раздражается от ретинола |
-| COSRX Master Patch (acne patches) | Точечно на воспаления |
+## 🛒 К покупке сейчас
 
-## Что НЕ покупать
-- Тяжёлые ночные кремы летом
-- Скрабы с абразивом для пор — рвут кожу, не работают
-- Маски-плёнки с углём для чёрных точек — травмируют, эффект на час
-- Спиртовые тоники "для жирной кожи" — пересушивают → кожа жирнится сильнее
+| Продукт | Где | Цена |
+|---|---|---|
+| **Pyunkang Yul Mist Toner 200мл** | Goldapple.by | **48,29 BYN** |
 
-## Заказ
-- [ ] Собрать корзину на goldapple.ru
-- [ ] Скинуть посреднику в Viber
-- [ ] Оплатить, дождаться
-- [ ] Записать дату получения в [[journal]]
+🔗 https://goldapple.by/19000150166-mist-toner
+
+⚠️ Внимание: на Goldapple маркирован "для женщин" — это маркетинг, состав работает одинаково на любой коже. Игнорировать категоризацию.
+
+## ⏳ Возможные покупки позже (если рутина зайдёт)
+
+| Продукт | Зачем | Цена |
+|---|---|---|
+| **LRP Anthelios UVMune 400 Oil Control SPF 50+** | Нормальный SPF вместо BABE 20 | ~70-90 BYN (103.by / healthplanet.by) |
+| **Paula's Choice 2% BHA Liquid 118мл** | Если ниацинамид не справится с порами через 4-6 недель | ~211 BYN (Goldapple.by — https://goldapple.by/19000153871-perfecting-2-bha) |
+| **The Ordinary Granactive Retinoid 2%** | Антиэйдж добавить осенью | ~12 BYN |
+
+## ❌ Не покупать (искали — не нашли в РБ или нет смысла)
+
+- **Bielenda Water Balance тоник 200мл** — везде "нет в наличии" в Беларуси (Milan/Healthplanet/Skinfood/Mamashop/Magnit Cosmetic/Apteka-online — все пусто, на Ozon перекуп 156 BYN). Заменён на Pyunkang Yul Mist Toner.
+- **Timeless 20% Vit C** — отложили, niacinamide пока достаточно
+- **COSRX Hyaluronic Hydra Power Essence** — отложили, мист справится с увлажнением
+
+## Где покупать в РБ
+
+- **Goldapple.by** — основной (k-beauty, La Roche-Posay, Paula's Choice)
+  - Офлайн в Минске: проспект Победителей 9, Притыцкого 156
+- **103.by / Healthplanet.by** — белорусские аптечные SPF и фарма-косметика
+- **Wildberries.by** — дешёвые тоники-аналоги (Aravia и т.п.)
+- **BeautyLavka.by / Skinfood.by** — нишевая k-beauty
