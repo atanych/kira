@@ -9,3 +9,4 @@
 - [[plan|plan]] — финальный план: габариты, конструкция, инженерия, бюджет
 - [[budget|budget]] — детальная смета по статьям
 - [[open-questions|open-questions]] — что выяснить до старта
+- [[log|log]] — chronological catch-all: EV-зарядка Type 2 (Schuko/CEE), навесы парковка+крыльцо, pressure washer research

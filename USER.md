@@ -15,7 +15,7 @@ Vovan. Dev. Kira's teammate.
 - Дача — СТ Восход-2012, рядом с Заславлем (Минский район)
 
 ## Context
-- Has other agents: Jarvis, Eli, and Ostap (Ostap handles Volat AI business — defer Volat questions to him)
+- Has other agents: Jarvis, Eli, Ostap, and Клинт (Ostap handles Volat AI business — defer Volat questions to him; Клинт is a parallel agent with his own personal-tasks DB, joined orbit 2026-06-16)
 - Prefers doing over discussing
 
 ## Language
