@@ -11,6 +11,8 @@
 - [[wb-search|Wb Search]] — поиск товаров на wildberries.by через BY-прокси + agent-browser (PoW через JS-движок)
 - [[crm|Crm]] — Vovan отключил Grain/recap CRM-cron'ы 2026-06-04 (перенесены в `crons/.disabled/`); action-items-reminder остался
 - [[car-sale-rb|Car Sale RB]] — продажа б/у авто в РБ: МРО ГАИ Ждановичи/Малиновка, транзиты + ДКП, договор комиссии (ст. 880 ГК)
+- [[vladik|Vladik]] — Микоплазма подтверждена педиатром 2026-06-28 (4 колеса лаба/анализы). Болеет...
+- [[ksusha|Ksusha]] — Заболела 2026-06-28 — горло + стоматит, на фоне Vladik с микоплазмой и собств...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes
@@ -50,3 +52,5 @@
 [[2026-06-22]] Видеофайлы (.mp4 и т.п.) через Read не открываются — Read поддерживает только статические изображения (PNG/JPG) и PDF (с pages-параметром для длинных). Если юзер шлёт видео — попросить скриншот ключевого кадра. Аналогично DOCX (см. запись от 2026-06-21).
 
 [[2026-06-24]] Goldapple.by — anti-scraping (2026-06-23). SPA + WAF против direct запросов: голый `curl`/`WebFetch` возвращает пустую оболочку без товаров. `proxied by` не помогает (это не геоблок, а bot-detection). `agent-browser` headless тоже спотыкается на их защите. Что работает: (1) поисковые URL вида `https://goldapple.by/qs/<query+with+pluses>` — отдать пользователю для ручного клика; (2) browser screenshots через agent-browser с явной интерактивностью (long timeout, скриллинг). Офлайн в Минске: пр. Победителей 9, ул. Притыцкого 156. Аналогично у WB.by — карточки требуют PoW (см. wb-search skill).
+
+[[2026-06-29]] Volat AI / Четыре Колёса — SIP voice-agent POC (2026-06-28, Vovan ведёт engineering, тема не Ostap'а). Use case: **OUTBOUND** (агент сам звонит клиентам Четырёх Колёс через их Bitrix24+A1 ВАТС). REGISTER не нужен — direct INVITE с digest auth. Стек: **LiveKit Cloud** (уже создан проект 'Vovan Test', SIP URI sip:5pif6wmxwbo.sip.livekit.cloud) outbound trunk → **LiveKit Agents** (Python, на тот же сервер где volatclaw, локалхост) → новый канал `sip` в volatclaw (отдельный transport-handler рядом с telegram/slack) → Claude Haiku 4.5 (НЕ Sonnet — TTFT критичен). Открытия: **LiveKit SIP не поддерживает REGISTER** (заточен под trunking, direct INVITE на наш IP). **Pipecat — не SIP-стек**, аудио-пайплайн поверх Daily/Twilio/LiveKit — те же ограничения. Latency budget: <800ms естественно, до 1.5s терпимо, >2s = трубку бросают. Главные рычаги: Claude Haiku, prompt caching обязательно (системные промпты 50K+ кэшируются на 5 мин), стриминг везде (Claude→volatclaw→LiveKit→TTS), voice-режим где половина PLATFORM.md скипается. Запросить у 4 Колёс: адрес SIP-сервера A1 (НЕ угадывать sip.a1.by — у них может быть voice.a1.by/pbx.a1.by/внутренний IP), транспорт (UDP/TCP/TLS, скорее UDP), логин+пароль ОТДЕЛЬНОГО сотрудника (не из их рабочей очереди операторов), городской номер для Caller ID. Скинуть в env editor https://my.volat.ai/env/kira.
