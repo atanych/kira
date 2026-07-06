@@ -11,8 +11,6 @@
 - [[wb-search|Wb Search]] — поиск товаров на wildberries.by через BY-прокси + agent-browser (PoW через JS-движок)
 - [[crm|Crm]] — Vovan отключил Grain/recap CRM-cron'ы 2026-06-04 (перенесены в `crons/.disabled/`); action-items-reminder остался
 - [[car-sale-rb|Car Sale RB]] — продажа б/у авто в РБ: МРО ГАИ Ждановичи/Малиновка, транзиты + ДКП, договор комиссии (ст. 880 ГК)
-- [[vladik|Vladik]] — Микоплазма подтверждена педиатром 2026-06-28 (4 колеса лаба/анализы). Болеет...
-- [[ksusha|Ksusha]] — Заболела 2026-06-28 — горло + стоматит, на фоне Vladik с микоплазмой и собств...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes

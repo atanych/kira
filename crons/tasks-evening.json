@@ -1,6 +1,8 @@
 {
   "schedule": "0 17 * * *",
-  "prompt": "Запусти: `node skills/personal-tasks/scripts/tasks.js list --today`. Скрипт сам рендерит PNG в $BOT_OUTPUT_DIR/photo-tasks.png — он автоматически уйдёт в чат как фото. Никаких текстовых сообщений от тебя НЕ нужно. Исключение: если задач на сегодня нет — stdout будет содержать одну строку, перешли её как 'Чисто, можно отдыхать.' Если есть — НИЧЕГО не пиши, картинка самодостаточна. Отвечай на русском.",
+  "gate": "bash skills/personal-tasks/scripts/cron-gate.sh --today",
+  "gateTimeout": 60,
+  "prompt": "unused — cron gates via bash script (see gate field). If this fires, something is off with the gate.",
   "chatId": "telegram:-1003540340877:780",
   "platform": "telegram"
 }
