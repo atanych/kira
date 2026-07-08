@@ -13,7 +13,7 @@
 - [[cny-usd-cheatsheet]] — шпаргалка конвертации ¥/$ для китайских цен
 - [[ksyusha-car]] — параллельный поиск: замена Mercedes GLC для Ксюшеньки
 - [[log]] — chronological catch-all (memory-save Route 3); содержит hard-reqs embed + EV-льгота РБ + autohome.com.cn paths
-- `maintenance/` — журналы обслуживания и пробега по машинам ([[xc90]], [[glc]])
+- `maintenance/` — журналы обслуживания и пробега по машинам ([[xc90]], [[glc]], [[byd-song-plus]])
 - `assets/` — изображения/PDF-вложения
 
 ## Where the live decision lives
