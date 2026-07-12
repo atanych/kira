@@ -1,18 +1,16 @@
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { execSync } from "child_process";
-import sharp from "sharp";
 
 const BOT_DIR = resolve(import.meta.dirname, "../..");
-const OUTPUT_DIR = resolve(BOT_DIR, "tmp/output");
+const OUTPUT_DIR = process.env.BOT_OUTPUT_DIR || resolve(BOT_DIR, "tmp/output");
 const TEMPLATE_PATH = resolve(import.meta.dirname, "template.html");
-const VIEWPORT_WIDTH = 700;
 
 interface DigestItem {
   title: string;
   price?: string;
   body: string;
   source?: string;
+  url?: string;
 }
 
 interface Stat {
@@ -42,13 +40,24 @@ function esc(s: string): string {
     .replace(/"/g, "&quot;");
 }
 
+function linkify(s: string): string {
+  // Turn bare http(s) URLs into clickable links (call on already-escaped text)
+  return s.replace(
+    /(https?:\/\/[^\s<]+)/g,
+    '<a href="$1" target="_blank" rel="noopener" style="color:#6b70ff;text-decoration:none;border-bottom:1px dashed rgba(107,112,255,0.4);">$1</a>'
+  );
+}
+
 function renderCard(item: DigestItem): string {
+  const titleInner = `${esc(item.title)}${
+    item.price ? ` <span class="price-pill">${esc(item.price)}</span>` : ""
+  }`;
+  const title = item.url
+    ? `<a class="card-title-link" href="${esc(item.url)}" target="_blank" rel="noopener">${titleInner}<span class="link-arrow">↗</span></a>`
+    : titleInner;
   return `
     <div class="card">
-      <div class="card-title">
-        ${esc(item.title)}
-        ${item.price ? `<span class="price-pill">${esc(item.price)}</span>` : ""}
-      </div>
+      <div class="card-title">${title}</div>
       <div class="card-body">${esc(item.body)}</div>
       ${item.source ? `<div class="card-source">${esc(item.source)}</div>` : ""}
     </div>`;
@@ -74,7 +83,7 @@ function buildHtml(data: DigestData): string {
     .map((i) => `<div class="insight">${esc(i)}</div>`)
     .join("\n");
   const usefulItems = data.useful
-    .map((u) => `<div class="useful-item"><span class="arrow">→</span><span>${esc(u)}</span></div>`)
+    .map((u) => `<div class="useful-item"><span class="arrow">→</span><span>${linkify(esc(u))}</span></div>`)
     .join("\n");
 
   return template
@@ -84,7 +93,7 @@ function buildHtml(data: DigestData): string {
     .replace("{{stats}}", statCards)
     .replace("{{insights}}", insights)
     .replace("{{useful}}", usefulItems)
-    .replace("{{sources}}", esc(data.sources));
+    .replace("{{sources}}", data.sources);
 }
 
 // --- Main ---
@@ -96,27 +105,6 @@ if (!jsonPath) {
 
 const data: DigestData = JSON.parse(readFileSync(resolve(jsonPath), "utf-8"));
 const html = buildHtml(data);
-const htmlPath = resolve(BOT_DIR, "tmp/digest-rendered.html");
-writeFileSync(htmlPath, html);
-console.log(`✓ HTML written to ${htmlPath}`);
-
-// Screenshot via agent-browser + crop with sharp
-const tmpPath = resolve(BOT_DIR, "tmp/digest-full.png");
-const outPath = resolve(OUTPUT_DIR, "digest.png");
-try {
-  execSync(`npx agent-browser open "file://${htmlPath}"`, { stdio: "pipe", timeout: 15000 });
-  execSync(`npx agent-browser screenshot "${tmpPath}" --full`, { stdio: "pipe", timeout: 15000 });
-  execSync(`npx agent-browser close`, { stdio: "pipe", timeout: 10000 });
-
-  // Crop to body width (700px), removing empty right side
-  const img = sharp(tmpPath);
-  const meta = await img.metadata();
-  await sharp(tmpPath)
-    .extract({ left: 0, top: 0, width: VIEWPORT_WIDTH, height: meta.height! })
-    .toFile(outPath);
-
-  console.log(`✓ Screenshot saved to ${outPath} (${VIEWPORT_WIDTH}x${meta.height})`);
-} catch (e: any) {
-  console.error(`✗ Screenshot failed: ${e.message}`);
-  process.exit(1);
-}
+const outPath = resolve(OUTPUT_DIR, "digest.html");
+writeFileSync(outPath, html);
+console.log(`✓ HTML written to ${outPath}`);

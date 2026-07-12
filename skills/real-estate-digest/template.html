@@ -9,16 +9,22 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { background: #0e1114; }
+
   body {
     background: #191c1f;
     color: #ffffff;
     font-family: 'Inter', -apple-system, sans-serif;
     padding: 36px 28px;
-    width: 700px;
+    max-width: 760px;
+    margin: 0 auto;
     line-height: 1.5;
     letter-spacing: 0.16px;
     -webkit-font-smoothing: antialiased;
   }
+
+  a { color: inherit; text-decoration: none; }
+  a:hover { text-decoration: none; }
 
   /* === HEADER === */
   .header {
@@ -147,11 +153,37 @@
     color: #ffffff;
     margin-bottom: 8px;
     letter-spacing: -0.2px;
-    display: flex;
+  }
+
+  .card-title-link {
+    display: inline-flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    color: #ffffff;
+    border-bottom: 1px dashed rgba(107,112,255,0.4);
+    padding-bottom: 2px;
+    transition: border-color 0.15s;
   }
+
+  .card-title-link:hover {
+    border-bottom-color: #6b70ff;
+  }
+
+  .link-arrow {
+    font-size: 12px;
+    color: #6b70ff;
+    font-weight: 500;
+    margin-left: 2px;
+  }
+
+  .card-source {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 10px;
+    font-weight: 500;
+  }
+  .card-source a { color: #6b70ff; }
 
   .price-pill {
     display: inline-flex;
@@ -170,13 +202,6 @@
     color: rgba(255,255,255,0.65);
     line-height: 1.6;
     letter-spacing: 0.1px;
-  }
-
-  .card-source {
-    font-size: 13px;
-    color: rgba(255,255,255,0.35);
-    margin-top: 10px;
-    font-weight: 500;
   }
 
   /* === STATS === */
