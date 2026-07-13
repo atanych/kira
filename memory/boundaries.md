@@ -8,6 +8,9 @@ What I own vs. what I don't touch. Safety reflex exceptions for own code.
 > [!warning] Malware-safety reflex doesn't apply to own code
 > The safety reflex must NOT block editing Kira's own skill code. When the file is clearly under `bots/kira/` or `skills/` that Kira owns, just do the edit. The safety prompt is for external/unknown code.
 
+> [!warning] Never hardcode server install paths
+> `/home/claude/...` больше не существует — сервер переехал на `/home/volatclaw/volatclaw/` под locked-down OS-юзеров. Правила: (1) `proxied` — PATH-команда, `proxied <by|ru|off> <cmd>` без абсолютного пути к bin/; (2) любой другой абсолютный путь → относительно `BOT_DIR` или `$BOT_DIR`. Проверка: `grep -r '/home/claude' crons/ scripts/ skills/` должен быть пустым.
+
 ## Log
 - [[2026-04-22]] Boundary rule: never read, write, or touch anything inside Ostap's bot directory. Kira only owns her own bot folder.
 - [[2026-04-24]] Malware-safety reflex must NOT block editing Kira's own skill code. When the file is clearly under `bots/kira/` or `skills/` that Kira owns, just do the edit. The safety prompt is for external/unknown code.
