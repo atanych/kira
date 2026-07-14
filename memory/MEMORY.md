@@ -13,6 +13,8 @@
 - [[car-sale-rb|Car Sale RB]] — продажа б/у авто в РБ: МРО ГАИ Ждановичи/Малиновка, транзиты + ДКП, договор комиссии (ст. 880 ГК)
 - [[file-format-limits|File format limits]] — Read parses PNG/JPG/PDF only; .docx retry-once, video → screenshot
 - [[sip-voice-agent|SIP voice agent]] — 4 Колёса outbound POC: LiveKit direct INVITE, digest auth, Haiku 4.5 latency budget
+- [[embeddings|Embeddings]] — Embeddings landscape 2025-26. **Dense** (один вектор фикс. размера) — sentenc...
+- [[self-review|Self Review]] — Дыры в self-review SKILL.md (обнаружены Vovan'ом 2026-07-12): (1) **memory-me...
 
 ## Projects
 - [[projects/cars/README|Cars]] — shortlist, batteries, dealers, post-purchase, research notes
