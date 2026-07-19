@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # LLM-less cron gate for tasks-morning / tasks-evening.
-# Runs render.mjs → sends PNG via Telegram sendPhoto, or text fallback via sendMessage.
+# Runs render.mjs → sends PNG (default) or HTML document (--html), or text fallback.
 # Always exits 0 with empty stdout → cron records `gated`, LLM is never invoked.
 #
-# Usage: cron-gate.sh [--today]
+# Usage: cron-gate.sh [--today] [--html]
 set -uo pipefail
 
 BOT_DIR_LOCAL="${BOT_DIR:-$(cd "$(dirname "$0")/../../.." && pwd)}"
@@ -12,17 +12,23 @@ cd "$BOT_DIR_LOCAL"
 CHAT_ID="-1003540340877"
 THREAD_ID="780"
 PNG_PATH="tmp/photo-tasks.png"
+HTML_PATH="tmp/tasks.html"
 
-# Fresh output dir every run
+HTML_MODE=0
+for arg in "$@"; do
+  [ "$arg" = "--html" ] && HTML_MODE=1
+done
+
+# Fresh output every run
 mkdir -p tmp
-rm -f "$PNG_PATH"
+rm -f "$PNG_PATH" "$HTML_PATH"
 
 if [ -z "${TELEGRAM_BOT_TOKEN:-}" ]; then
   echo "cron-gate: TELEGRAM_BOT_TOKEN not in env" >&2
   exit 0    # still gated — do not spawn LLM to "fix" this
 fi
 
-# render.mjs writes PNG to $BOT_OUTPUT_DIR/photo-tasks.png; hijack that to our stable path.
+# render.mjs writes into $BOT_OUTPUT_DIR; hijack it to our stable tmp path.
 export BOT_OUTPUT_DIR="$BOT_DIR_LOCAL/tmp"
 
 # Run render — strip noisy node deprecation lines from stdout
@@ -31,7 +37,15 @@ RENDER_OUT="$(node skills/personal-tasks/scripts/render.mjs "$@" 2>&1 \
 
 API="https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}"
 
-if [ -f "$PNG_PATH" ]; then
+if [ "$HTML_MODE" = "1" ] && [ -f "$HTML_PATH" ]; then
+  # HTML rendered → send as document
+  curl -sS -o /dev/null \
+    -F "chat_id=${CHAT_ID}" \
+    -F "message_thread_id=${THREAD_ID}" \
+    -F "document=@${HTML_PATH};type=text/html;filename=tasks.html" \
+    "${API}/sendDocument" || echo "cron-gate: sendDocument failed" >&2
+  rm -f "$HTML_PATH"
+elif [ -f "$PNG_PATH" ]; then
   # PNG rendered → send as photo
   curl -sS -o /dev/null \
     -F "chat_id=${CHAT_ID}" \

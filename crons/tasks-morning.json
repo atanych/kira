@@ -1,6 +1,6 @@
 {
   "schedule": "5 4 * * *",
-  "gate": "bash skills/personal-tasks/scripts/cron-gate.sh",
+  "gate": "bash skills/personal-tasks/scripts/cron-gate.sh --html",
   "gateTimeout": 60,
   "prompt": "unused — cron gates via bash script (see gate field). If this fires, something is off with the gate.",
   "chatId": "telegram:-1003540340877:780",

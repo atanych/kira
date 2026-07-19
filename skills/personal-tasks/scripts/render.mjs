@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-// Render personal-tasks list as a PNG (BMW-M stream layout).
-// Run: node skills/personal-tasks/scripts/render.mjs [--today] [--all]
-// Output: $BOT_OUTPUT_DIR/photo-tasks.png (or tmp/output/photo-tasks.png).
+// Render personal-tasks list.
+// Run: node skills/personal-tasks/scripts/render.mjs [--today] [--all] [--html]
+// Default output: $BOT_OUTPUT_DIR/photo-tasks.png (PNG for chat photo mode).
+// With --html: writes $BOT_OUTPUT_DIR/tasks.html (mobile-friendly document).
 // Prints output path on success. Empty list → text fallback to stdout, no render.
 
 import fs from 'node:fs';
@@ -15,12 +16,28 @@ const OUT_DIR = process.env.BOT_OUTPUT_DIR || path.join(BOT_DIR, 'tmp/output');
 const TMP_HTML = path.join(BOT_DIR, 'tmp/tasks-render.html');
 const TMP_PNG = path.join(BOT_DIR, 'tmp/tasks-full.png');
 const OUT_PNG = path.join(OUT_DIR, 'photo-tasks.png');
+const OUT_HTML = path.join(OUT_DIR, 'tasks.html');
 
 const todayOnly = process.argv.includes('--today');
 const showAll = process.argv.includes('--all');
+const htmlMode = process.argv.includes('--html');
 
 function esc(s) {
   return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// Turn URLs and bare domains in escaped text into <a> tags. Only for HTML mode.
+const URL_RE = /(https?:\/\/[^\s<]+)|(www\.[^\s<]+)|(\b[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:by|ru|com|org|io|net|dev|ai|app|shop|store|info|me|xyz|tech|co|de|pl)(?:\/[^\s<]*)?)/gi;
+function linkify(escaped) {
+  if (!htmlMode) return escaped;
+  return escaped.replace(URL_RE, (m) => {
+    // Strip trailing punctuation from the linked text (keeps sentence commas/periods out of the URL)
+    const trail = m.match(/[),.;:!?»"']+$/);
+    const clean = trail ? m.slice(0, -trail[0].length) : m;
+    const suffix = trail ? trail[0] : '';
+    const href = /^https?:\/\//i.test(clean) ? clean : `https://${clean}`;
+    return `<a href="${href}" target="_blank" rel="noopener">${clean}</a>${suffix}`;
+  });
 }
 
 const TAG_META = {
@@ -102,7 +119,7 @@ function buildHtml(rows) {
       ${items.map(t => `
         <div class="row">
           <span class="num">${t.index}</span>
-          <span class="title">${esc(t.title)}</span>
+          <span class="title">${linkify(esc(t.title))}</span>
           ${dueBadge(t.due_date)}
         </div>
       `).join('')}
@@ -112,12 +129,18 @@ function buildHtml(rows) {
   const titleLabel = todayOnly ? 'На сегодня' : (showAll ? 'Все' : 'Открытые');
   const dateLabel = new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 
-  return `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Tasks</title>
+  const bodyLayout = htmlMode
+    ? 'max-width: 640px; margin: 0 auto; padding: 24px 20px 20px;'
+    : 'width: 480px; padding: 20px 18px 16px;';
+
+  return `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tasks</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" rel="stylesheet">
 <style>${tokensCss}\n${baseCss}
   body, .badge, .title, .grp-label, .hero-count, .hero-label { font-family: var(--font-sans), 'Noto Color Emoji', system-ui !important; }
-  body { width: 480px; padding: 20px 18px 16px; }
+  body { ${bodyLayout} }
   .hero { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--color-hairline-strong); margin-bottom: 14px; }
   .hero-count { font-family: var(--font-sans); font-size: 26px; font-weight: 700; color: var(--color-on-dark); line-height: 1; }
   .hero-label { font-family: var(--font-sans); font-size: 10px; font-weight: 700; letter-spacing: 1.8px; color: var(--color-muted); text-transform: uppercase; }
@@ -135,6 +158,8 @@ function buildHtml(rows) {
   .row:last-child { border-bottom: none; }
   .num { font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); width: 18px; font-weight: 700; flex-shrink: 0; }
   .title { font-size: 13px; color: var(--color-body-strong); line-height: 1.35; flex: 1; }
+  .title a { color: var(--color-m-blue-light); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.28); text-underline-offset: 2px; }
+  .title a:hover { text-decoration-color: currentColor; color: var(--color-on-dark); }
   .badge { font-family: var(--font-mono); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.3px; flex-shrink: 0; }
   .badge.red { background: rgba(226,39,24,0.15); color: var(--color-m-red); }
   .badge.fire { background: rgba(244,180,0,0.18); color: var(--color-warning); }
@@ -168,6 +193,14 @@ async function main() {
   const html = buildHtml(rows);
   fs.mkdirSync(path.dirname(TMP_HTML), { recursive: true });
   fs.mkdirSync(OUT_DIR, { recursive: true });
+
+  if (htmlMode) {
+    fs.writeFileSync(OUT_HTML, html);
+    console.log(OUT_HTML);
+    await db.end();
+    return;
+  }
+
   fs.writeFileSync(TMP_HTML, html);
 
   const env = { ...process.env, AGENT_BROWSER_ARGS: '--no-sandbox' };
