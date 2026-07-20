@@ -60,3 +60,4 @@ Revolut-inspired: near-black (#191c1f), white, flat (zero shadows), pill badges,
 [2026-07-18] Switched from PNG to HTML output — user wants clickable per-project links, not a static screenshot. Rendering pipeline dropped agent-browser + sharp entirely, just writes HTML string to output dir.
 
 [2026-07-18] `realt.by/search/?query=` returns 404 for all queries. Use `realt.by/newflats/?text=<encoded>` — verified with `curl -sIL` and confirmed presence of the query term in the response body.
+- [[2026-07-19]] [[real-estate-digest]] Скилл переделан 2026-07-18: **HTML документ** с кликабельными ссылками на порталы (realt.by / minskdsk.by / uyutnyi.by), а не PNG. Утренний cron (7:05 Минск) шлёт HTML, вечерний (20:00) остался картинкой. Vovan попросил кликабельные — уже пофиксено.
