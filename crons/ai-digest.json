@@ -1,6 +1,6 @@
 {
   "schedule": "0 4 * * *",
-  "prompt": "You're my daily research assistant. Find the top 3 developments in AI Tools, New LLM Models, and AI Automation. Summarize each in 2 sentences with source links. Tell me Why it Matters. Format as a quick briefing I can read in under 3 minutes and keep it entertaining and easy to digest.",
+  "prompt": "Daily AI news briefing — deliver as an HTML report, not chat text.\n\n1. Research: use the google-search skill to find TOP 3 developments in each of: (a) AI Tools, (b) New LLM Models, (c) AI Automation. Prefer stories from the last 24-48h. For each story capture: short title, 2-sentence summary, 1-sentence 'why it matters' take, direct URL, source name.\n\n2. Build `tmp/ai-news.json` in the exact shape `skills/ai-news-digest/SKILL.md` documents (dateLabel = today, headline = 'AI Daily', tagline = one-line vibe, categories = tools/models/automation with accents blue/teal/orange, sources = raw HTML string with 3-5 outlet links).\n\n3. Render: `npx tsx skills/ai-news-digest/render.ts tmp/ai-news.json`. The resulting `ai-news.html` auto-sends to chat.\n\n4. In chat, reply with a ONE-LINE teaser (e.g. 'Today's briefing ⚡ 3 tools · 3 models · 3 automations') — do NOT paste the news items in text. The HTML file is the deliverable.\n\nIf research returns thin (fewer than 2 solid items in a category) — say so in the one-liner and skip that category from the JSON.",
   "chatId": "telegram:-1003540340877:780",
   "platform": "telegram"
 }

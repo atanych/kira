@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI News Digest — {{dateLabel}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { background: #0a0c0f; }
+  body {
+    background: #14171b;
+    color: #ffffff;
+    font-family: 'Inter', -apple-system, sans-serif;
+    padding: 36px 28px;
+    max-width: 780px;
+    margin: 0 auto;
+    line-height: 1.5;
+    letter-spacing: 0.12px;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* HEADER */
+  .header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: linear-gradient(135deg, #6b70ff 0%, #a94fff 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700;
+  }
+  .logo-text { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.2px; }
+  .date-pill {
+    display: inline-flex; align-items: center; padding: 10px 18px;
+    border-radius: 9999px; background: rgba(244,244,244,0.08);
+    font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7); letter-spacing: 0.2px;
+  }
+  .header h1 {
+    font-family: 'DM Sans', sans-serif; font-size: 38px; font-weight: 700;
+    letter-spacing: -1px; line-height: 1.1; color: #ffffff;
+  }
+  .header .tagline {
+    margin-top: 8px; font-size: 15px; color: rgba(255,255,255,0.5); font-weight: 400;
+  }
+
+  /* SECTIONS */
+  .section { margin-bottom: 32px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .section-pill {
+    display: inline-flex; align-items: center; padding: 7px 16px;
+    border-radius: 9999px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.6px; text-transform: uppercase;
+  }
+  .pill-blue   { background: rgba(107,112,255,0.15); color: #8b90ff; border: 1.5px solid rgba(107,112,255,0.28); }
+  .pill-teal   { background: rgba(0,168,126,0.14);   color: #16c090; border: 1.5px solid rgba(0,168,126,0.24); }
+  .pill-orange { background: rgba(236,126,0,0.14);   color: #ff9a3d; border: 1.5px solid rgba(236,126,0,0.24); }
+  .pill-red    { background: rgba(226,59,74,0.14);   color: #ff5b6b; border: 1.5px solid rgba(226,59,74,0.24); }
+  .pill-purple { background: rgba(169,79,255,0.14);  color: #c68cff; border: 1.5px solid rgba(169,79,255,0.24); }
+  .section h2 {
+    font-family: 'DM Sans', sans-serif; font-size: 22px; font-weight: 700;
+    letter-spacing: -0.4px; color: #ffffff;
+  }
+
+  /* ITEM CARDS */
+  .item {
+    background: rgba(244,244,244,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 18px 20px 16px;
+    margin-bottom: 10px;
+  }
+  .item-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px; font-weight: 700; color: #ffffff;
+    margin-bottom: 8px; letter-spacing: -0.15px; line-height: 1.35;
+  }
+  .item-title-link {
+    display: inline-flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
+    color: #ffffff; border-bottom: 1px dashed rgba(107,112,255,0.4);
+    padding-bottom: 2px; transition: border-color 0.15s;
+  }
+  .item-title-link:hover { border-bottom-color: #6b70ff; }
+  .link-arrow { font-size: 12px; color: #6b70ff; font-weight: 500; }
+  .item-body {
+    font-size: 14.5px; color: rgba(255,255,255,0.7);
+    line-height: 1.55; letter-spacing: 0.05px;
+  }
+  .item-body a {
+    color: #8b90ff; border-bottom: 1px dashed rgba(139,144,255,0.4); padding-bottom: 1px;
+  }
+  .why {
+    margin-top: 12px; padding: 10px 14px;
+    background: rgba(107,112,255,0.06);
+    border-left: 3px solid #6b70ff;
+    border-radius: 4px 10px 10px 4px;
+    font-size: 13.5px; color: rgba(255,255,255,0.75); line-height: 1.5;
+  }
+  .why-label {
+    display: inline-block; font-size: 10.5px; font-weight: 700;
+    color: #8b90ff; letter-spacing: 0.8px; text-transform: uppercase;
+    margin-right: 6px;
+  }
+  .item-source {
+    margin-top: 10px; font-size: 12.5px; color: rgba(255,255,255,0.35); font-weight: 500;
+  }
+  .item-source a { color: #8b90ff; }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 36px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-sources { font-size: 12.5px; color: rgba(255,255,255,0.35); }
+  .footer-sources a { color: #8b90ff; }
+  .footer-brand {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 9999px;
+    background: rgba(244,244,244,0.06);
+    font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">AI Daily</div>
+    </div>
+    <div class="date-pill">📅 {{dateLabel}}</div>
+  </div>
+  <h1>{{headline}}</h1>
+  <div class="tagline">{{tagline}}</div>
+</div>
+
+{{sections}}
+
+<div class="footer">
+  <div class="footer-sources">Sources: {{sources}}</div>
+  <div class="footer-brand">⚡ Kira · daily AI briefing</div>
+</div>
+
+</body>
+</html>
