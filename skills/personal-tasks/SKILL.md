@@ -6,8 +6,13 @@
 ## Usage
 
 ```bash
-# добавить задачу
+# добавить задачу с дедлайном (deadline — до когда сделать)
 node skills/personal-tasks/scripts/tasks.js add "Починить iPhone Лерочке" --due 2025-02-15
+
+# добавить событие (встреча/созвон) через --at — время когда физически ПРОИСХОДИТ
+node skills/personal-tasks/scripts/tasks.js add "Созвон с клиентом" --at "2026-07-22 11:00" --tag ai
+node skills/personal-tasks/scripts/tasks.js add "Встреча с Х" --at 2026-07-22 --tag ai   # только день, без времени
+# --at "none" в edit → очистить scheduled поля
 
 # список открытых задач — рендерится как PNG в $BOT_OUTPUT_DIR/photo-tasks.png (авто-отправляется в чат)
 node skills/personal-tasks/scripts/tasks.js list
@@ -77,7 +82,15 @@ node skills/personal-tasks/scripts/tasks.js spawn
 
 ## Input
 - Команда: `add`, `list`, `done`, `remove`, `edit`
-- Текст задачи, индексы, опциональный дедлайн, опциональные теги (`--tag`)
+- Текст задачи, индексы, опциональный дедлайн (`--due`), опциональное расписание (`--at`), опциональные теги (`--tag`)
+
+## Schema — `due_date` vs `scheduled_date/time`
+- **`due_date`** (DATE) — ДЕДЛАЙН, «до какого дня надо сделать». Просроченные краснеют.
+- **`scheduled_date`** (DATE) — день ФИЗИЧЕСКОГО СОБЫТИЯ (встреча, звонок). Может быть без времени.
+- **`scheduled_time`** (TIME) — точное время события, если известно. NULL = только день (например «утром»).
+- Обычно на задаче один из них, но оба могут быть выставлены одновременно (например «подготовиться к встрече в 15:00 в пятницу» — scheduled=пт 15:00, due=чт).
+- В render badge: 🕐 сегодня 11:00 / 🕐 22.07 (scheduled) vs today/overdue/date (due).
+- Сортировка: `LEAST(due_date, scheduled_date)` — событие/дедлайн что ближе, то выше.
 
 ## Output
 - Список задач с индексами, статусами и дедлайнами

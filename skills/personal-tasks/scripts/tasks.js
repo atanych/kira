@@ -62,6 +62,22 @@ function parseTagsFlag() {
   return normalized;
 }
 
+// Parse --at flag. Returns undefined if flag missing (no change), null to clear ("--at none"/""),
+// or { date: "YYYY-MM-DD", time: "HH:MM" | null } for an actual schedule.
+function parseAtFlag() {
+  const idx = args.indexOf('--at');
+  if (idx === -1) return undefined;
+  const raw = idx + 1 < args.length ? args[idx + 1] : '';
+  const trimmed = String(raw).trim();
+  if (!trimmed || trimmed === 'none' || trimmed === '-') return null;
+  // Accept "YYYY-MM-DD" or "YYYY-MM-DD HH:MM" or "YYYY-MM-DDTHH:MM"
+  const m = trimmed.match(/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{1,2}):(\d{2}))?$/);
+  if (!m) throw new Error(`Bad --at: "${trimmed}". Формат: "YYYY-MM-DD" или "YYYY-MM-DD HH:MM"`);
+  const date = m[1];
+  const time = m[2] ? `${m[2].padStart(2, '0')}:${m[3]}` : null;
+  return { date, time };
+}
+
 async function add() {
   const title = args[1];
   if (!title) {
@@ -71,13 +87,21 @@ async function add() {
   const due = getFlag('due');
   const notes = getFlag('notes');
   const tags = parseTagsFlag() || [];
+  const at = parseAtFlag();
+
+  const schedDate = at ? at.date : null;
+  const schedTime = at && at.time ? at.time : null;
 
   const res = await db.query(
-    `INSERT INTO tasks (title, due_date, notes, tags) VALUES ($1, $2::date, $3, $4) RETURNING id`,
-    [title, due || null, notes || null, tags]
+    `INSERT INTO tasks (title, due_date, notes, tags, scheduled_date, scheduled_time)
+     VALUES ($1, $2::date, $3, $4, $5::date, $6::time) RETURNING id`,
+    [title, due || null, notes || null, tags, schedDate, schedTime]
   );
   const tagStr = tags.length ? ` [${tags.join(', ')}]` : '';
-  console.log(`Задача #${res.rows[0].id} добавлена${tagStr}: ${title}${due ? ` (до ${due})` : ''}`);
+  const when = at
+    ? ` (на ${at.date}${at.time ? ' ' + at.time : ''})`
+    : (due ? ` (до ${due})` : '');
+  console.log(`Задача #${res.rows[0].id} добавлена${tagStr}: ${title}${when}`);
 }
 
 const TAG_ORDER_SQL = `CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 WHEN 'ai' = ANY(tags) THEN 3 WHEN 'volatclaw' = ANY(tags) THEN 4 ELSE 5 END`;
@@ -166,6 +190,7 @@ async function edit() {
   const due = getFlag('due');
   const notes = getFlag('notes');
   const tags = parseTagsFlag();
+  const at = parseAtFlag(); // undefined = no flag; null = clear; { date, time } = set
 
   const updates = [];
   const params = [item.id];
@@ -175,9 +200,17 @@ async function edit() {
   if (due) { updates.push(`due_date = $${idx++}::date`); params.push(due); }
   if (notes) { updates.push(`notes = $${idx++}`); params.push(notes); }
   if (tags !== null) { updates.push(`tags = $${idx++}`); params.push(tags); }
+  if (at !== undefined) {
+    if (at === null) {
+      updates.push(`scheduled_date = NULL`, `scheduled_time = NULL`);
+    } else {
+      updates.push(`scheduled_date = $${idx++}::date`); params.push(at.date);
+      updates.push(`scheduled_time = $${idx++}::time`); params.push(at.time || null);
+    }
+  }
 
   if (updates.length === 0) {
-    console.error('Нечего менять. Используй --title, --due, --notes, --tag');
+    console.error('Нечего менять. Используй --title, --due, --at, --notes, --tag');
     process.exit(1);
   }
 
@@ -185,21 +218,64 @@ async function edit() {
   console.log(`Задача #${item.id} обновлена.`);
 }
 
+// Match render.mjs ordering EXACTLY so "done N" / "edit N" indices line up with the report.
+// Fetch tag-grouped, then split top section (today/overdue) to the front in JS.
 async function getOpenItems() {
   const res = await db.query(`
     SELECT id, title, status,
            TO_CHAR(due_date, 'YYYY-MM-DD') AS due_date,
+           TO_CHAR(scheduled_date, 'YYYY-MM-DD') AS scheduled_date,
+           TO_CHAR(scheduled_time, 'HH24:MI')    AS scheduled_time,
            notes, tags
     FROM tasks
-    WHERE status = 'open' AND (due_date IS NULL OR due_date <= CURRENT_DATE + INTERVAL '1 month')
+    WHERE status = 'open' AND (
+      (due_date IS NULL AND scheduled_date IS NULL)
+      OR LEAST(COALESCE(due_date, '9999-12-31'::date),
+               COALESCE(scheduled_date, '9999-12-31'::date))
+         <= CURRENT_DATE + INTERVAL '1 month'
+    )
     ORDER BY
       ${TAG_ORDER_SQL},
-      CASE WHEN due_date IS NOT NULL THEN 0 ELSE 1 END,
-      due_date ASC NULLS LAST,
+      CASE WHEN due_date IS NOT NULL OR scheduled_date IS NOT NULL THEN 0 ELSE 1 END,
+      LEAST(COALESCE(due_date, '9999-12-31'::date),
+            COALESCE(scheduled_date, '9999-12-31'::date)) ASC,
+      scheduled_time ASC NULLS LAST,
       created_at DESC,
       id ASC
   `);
-  return res.rows;
+  const today = todayStr();
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  const tomorrow = d.toISOString().slice(0, 10);
+  const isTop = r => (r.scheduled_date && r.scheduled_date <= today) ||
+                     (r.due_date && r.due_date <= today);
+  const isTomorrow = r => (r.scheduled_date && r.scheduled_date === tomorrow) ||
+                          (r.due_date && r.due_date === tomorrow);
+  const earliest = r => {
+    const d = [r.scheduled_date, r.due_date].filter(Boolean);
+    return d.length ? d.reduce((a, b) => (a < b ? a : b)) : '9999-12-31';
+  };
+  // Same rule as render.mjs topSectionSort: timed first (by time), then overdue-no-time, then today-no-time.
+  const priorityCmp = pivotISO => (a, b) => {
+    const aHt = !!a.scheduled_time, bHt = !!b.scheduled_time;
+    if (aHt && bHt) {
+      const t = a.scheduled_time.localeCompare(b.scheduled_time);
+      if (t !== 0) return t;
+      return earliest(a).localeCompare(earliest(b));
+    }
+    if (aHt) return -1;
+    if (bHt) return 1;
+    const aE = earliest(a), bE = earliest(b);
+    const aOd = aE < pivotISO, bOd = bE < pivotISO;
+    if (aOd && !bOd) return -1;
+    if (!aOd && bOd) return 1;
+    return aE.localeCompare(bE);
+  };
+  const top = res.rows.filter(isTop).sort(priorityCmp(today));
+  const topIds = new Set(top.map(r => r.id));
+  const tomorrowRows = res.rows.filter(r => !topIds.has(r.id) && isTomorrow(r)).sort(priorityCmp(tomorrow));
+  const usedIds = new Set([...topIds, ...tomorrowRows.map(r => r.id)]);
+  const rest = res.rows.filter(r => !usedIds.has(r.id));
+  return [...top, ...tomorrowRows, ...rest];
 }
 
 // ─── Recurring templates ──────────────────────────────────────────────────

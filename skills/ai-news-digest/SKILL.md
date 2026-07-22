@@ -68,3 +68,4 @@ Dark inky canvas, DM Sans display + Inter body. Purple/blue accent for "why it m
 
 ## Learnings
 _(none yet — created 2026-07-20 to replace plain-text ai-digest cron output)_
+- [[2026-07-21]] [[ai-news-digest]] Скилл создан 2026-07-20. Dark-themed clickable HTML digest — top-N новостей по 3 категориям (AI Tools / New Models / AI Automation), с 'Why it matters' callouts под каждой и прямыми ссылками на источники. Emits digest.html в output dir — открывается в браузере. Утренний ai-digest cron (7:00 Минск) шлёт HTML документом с 21.07. Vovan одобрил стиль после теста ('огонь').

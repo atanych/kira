@@ -48,10 +48,18 @@ const TAG_META = {
   'other':    { label: 'ПРОЧЕЕ',   order: 5, accent: 'var(--color-muted)' },
 };
 
+const TAG_EMOJI = { 'квартира': '🏠', 'дача': '🌲', 'ai': '🤖', 'volatclaw': '⚙️', 'other': '📍' };
+
 function primaryGroup(tags) {
   if (!tags || tags.length === 0) return 'other';
   for (const t of ['квартира','дача','ai','volatclaw']) if (tags.includes(t)) return t;
   return 'other';
+}
+
+// Earliest actionable date for a row (min of scheduled_date / due_date), or infinity string.
+function earliestDate(t) {
+  const dates = [t.scheduled_date, t.due_date].filter(Boolean);
+  return dates.length ? dates.reduce((a, b) => (a < b ? a : b)) : '9999-12-31';
 }
 
 function dueBadge(due) {
@@ -63,6 +71,17 @@ function dueBadge(due) {
   return `<span class="badge blue">${due.slice(5)}</span>`;
 }
 
+// Scheduled = when it happens (call/meeting), not deadline.
+function scheduledBadge(date, time) {
+  if (!date) return '';
+  const today = new Date().toISOString().slice(0, 10);
+  const cmp = date.localeCompare(today);
+  const timeStr = time ? ` ${time}` : '';
+  if (cmp < 0)  return `<span class="badge red">🕐 просрочено · ${date.slice(5)}${timeStr}</span>`;
+  if (cmp === 0) return `<span class="badge sched">🕐 сегодня${timeStr}</span>`;
+  return `<span class="badge sched">🕐 ${date.slice(5)}${timeStr}</span>`;
+}
+
 function plural(n) {
   const mod10 = n % 10, mod100 = n % 100;
   if (mod10 === 1 && mod100 !== 11) return 'задача';
@@ -72,43 +91,134 @@ function plural(n) {
 
 async function loadTasks() {
   const today = new Date().toISOString().slice(0, 10);
+  const tomorrow = (() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0, 10); })();
   let where;
   if (todayOnly) {
-    where = `WHERE status='open' AND due_date IS NOT NULL AND due_date <= '${today}'::date`;
+    // Overdue + today + tomorrow — evening PNG groups them as 🔥 На сегодня / 📅 На завтра.
+    where = `WHERE status='open' AND (
+      (due_date IS NOT NULL AND due_date <= '${tomorrow}'::date) OR
+      (scheduled_date IS NOT NULL AND scheduled_date <= '${tomorrow}'::date)
+    )`;
   } else if (showAll) {
     where = '';
   } else {
-    where = `WHERE status='open' AND (due_date IS NULL OR due_date <= CURRENT_DATE + INTERVAL '1 month')`;
+    where = `WHERE status='open' AND (
+      (due_date IS NULL AND scheduled_date IS NULL)
+      OR LEAST(COALESCE(due_date, '9999-12-31'::date),
+               COALESCE(scheduled_date, '9999-12-31'::date))
+         <= CURRENT_DATE + INTERVAL '1 month'
+    )`;
   }
   const r = await db.query(`
-    SELECT id, title, TO_CHAR(due_date, 'YYYY-MM-DD') AS due_date, tags
+    SELECT id, title,
+           TO_CHAR(due_date, 'YYYY-MM-DD')       AS due_date,
+           TO_CHAR(scheduled_date, 'YYYY-MM-DD') AS scheduled_date,
+           TO_CHAR(scheduled_time, 'HH24:MI')    AS scheduled_time,
+           tags
     FROM tasks ${where}
     ORDER BY
       CASE WHEN 'квартира' = ANY(tags) THEN 1 WHEN 'дача' = ANY(tags) THEN 2 WHEN 'ai' = ANY(tags) THEN 3 WHEN 'volatclaw' = ANY(tags) THEN 4 ELSE 5 END,
-      CASE WHEN due_date IS NOT NULL THEN 0 ELSE 1 END,
-      due_date ASC NULLS LAST,
+      CASE WHEN due_date IS NOT NULL OR scheduled_date IS NOT NULL THEN 0 ELSE 1 END,
+      LEAST(COALESCE(due_date, '9999-12-31'::date),
+            COALESCE(scheduled_date, '9999-12-31'::date)) ASC,
+      scheduled_time ASC NULLS LAST,
       created_at DESC,
       id ASC
   `);
   return r.rows;
 }
 
-function groupTasks(rows) {
+function groupTasks(rows, startIdx = 0) {
   const groups = {};
   rows.forEach((t, i) => {
     const g = primaryGroup(t.tags);
-    (groups[g] ||= []).push({ ...t, index: i + 1 });
+    (groups[g] ||= []).push({ ...t, index: startIdx + i + 1 });
   });
   return Object.keys(groups)
     .sort((a, b) => TAG_META[a].order - TAG_META[b].order)
     .map(g => ({ key: g, meta: TAG_META[g], items: groups[g] }));
 }
 
+// Sort for the "🔥 На сегодня" top section:
+//   1. Anything with scheduled_time — sorted by time ASC (day pivots around meetings)
+//   2. Overdue without time — oldest first
+//   3. Today without time
+function topSectionSort(a, b, todayISO) {
+  const aHasTime = !!a.scheduled_time, bHasTime = !!b.scheduled_time;
+  if (aHasTime && bHasTime) {
+    const t = a.scheduled_time.localeCompare(b.scheduled_time);
+    if (t !== 0) return t;
+    return earliestDate(a).localeCompare(earliestDate(b));
+  }
+  if (aHasTime) return -1;
+  if (bHasTime) return 1;
+  // Neither has time — overdue-no-time first (older wins), then today-no-time
+  const aE = earliestDate(a), bE = earliestDate(b);
+  const aOverdue = aE < todayISO, bOverdue = bE < todayISO;
+  if (aOverdue && !bOverdue) return -1;
+  if (!aOverdue && bOverdue) return 1;
+  return aE.localeCompare(bE);
+}
+
 function buildHtml(rows) {
   const tokensCss = fs.readFileSync(path.join(DESIGN_DIR, 'tokens.css'), 'utf-8');
   const baseCss   = fs.readFileSync(path.join(DESIGN_DIR, 'base.css'),   'utf-8');
 
-  const groups = groupTasks(rows);
+  const todayISO = new Date().toISOString().slice(0, 10);
+  const tomorrowISO = (() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0, 10); })();
+  // Split into: 🔥 На сегодня (today + overdue) → 📅 На завтра → tag groups (rest).
+  // Applies to all modes — in --today mode `rest` is empty by construction.
+  const topRows = rows.filter(r =>
+    (r.scheduled_date && r.scheduled_date <= todayISO) ||
+    (r.due_date && r.due_date <= todayISO)
+  );
+  const topIds = new Set(topRows.map(r => r.id));
+  const tomorrowRows = rows.filter(r =>
+    !topIds.has(r.id) && (
+      (r.scheduled_date && r.scheduled_date === tomorrowISO) ||
+      (r.due_date && r.due_date === tomorrowISO)
+    )
+  );
+  const usedIds = new Set([...topIds, ...tomorrowRows.map(r => r.id)]);
+  const restRows = rows.filter(r => !usedIds.has(r.id));
+  topRows.sort((a, b) => topSectionSort(a, b, todayISO));
+  tomorrowRows.sort((a, b) => topSectionSort(a, b, tomorrowISO));
+
+  const renderRow = (t, withChip) => `
+    <div class="row">
+      <span class="num">${t.index}</span>
+      ${withChip ? `<span class="tag-chip">${TAG_EMOJI[primaryGroup(t.tags)]}</span>` : ''}
+      <span class="title">${linkify(esc(t.title))}</span>
+      ${scheduledBadge(t.scheduled_date, t.scheduled_time)}
+      ${dueBadge(t.due_date)}
+    </div>`;
+
+  let idxCounter = 0;
+  const topItems = topRows.map(r => ({ ...r, index: ++idxCounter }));
+  const topSection = topItems.length > 0 ? `
+    <section class="grp top-grp" style="--accent: var(--color-warning)">
+      <div class="grp-head">
+        <span class="grp-label">🔥 НА СЕГОДНЯ</span>
+        <span class="grp-line"></span>
+        <span class="grp-count">${topItems.length}</span>
+      </div>
+      ${topItems.map(t => renderRow(t, true)).join('')}
+    </section>
+  ` : '';
+
+  const tomorrowItems = tomorrowRows.map(r => ({ ...r, index: ++idxCounter }));
+  const tomorrowSection = tomorrowItems.length > 0 ? `
+    <section class="grp tomorrow-grp" style="--accent: var(--color-bmw-blue)">
+      <div class="grp-head">
+        <span class="grp-label">📅 НА ЗАВТРА</span>
+        <span class="grp-line"></span>
+        <span class="grp-count">${tomorrowItems.length}</span>
+      </div>
+      ${tomorrowItems.map(t => renderRow(t, true)).join('')}
+    </section>
+  ` : '';
+
+  const groups = groupTasks(restRows, idxCounter);
   const sections = groups.map(({ meta, items }) => `
     <section class="grp" style="--accent: ${meta.accent}">
       <div class="grp-head">
@@ -116,13 +226,7 @@ function buildHtml(rows) {
         <span class="grp-line"></span>
         <span class="grp-count">${items.length}</span>
       </div>
-      ${items.map(t => `
-        <div class="row">
-          <span class="num">${t.index}</span>
-          <span class="title">${linkify(esc(t.title))}</span>
-          ${dueBadge(t.due_date)}
-        </div>
-      `).join('')}
+      ${items.map(t => renderRow(t, false)).join('')}
     </section>
   `).join('');
 
@@ -164,6 +268,16 @@ function buildHtml(rows) {
   .badge.red { background: rgba(226,39,24,0.15); color: var(--color-m-red); }
   .badge.fire { background: rgba(244,180,0,0.18); color: var(--color-warning); }
   .badge.blue { background: rgba(28,105,212,0.15); color: var(--color-m-blue-dark); }
+  .badge.sched { background: rgba(15,163,54,0.15); color: var(--color-success); }
+
+  .tag-chip { font-size: 13px; flex-shrink: 0; width: 16px; text-align: center; line-height: 1; }
+
+  /* 🔥 На сегодня — приоритетная секция сверху */
+  .top-grp { padding: 10px 12px 4px; margin-bottom: 14px; background: rgba(244,180,0,0.05); border: 1px solid rgba(244,180,0,0.18); border-radius: 6px; }
+  .top-grp .grp-label { font-size: 11px; letter-spacing: 1.8px; }
+  /* 📅 На завтра — планирующая секция */
+  .tomorrow-grp { padding: 10px 12px 4px; margin-bottom: 18px; background: rgba(28,105,212,0.05); border: 1px solid rgba(28,105,212,0.18); border-radius: 6px; }
+  .tomorrow-grp .grp-label { font-size: 11px; letter-spacing: 1.8px; }
 
   .footer { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--color-hairline-strong); display: flex; justify-content: space-between; font-family: var(--font-sans); font-size: 9px; color: var(--color-muted); letter-spacing: 1.5px; text-transform: uppercase; }
 </style></head><body>
@@ -174,6 +288,8 @@ function buildHtml(rows) {
     </div>
     <div class="hero-label">${dateLabel}</div>
   </div>
+  ${topSection}
+  ${tomorrowSection}
   ${sections}
   <div class="footer"><span>kira</span><span>tasks</span></div>
 </body></html>`;
